@@ -30,7 +30,7 @@ function drawDoorOpenAnim(t,st,et,x,y)
 	drawSprite(spr_id,ox,oy)
 	-- door light
 	local doorlight_id = door_id//2+1
-	print(doorlight_id,0,0,12)
+	--print(doorlight_id,0,0,12)
 	if doorlight_id <= 5 then
 		local sprl_id = "DoorLight_"..string.format("%02d", doorlight_id)
 		local dw=sprites[sprl_id].w
@@ -70,37 +70,37 @@ function drawSpriteD(spr_id,spr_id2,x,y)
 end
 
 function Frame01(t)
---	drawSprite("Arrow",50,50)
- cls()
- local rate=0.3
- local sceneX=100-t/20*rate
+	--	drawSprite("Arrow",50,50)
+	cls()
+	local rate=0.3
+	local sceneX=100-t/20*rate
 	local posGateX=sceneX+60+t/30*rate
 	local posGateY=0
 	local posShipX=sceneX+t/15*rate
 	local posShipY=130-t/50*rate
-	drawSprite("BgDither",posGateX,posGateY)
+	drawSprite("BgDither",posGateX-40,posGateY)
 	--drawSprite("DoorLight",posGateX+12,posGateY+28)
 	--drawSprite("Door",posGateX+38,posGateY+18)
 	drawDoorOpenAnim(t,1000,3000,posGateX+53,posGateY+22)
-	
+
 	if (t<1200) then
 		drawSprite("Ship01",posShipX,posShipY)
 	else
 	 drawSpriteD("Ship01","Ship02",posShipX,posShipY)
- end
- --else
- -- drawSprite("Ship02",posShipX,posShipY)
- --end
+	end
+	--else
+	-- drawSprite("Ship02",posShipX,posShipY)
+	--end
 	-- left throttle
- circ(posShipX+2,18+posShipY,math.random(2),math.random(3)+1)
- circ(posShipX,20+posShipY,math.random(2),math.random(2)+1)
- -- right throttle
- circ(posShipX+9,23+posShipY,math.random(3),math.random(3)+1)
- circ(posShipX+7,25+posShipY,math.random(2),math.random(2)+1)
+	circ(posShipX+2,18+posShipY,math.random(2),math.random(3)+1)
+	circ(posShipX,20+posShipY,math.random(2),math.random(2)+1)
+	-- right throttle
+	circ(posShipX+9,23+posShipY,math.random(3),math.random(3)+1)
+	circ(posShipX+7,25+posShipY,math.random(2),math.random(2)+1)
 
--- drawSprite("Arrow",posShipX,30+posShipY)
- 
-	drawSprite("Logo",10,96)
+	-- drawSprite("Arrow",posShipX,30+posShipY)
+
+	drawSprite("Logo",10,104)
 	drawSprite("LogoBackdrop",0,4)
 
 end

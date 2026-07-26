@@ -29,7 +29,7 @@ scenes = {
 }
 
 scene_frame = 0
-current_scene_id = 3
+current_scene_id = 1
 
 scenes[current_scene_id].init()
 somatic_init(scenes[current_scene_id].start, 0)

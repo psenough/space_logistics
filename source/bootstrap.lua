@@ -17,6 +17,18 @@ function unpac(str)
   return r
 end
 
+function unpac_noheader(str)
+  local r = ""
+  local d = "" -- (d)ecoded data
+  for m, c in str:gmatch("(%u+)([^%u]+)") do -- decode rle, (m)atch & (c)ounter
+    d = d .. m .. (m:sub(-1):rep(c)) -- (d)ecoded data
+  end
+  for x = 1,#d,1 do -- get (d)ecoded data into (r)aw data
+    r = r .. string.format("%x",(string.byte(d:sub(x,x))-65))
+  end
+  return r
+end
+
 -- the raw-decoder
 function tomem(str,adr)
   local o = adr or tonumber(str:sub(1,5),16) -- get (o)ffset, from param or string
@@ -41,6 +53,17 @@ function loadSprite(name,w,h,bg)
 			sprites[name].data[x+y*sprites[name].w] = pix(x,y)
 		end
 	end
+end
+
+function loadExtendedSprite(ref,name,w,h,bg)
+	sprites[name] = { w=w, h=h, bg=bg, data={}	}
+	--cls(sprites[name].bg)
+	--spr(256,0,0,sprites[name].bg,1,0,0,16,16)
+	local i=0
+	for m in string.gmatch(ref, '%x') do
+	 sprites[name].data[i]=tonumber(m,16)
+	 i=i+1
+	end	
 end
 
 function sweetie16_init()

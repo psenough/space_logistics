@@ -26,7 +26,21 @@ function drawIsoSlab(posx,posy,uy,ux,c)
 	
 	tri(t1x,t1y,t2x,t2y,t3x,t3y,c)
 	tri(t2x,t2y,t3x,t3y,t4x,t4y,c)
+
+	if math.random()<.4 then
+		line(t1x,t1y+2,t2x+4,t2y,0)
+	end
+	if math.random()<.4 then
+		line(t1x,t1y+3,t3x-1,t3y+3,0)
+	end
+	if math.random()<.2 then
+		line((t1x+t2x)/2+2,(t1y+t2y)/2,(t3x+t4x)/2,(t3y+t4y)/2-2,0)
+	end
+	if math.random()<.2 then
+		line((t4x+t2x)/2,(t4y+t2y)/2+2,(t3x+t1x)/2,(t3y+t1y)/2,0)
+	end
 end
+
 
 local slabs = {
 	{50,50,4,6,7},
@@ -36,13 +50,33 @@ local slabs = {
 	{160,-30,12,6,9},
 	{110,-90,6,6,2},
 	{300,-180,5,10,7},
-	{410,-180,10,8,8}
+	{410,-180,10,8,8},
+	{230,-80,5,6,6},
+	{290,-40,10,6,7},
+	{360,-90,2,4,2},
+	{300,-300,10,8,6},
+	{496,-290,3,17,7},
+	{570,-290,8,7,2},
+	{570,-400,4,5,6},
+	{715,-395,5,14,7},
+	{410,-400,5,12,9},
+	{420,-450,6,2,9},
+}
+
+local Frame03_sprites = {
+	{"Beam",400,-400,2},
+	{"ContainerGrey",530,-300,1},
+	{"ContainerRed",620,-530,1},
+	{"ContainerSmall_01",380,-300,1},
+	{"ContainerSmall_01",430,-350,1}
 }
 
 function Frame03(t)
 	cls()
+	math.randomseed(1)
 
 	local tt=1
+	-- draw slabs
 	for i=1,#slabs do
 		-- update
 		slabs[i][1]=slabs[i][1] - tt
@@ -62,12 +96,29 @@ function Frame03(t)
 		local c = slabs[i][5]
 		drawIsoSlab(posx,posy,ux,uy,c)
 	end
-	drawSprite("BgDittering",0,0)
+	-- draw sprites
+	for i=1,#Frame03_sprites do
+		-- update
+		Frame03_sprites[i][2]=Frame03_sprites[i][2] - tt*Frame03_sprites[i][4]
+		if Frame03_sprites[i][2] < -100 then
+			Frame03_sprites[i][2] = Frame03_sprites[i][2] + 500
+		end
+		Frame03_sprites[i][3]=Frame03_sprites[i][3] + tt*Frame03_sprites[i][4]
+		if Frame03_sprites[i][3] > 140 then
+			Frame03_sprites[i][3] = Frame03_sprites[i][3] - 500
+		end
+		
+		-- draw
+		drawSprite(Frame03_sprites[i][1],Frame03_sprites[i][2],Frame03_sprites[i][3])
+	end
+
+	drawSprite("BgDitterTop",0,0)
+	drawSprite("BgDitterBottom",240-90,136-58)
 
 	local shipPosX=70
 	local shipPosY=30
-	drawFrame03_Ship(t,shipPosX,shipPosY)
 
-	drawSprite("Beam",0,0)
+	drawSprite("Frame03_Ship_Shadow",shipPosX,shipPosY+80)
+	drawFrame03_Ship(t,shipPosX,shipPosY)
 
 end

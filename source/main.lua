@@ -4,6 +4,8 @@ function BOOT()
     loadFrame01Sprites()
 	loadFrame02Sprites()
 	loadFrame03Sprites()
+	loadFrame04Sprites()
+	loadFrame05Sprites()
 end
 
 scenes = {
@@ -31,11 +33,17 @@ scenes = {
 		bdr = no_fn,
 		start = 4,
 		row = 0,
+	},{
+		init = no_fn,
+		frame = Frame05,
+		bdr = no_fn,
+		start = 5,
+		row = 0,
 	}
 }
 
 scene_frame = 0
-current_scene_id = 4
+current_scene_id = 5
 
 scenes[current_scene_id].init()
 somatic_init(scenes[current_scene_id].start, 0)

@@ -37,6 +37,12 @@ bank3 = bank3 + open("source\\frame04_sprites.lua", "r").read()
 bank3 = bank3 + open("source\\frame04_calls.lua", "r").read()
 reference_cart.chunks.append(Chunk(ChunkType.CODE, 3, bytes(bank3,"ascii")))
 
+# bank 4
+bank4 = ""
+bank4 = bank4 + open("source\\frame05_sprites.lua", "r").read()
+bank4 = bank4 + open("source\\frame05_calls.lua", "r").read()
+reference_cart.chunks.append(Chunk(ChunkType.CODE, 4, bytes(bank4,"ascii")))
+
 
 # save it to the final destination
 reference_cart.save("space_logistics.tic")

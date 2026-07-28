@@ -25,11 +25,17 @@ scenes = {
 		bdr = no_fn,
 		start = 3,
 		row = 0,
+	},{
+		init = no_fn,
+		frame = Frame04,
+		bdr = no_fn,
+		start = 4,
+		row = 0,
 	}
 }
 
 scene_frame = 0
-current_scene_id = 3
+current_scene_id = 4
 
 scenes[current_scene_id].init()
 somatic_init(scenes[current_scene_id].start, 0)

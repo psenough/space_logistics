@@ -4,8 +4,6 @@ function Frame05(t)
 
 	local tt=1
 
-	-- dithering
-
 	math.randomseed(1)
 	stars(1000)
 	

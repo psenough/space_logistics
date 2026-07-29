@@ -18,3 +18,7 @@ python ".\ticmctile.py" "%%f" -o "%~dp0\%%~nf.lua" -f -m rle -s
 )
 
 endlocal
+
+python ".\ticpanel.py" "BgDitterExtended.png"
+
+python ".\ticpanel.py" "LogoBackdropExtended.png"

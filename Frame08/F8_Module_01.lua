@@ -1,0 +1,105 @@
+-- title:  C:\Users\Utilizador\AppData\Roaming\com.nesbox.tic\TIC-80\space_logistics\Frame08\\F8_Module_01.png
+-- author: TicMcTile
+-- script: lua
+
+local pal = "07F80060KBMBMCNFHCNFBLODDFPONHHFPPNMFHHKAPAHIDHLEGFCBHJHJCGDPGLDNFJMBEGKGPDHPOHPEPEPEPEJALCMGFMGGIDDMDHF0"
+
+local gfx = "0c000300A124C2A38CA2C20A20C2AAC35NNA2CBBAAC5BBC21NNC2N4CN12CCA7BA6CB2A3CN2BBAAN5BBN3C3NC5DC3D2BA31BA6CB2A3DB5ABC5BA55BBA276CA4C2A2C4AACDMMCCAACD2MMACD5ACD5AAC42N2M2N4D2M2NNC20N2C2N18CCN2C9D2C2N18CCN2C10DDC2D2BBD2B2CCB2C4N3C3NC4DDC2D2BBCDDB2CCDBBC4BC11D2C3D3CD2B2CDB2C3BC13DC3D2CCD2C3DC6MMC18BBC2DDCCBBDDC39B2A2C4B3C6B3C5B3C6B2C9B2C2A15BBA5CCB2A2C4B3C6B3C5B3CCA39B2A4C2B2AAC5BBA55BA70C2D4C4D2C17BC6BC6BC12DDM5DDM3D2M4DDCNM2D2CN3D2CN3CCDCN3C3N3C5DDB2MMDBBC2D2BDMMCDDBD3MDDBD5BD6BD6BCCD3C23MC6DM2C3D3M3D6MD7CCD5CD6C3D3C5DDC7MC6M2C4DM4CCDDM2C2D4M2D15CD6C2D4C5DDC14BC4B2MMC4BDDM2C2D4M2D23B9O4BBO6CB2O3C3BBOOMMC3BPD3CBBPD3B3C4B5C3BOB3CCBO2PB3OOPPB3P4B2P4BBCP4C2BC6B2C4B4C2B5CCB3C3BBC12BC3B3CBBA4C2B2AAC5BBC5BBC3B3CB12AAB2A20BA6B2A4B3A3B5A3B5PPA2B2AAC5AAPOC3AAPO2CCAAPO3PAAPO3PAAPO3PAAPO3PAAP2O2CN3C3N3C3N3C2PN3C2P2NNC2P5CCP6AOOP4ADBC4DDBCBC3DBCBBC2DBCBBC2DBCBCBCCDBCBCBCCDC4BCAPC5D7CD6C3D3C5DDC31D3M3D6MD15CD6C2D3BC5BBC5BPC7MMBBC3DBBPC3BBPDMMCCBPD3MMBPD5PD14CCD5C4D2C6DC7MC6DM2C3D3MMCCD5MMD2B4D2B4DDB2C3BBC18BBC2B4CCB5PPC18B2C2B11AB4A2B2A10PPCCB12AB3A3BBA4PA4P2AAP21BA4PPA3P2A2P3AAP5AAPPAPPA2PPAPPA2P3AAOAP3AOOA2PPAABBAAPAPABBAAPAPPBBAAPAPPBBAAPAPPA3PAPPA3PAPPA3PAPPA4PAPPOA3PAAPA3PPA7PPA31O3P2APPO4PAAPPO3A3PPOOPPA3PPAAP2A7PPA7PAP3C2P6COP6O3P4O4PPAPPO4A2P2OOPA4PPC15PPC5P3CBCCP3C3P4C2O2P3CO4P2C5BPC5BPC5BPC5BPC5BPC5BPC3BCBPPC4BPC2D4C4D2C47D23CCD5C4DDBC6BC5BBC2BBCBBDCB3AADB2A3DBBA2PPB2AAPPABBA2PAABBAAPA2BA2PA5PA6P4AP10AP6AP2AP6A2P4A4P2OOA4P67AOAOAP2AOAOAPPAOAAOAPPAOAAOAPPAAO2APPA5P3A3P5A3PAPPA3PAPPA3PAPPA3PAPPA3PAPPA3PAPPA3PAPPA3P3A130PPA7P2A7PPA39PPO5AAP2O2A4PPOPPA4PAAP2A7PPA7PA7P3CCBPOOP3BPO4P4O4PAAPPO3A3PPOOPA4PPAPPA4C7PPC4BP3AC2P3AAPCOOPPAAPPO3P4O4PPAPPO4CBBCBCB2C2BCB3CCBCBBCCB2CBBPPC3BBP3CCBBP5BBOP4OOPAAPA3PAAPA3PAAPA3PAAPA3PAAPA3PAAPA3PAAPA3PPAPA3OAOOA2POA2OAAPOA2OAAPOAAOAAPPOAOA2PPOOA2P2OA2P3A2P87AP6AP9AAP3AAP3AAPPA3PPA5P2A2P4A2PAPPA4PPA4PPA288P2A7PPA50P2OOA5P3A7P2A7PPA7PA15O2P2O6POOPPO5AAP2O2A4PPOPA5PAPPA7P2AAPPAPA3PPAPA3PPAPA3PPAPA3PPAPA2OPPAPAAOP2AAPAOPAPA2P2A2P4AAP2APPAP3APPAP12AAP3AAP3AAPPA3PPA3P5AAP3AAP3AAPPA3PPA3PPA29PPA515PPA57PA4PPAPAAPPAAP3A41PPA253"
+
+-- the rle-decoder
+function unpac(str)
+  local r = str:sub(1,5) -- get (o)ffset into (r)aw data
+  local r = r .. str:sub(6,8) -- get (w)idth into (r)aw data
+  local e=str:sub(9,str:len()) -- remove header to get (e)ncoded data
+  local d = "" -- (d)ecoded data
+  for m, c in e:gmatch("(%u+)([^%u]+)") do -- decode rle, (m)atch & (c)ounter
+    d = d .. m .. (m:sub(-1):rep(c)) -- (d)ecoded data
+  end
+  for x = 1,#d,1 do -- get (d)ecoded data into (r)aw data
+    r = r .. string.format("%x",(string.byte(d:sub(x,x))-65))
+  end
+  return r
+end
+
+-- the raw-decoder
+function tomem(str,adr)
+  local o = adr or tonumber(str:sub(1,5),16) -- get (o)ffset, from param or string
+  local w=tonumber(str:sub(6,8),16)-1 -- get (w)idth
+  local d=str:sub(9,str:len()) -- remove header to get (d)ata
+  local y=0
+  for x = 1,#d,1 do -- write to mem
+    local c=tonumber(d:sub(x,x),16) -- get (c)olor value
+    poke4(o+y,c) y=y+1
+    if y>w then y=0 o=o+1024 end
+  end
+end
+
+-- call the decoders
+col = unpac(pal)
+tomem(col)
+pix = unpac(gfx)
+tomem(pix)
+
+-- the viewer
+m=2 -- mode
+t=0 -- tiles/sprites
+r=0 -- range
+
+function draw()
+  if m==2 and r>0 then r=0 end
+  if m==4 and r>16 then r=16 end
+  if t==0 then s=r else s=r+(128*m) end
+  poke4(2*0x03ffc,m)
+  cls(0)
+  for y = 0,128-8,8 do
+    for x = 0,(m*64)-8,8 do
+      spr(s,x+56,y+4) s=s+1
+    end
+  end
+  rect(184,2,56,132,00)
+  rectb(54,2,132,132,10)
+  print("Tiles",4-(t*32),4,15)
+  print("Sprites",-40+(t*44),4,15)
+  print("Page: "..(r//16),4,12,15)
+  print("Mode: "..m,4,20,15)
+  print("CTRL\n toggle\n Tiles or\n Sprites",4,32,10,false,1,true)
+  print("Up/Down\n switch\n color\n mode",4,62,10,false,1,true)
+  print("Left/Right\n switch\n pages",4,92,10,false,1,true)
+  print("TAB\n display\n system font",4,116,10,false,1,true)
+  for c = 0,15,1 do
+    rect(208,(c*8)+4,8,8,c)
+    print(c,218,(c*8)+6,15,false,1,true)
+  end
+end
+
+-- call the viewer
+draw()
+
+-- system font demo - https://github.com/nesbox/TIC-80/wiki/system-font
+offy=4
+offx=65
+
+function font()
+  cls()
+  print("SYSTEM",0,5,12)
+  print("FONT",0,12,12)
+  print("CTRL\n back to\n Tiles or\n Sprites",0,24,10,false,1,true)
+  for x = 0,15 do
+    off = x*16
+    print(string.format("%+3s",off),offx-20,x*8+offy+1,14,true,1, true)
+    for y =0,15 do
+      char = y*16+x
+      rect(x*11+offx,y*8+offy,8,7,15)
+      print(string.char(char),x*11+offx,y*8+offy,12)
+    end
+  end
+end
+
+function TIC()
+  if btnp(00,60,6) and m<8 then m=m*2 draw() end
+  if btnp(01,60,6) and m>2 then m=m//2 draw() end 
+  if btnp(03,60,6) and r<48 then r=r+16 draw() end
+  if btnp(02,60,6) and r>0 then r=r-16 draw() end 
+  if keyp(63,60,6) then t=1-t draw() end
+  if keyp(49,60,6) then t=1-t font() end
+end

@@ -1,5 +1,24 @@
 
+function drawShadowSprite(spr_id,x,y,mode)
+	local posx = x
+	local posy = y
+	local w = sprites[spr_id].w
+	local h = sprites[spr_id].h
+	local c = sprites[spr_id].data
+	local bkg = sprites[spr_id].bg
+	for y=0,h-1 do
+		for x=y%2,w-1,mode do
+				local col = c[x+y*w]
+				if (col ~= bkg) then pix(posx+x,posy+y,col) end
+		end
+	end
+end
+
 function drawFrame03_Ship(t,x,y)
+	local mode = t//30%3
+	if mode > 0 then 
+		drawShadowSprite("Frame03_Ship_Shadow",x,y+80,mode)
+	end
 	drawSprite("Frame03_Ship",x,y)
 	--left
 	local jet_id1 = t//60%3+1 -- math.random(2)+1
@@ -118,7 +137,6 @@ function Frame03(t)
 	local shipPosX=70
 	local shipPosY=30
 
-	drawSprite("Frame03_Ship_Shadow",shipPosX,shipPosY+80)
 	drawFrame03_Ship(t,shipPosX,shipPosY)
 
 end

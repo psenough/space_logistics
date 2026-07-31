@@ -1,14 +1,14 @@
 
 function BOOT()
 	tomem(unpac(pal))
-    loadFrame01Sprites()
-	loadFrame02Sprites()
-	loadFrame03Sprites()
-	loadFrame04Sprites()
-	loadFrame05Sprites()
-	loadFrame06Sprites()
-	loadFrame07Sprites()
-	loadFrame08Sprites()
+    loadFrame01Sprites() -- logo + ship docking
+	loadFrame02Sprites() -- planet with ship in orbit
+	loadFrame03Sprites() -- ship landing in slabs
+	loadFrame04Sprites() -- ships taking off to space
+	loadFrame05Sprites() -- leaving hub ship in curves
+	loadFrame06Sprites() -- leaving hub ship in straights
+	loadFrame07Sprites() -- leaving moving hub ship
+	loadFrame08Sprites() -- modules
 end
 
 scenes = {
@@ -64,7 +64,7 @@ scenes = {
 }
 
 scene_frame = 0
-current_scene_id = 8
+current_scene_id = 3
 
 scenes[current_scene_id].init()
 somatic_init(scenes[current_scene_id].start, 0)

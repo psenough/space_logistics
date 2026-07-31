@@ -7,7 +7,7 @@ function Frame08(t)
 	math.randomseed(234)
 	stars(1000)
 	
-	drawSprite("F8_Module_01",20,20)
-	--drawSprite("F7_Ship_02",10,100)
+	drawSprite("F8_Module_09",20,20)
+	drawSprite("F8_Ship_04",10,100)
 
 end

@@ -1,4 +1,7 @@
 
+local scene_frame = 0
+local current_scene_id = 5
+
 function BOOT()
 	tomem(unpac(pal))
     loadFrame01Sprites() -- logo + ship docking
@@ -9,6 +12,9 @@ function BOOT()
 	loadFrame06Sprites() -- leaving hub ship in straights
 	loadFrame07Sprites() -- leaving moving hub ship
 	loadFrame08Sprites() -- modules
+
+	scenes[current_scene_id].init()
+	somatic_init(scenes[current_scene_id].start, 0)
 end
 
 scenes = {
@@ -37,7 +43,7 @@ scenes = {
 		start = 4,
 		row = 0,
 	},{
-		init = no_fn,
+		init = Frame05_init,
 		frame = Frame05,
 		bdr = no_fn,
 		start = 5,
@@ -62,12 +68,6 @@ scenes = {
 		row = 0,
 	}
 }
-
-scene_frame = 0
-current_scene_id = 3
-
-scenes[current_scene_id].init()
-somatic_init(scenes[current_scene_id].start, 0)
 
 function TIC()
 	if keyp(55) then
@@ -115,7 +115,7 @@ function TIC()
 	end
 
 	--hide cursor
-	poke(16379, 2)
+	--poke(16379, 2)
 
 	-- get global music sync refs
 	local _pO = playingSongOrder

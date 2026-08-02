@@ -1,6 +1,6 @@
 
-local scene_frame = 0
-local current_scene_id = 5
+scene_frame = 0
+current_scene_id = 1
 
 function BOOT()
 	tomem(unpac(pal))
@@ -14,7 +14,8 @@ function BOOT()
 	loadFrame08Sprites() -- modules
 
 	scenes[current_scene_id].init()
-	somatic_init(scenes[current_scene_id].start, 0)
+	--somatic_init(scenes[current_scene_id].start, 0)
+	somatic_seek(scenes[current_scene_id].start)
 end
 
 scenes = {
@@ -75,7 +76,8 @@ function TIC()
 			current_scene_id = current_scene_id + 1
 			scene_frame = 0
 			scenes[current_scene_id].init()
-			somatic_init(scenes[current_scene_id].start, 0)
+			--somatic_init(scenes[current_scene_id].start, 0)
+			somatic_seek(scenes[current_scene_id].start)
 		end
 	end
 	if keyp(54) then
@@ -83,14 +85,19 @@ function TIC()
 			current_scene_id = current_scene_id - 1
 			scene_frame = 0
 			scenes[current_scene_id].init()
-			somatic_init(scenes[current_scene_id].start, 0)
+			--somatic_init(scenes[current_scene_id].start, 0)
+			somatic_seek(scenes[current_scene_id].start)
 		end
 	end
 
-	somatic_tick()
-	local track, playingSongOrder, currentFrame, currentRow = somatic_get_state()
+	--local track, playingSongOrder, currentFrame, currentRow = somatic_get_state()
+	local state = somatic_tick()
+	local track = state.demoPatternIndex
+	local playingSongOrder = state.demoPatternIndex
+	local currentRow = state.demoPatternRow
+	
 
-	if track ~= -1 then -- if playing
+	if state.isPlaying then -- if playing
 		lastKnownOrder = playingSongOrder
 		lastKnownRow = currentRow
 	else
@@ -99,27 +106,27 @@ function TIC()
 	end
 
 	if btnp(2) then -- left
-		somatic_init(math.max(0, playingSongOrder - 1), 0)
+		--somatic_init(math.max(0, playingSongOrder - 1), 0)
 	end
 	if btnp(3) then -- right
 		-- clamping...
-		local nextPattern = math.min(somatic_get_song_order_count() - 1, playingSongOrder + 1)
-		somatic_init(nextPattern, 0)
+		--local nextPattern = math.min(somatic_get_song_order_count() - 1, playingSongOrder + 1)
+		--somatic_init(nextPattern, 0)
 	end
 	if btnp(1) then -- down
-		if track == -1 then
-			somatic_init(lastKnownOrder, lastKnownRow)
-		else
-			somatic_stop()
-		end
+		--if track == -1 then
+			--somatic_init(lastKnownOrder, lastKnownRow)
+		--else
+		--	somatic_stop()
+		--end
 	end
 
 	--hide cursor
 	--poke(16379, 2)
 
 	-- get global music sync refs
-	local _pO = playingSongOrder
-	local _row = peek(0x13FFE)
+	local _pO = state.demoPatternIndex--playingSongOrder
+	local _row = state.demoPatternRow--peek(0x13FFE)
 
 	if
 		current_scene_id < #scenes
@@ -132,6 +139,20 @@ function TIC()
 		scenes[current_scene_id].init()
 	end
 	scenes[current_scene_id].frame(time())
+
+	print(
+		string.format(
+			"play:%s mute:%s beat:%.2f pat:%d row:%d",
+			state.isPlaying and "y" or "n",
+			state.isMuted and "y" or "n",
+			state.demoBeats,
+			state.demoPatternIndex,
+			state.demoPatternRow
+		),
+		0,
+		0,
+		6
+	)
 
 	scene_frame = scene_frame + 1
 

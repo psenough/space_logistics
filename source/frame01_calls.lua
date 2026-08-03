@@ -60,7 +60,7 @@ function drawSpriteD(spr_id,spr_id2,x,y)
 						local dx=(posx+x)//1
 						local dy=(posy+y)//1
 						local dc=col
-						if (dx/2+20+math.sin(dy*dx/14+time()/800)*30)/70 > 1 then
+						if (dx/2+20+math.sin(dy*dx/12+(20000-time())/800)*30)/70 > 1 then
 							dc=col2
 						end
 						pix(dx,dy,dc)
@@ -69,24 +69,51 @@ function drawSpriteD(spr_id,spr_id2,x,y)
 	end
 end
 
-function Frame01(t)
-	--	drawSprite("Arrow",50,50)
-	cls()
-	local rate=0.3
-	local sceneX=100-t/20*rate
-	local posGateX=sceneX+60+t/30*rate
-	local posGateY=0
-	local posShipX=sceneX+t/15*rate
-	local posShipY=130-t/50*rate
-	drawSprite("BgDither",posGateX-40,posGateY)
-	--drawSprite("DoorLight",posGateX+12,posGateY+28)
-	--drawSprite("Door",posGateX+38,posGateY+18)
-	drawDoorOpenAnim(t,1000,3000,posGateX+53,posGateY+22)
+function stars_side(x,y)
+	for i=0,20 do
+		circ((math.random(240)+x)%240,
+			 (math.random(136)+y)%136,
+			 math.random()*1.5,
+			 (4+math.random(2)//1*8)
+			)
+	end
+end
 
-	if (t<1200) then
+function Frame01(t)
+
+	local dooropen=18000
+	local sceneX=t/105
+	local sceneY=-t/65
+	if sceneX > 220 then sceneX = 220 end
+	if sceneY < -310 then sceneY = -310 end
+
+	vbank(0)
+	cls()
+	math.randomseed(6)
+	stars_side(-sceneX,-sceneY)
+
+	math.randomseed(t)
+
+	local posGateX=310-sceneX
+	local posGateY=-310-sceneY
+	local posShipX=65-sceneX+t/66
+	local posShipY=50+math.sin(t/8000)*2-sceneY-t/65
+	tri(posGateX-40,posGateY,240,0,240,136,0)
+	drawSprite("BgDither",posGateX-40,posGateY)
+	drawDoorOpenAnim(t,dooropen,dooropen+1600,posGateX+53,posGateY+22)
+
+	-- draw under to get black over stars
+	if (t<(dooropen+200)) then
+		drawSprite("Ship01",posShipX,posShipY)
+	end
+
+	vbank(1)
+	cls()
+	if (t<(dooropen+200)) then
 		drawSprite("Ship01",posShipX,posShipY)
 	else
-	 drawSpriteD("Ship01","Ship02",posShipX,posShipY)
+		--drawSpriteD("Ship01","Ship02",posShipX,posShipY)
+		drawSprite("Ship02",posShipX,posShipY)
 	end
 	--else
 	-- drawSprite("Ship02",posShipX,posShipY)
@@ -98,9 +125,19 @@ function Frame01(t)
 	circ(posShipX+9,23+posShipY,math.random(3),math.random(3)+1)
 	circ(posShipX+7,25+posShipY,math.random(2),math.random(2)+1)
 
-	-- drawSprite("Arrow",posShipX,30+posShipY)
+	-- clip right
+	rect(posGateX+102,0,100,136,0)
+	-- clip top of gate
+	tri(posGateX+10,posGateY, 240,0, 240,posGateY+62, 0)
+
+	--if math.random() > 0.5 then	drawSprite("Logo",10,104) end
 
 	drawSprite("Logo",10,104)
+	for i=104,140 do
+		if math.sin(time()/500+i)*math.sin(time()/400+i*3) > 0 then line(0,i,100,i,0) end
+	end
 	drawSprite("LogoBackdrop",0,4)
+
+	vbank(0)
 
 end

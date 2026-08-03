@@ -75,20 +75,3 @@ end
 
 function no_fn()
 end
-
-
--- dummy until we have sound
---[[
-function somatic_init()
-end
-function somatic_tick()
-end
-function somatic_get_state()
- return 0,0,0,0
-end
-function somatic_tick()
-end
-function somatic_get_song_order_count()
- return 0
-end
---]]

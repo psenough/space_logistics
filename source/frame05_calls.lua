@@ -26,13 +26,22 @@ local imx,imy=-1,-1 -- store initial mouse position
 --]]
 
 local curves = {
-	{ st = 0, pivots={{136,77},{68,99},{230,104},{224,2}}},
+	{ st = 400, pivots={{136,77},{68,99},{230,104},{224,2}}},
 	{ st = 1000, pivots={{136,77},{74,74},{19,26},{8,0}}},
-	{ st = 1000, pivots={{137,78},{68,99},{0,100},{79,111}}},
-	{ st = 2000, pivots={{77,109},{29,119},{0,37},{115,0}}},
-	{ st = 2000, pivots={{136,77},{77,119},{191,103},{239,135}}},
+	{ st = 1200, pivots={{137,78},{68,99},{0,100},{79,240}}},
+	{ st = 2400, pivots={{136,77},{77,119},{191,103},{239,135}}},
 	{ st = 3000, pivots={{134,76},{54,97},{131,126},{239,59}}},
 	{ st = 3500, pivots={{136,77},{26,95},{20,26},{165,0}}}
+}
+
+
+local curves_b = {
+	{ st = 0, pivots={{77,109},{29,119},{136,77},{68,99},{230,104},{224,2}}},
+	{ st = 600, pivots={{77,109},{29,119},{136,77},{74,74},{19,26},{8,0}}},
+	{ st = 1000, pivots={{77,109},{137,78},{68,99},{191,0}}},
+	{ st = 2400, pivots={{77,109},{136,77},{77,119},{191,103},{239,135}}},
+	{ st = 2600, pivots={{77,109},{29,119},{134,76},{54,97},{131,126},{239,59}}},
+	{ st = 3500, pivots={{77,109},{29,119},{136,77},{26,95},{20,26},{165,0}}}
 }
 
 local quality = 100   -- curve quality
@@ -121,10 +130,33 @@ function drawBezierCurves(t)
 		trace(dump)
 	end
 --]]		
+	
+
+end
+
+F05_st = 0
+
+function Frame05_init()
+	F05_st = time()
+	cls()
+
+	math.randomseed(1)
+	stars(1000)
+	
+	--drawSprite("F5_PlanetBG",240-59,136-41)
+	drawSprite("F5_PlanetBG_02",20,20)
+
+	--drawSprite("F5_Ship02",60,100)
+	drawSprite("F5_Ship01",100,40)
+end
+
+function Frame05(tt)
+	--Frame05_init()
+	local t = tt - F05_st
 	for c=1,#curves do
 		local st=curves[c].st
 		local piv=curves[c].pivots
-		local tt=(time()-st)/30//1
+		local tt=(t-st)/30//1
 		if t > st and t < (st + 3000) then
 			local pre = pBezier(piv,0)
 			for i=1,quality do
@@ -140,23 +172,43 @@ function drawBezierCurves(t)
 			end
 		end
 	end
-
 end
 
-function Frame05_init()
+
+function Frame05b_init()
+	F05_st = time()
 	cls()
 
-	math.randomseed(1)
+	math.randomseed(18)
 	stars(1000)
 	
 	drawSprite("F5_PlanetBG",240-59,136-41)
-	drawSprite("F5_PlanetBG_02",20,20)
+	--drawSprite("F5_PlanetBG_02",20,20)
 
 	drawSprite("F5_Ship02",60,100)
-	drawSprite("F5_Ship01",100,40)
+	--drawSprite("F5_Ship01",100,40)
 end
 
-function Frame05(t)
+function Frame05b(tt)
 	--Frame05_init()
-	drawBezierCurves(t)
+	local t = tt - F05_st
+	for c=1,#curves_b do
+		local st=curves_b[c].st
+		local piv=curves_b[c].pivots
+		local tt=(t-st)/30//1
+		if t > st and t < (st + 3000) then
+			local pre = pBezier(piv,0)
+			for i=1,quality do
+				local t=i/quality
+				local p=pre
+				local q=pBezier(piv,t)
+				if i<tt then line(p[1],p[2],q[1],q[2],9) end
+				if i==tt then
+					line(p[1],p[2],q[1],q[2],11)
+					--circ(p[1],p[2],2,12)
+				end
+				pre=q
+			end
+		end
+	end
 end

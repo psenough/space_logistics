@@ -3,8 +3,15 @@ scene_frame = 0
 current_scene_id = 1
 
 function BOOT()
+	-- load same palette on both banks
+	vbank(0)
 	tomem(unpac(pal))
-    loadFrame01Sprites() -- logo + ship docking
+	vbank(1)
+	tomem(unpac(pal))
+	vbank(0)
+
+	-- load sprites
+	loadFrame01Sprites() -- logo + ship docking
 	loadFrame02Sprites() -- planet with ship in orbit
 	loadFrame03Sprites() -- ship landing in slabs
 	loadFrame04Sprites() -- ships taking off to space
@@ -13,9 +20,9 @@ function BOOT()
 	loadFrame07Sprites() -- leaving moving hub ship
 	loadFrame08Sprites() -- modules
 
+	-- init scenes
 	scenes[current_scene_id].init()
-	--somatic_init(scenes[current_scene_id].start, 0)
-	somatic_seek(scenes[current_scene_id].start)
+	somatic_seek(scenes[current_scene_id].start*16)
 end
 
 scenes = {
@@ -26,67 +33,75 @@ scenes = {
 		start = 0,
 		row = 0,
 	},{
-		init = no_fn,
+		init = Frame02_init,
 		frame = Frame02,
 		bdr = no_fn,
-		start = 2,
+		start = 4,
 		row = 0,
 	},{
 		init = no_fn,
 		frame = Frame03,
 		bdr = no_fn,
-		start = 3,
+		start = 6,
 		row = 0,
 	},{
 		init = no_fn,
 		frame = Frame04,
 		bdr = no_fn,
-		start = 4,
+		start = 8,
 		row = 0,
 	},{
 		init = Frame05_init,
 		frame = Frame05,
 		bdr = no_fn,
-		start = 5,
+		start = 10,
+		row = 0,
+	},{
+		init = Frame05b_init,
+		frame = Frame05b,
+		bdr = no_fn,
+		start = 11,
 		row = 0,
 	},{
 		init = no_fn,
 		frame = Frame06,
 		bdr = no_fn,
-		start = 6,
+		start = 12,
 		row = 0,
 	},{
 		init = no_fn,
 		frame = Frame07,
 		bdr = no_fn,
-		start = 7,
+		start = 14,
 		row = 0,
 	},{
 		init = no_fn,
 		frame = Frame08,
 		bdr = no_fn,
-		start = 8,
+		start = 16,
 		row = 0,
 	}
 }
 
+_beats = 0
+
 function TIC()
-	if keyp(55) then
+	if keyp(55) or btnp(3) then
 		if current_scene_id < #scenes then
 			current_scene_id = current_scene_id + 1
 			scene_frame = 0
 			scenes[current_scene_id].init()
 			--somatic_init(scenes[current_scene_id].start, 0)
-			somatic_seek(scenes[current_scene_id].start)
+			somatic_seek(scenes[current_scene_id].start*16)
 		end
 	end
-	if keyp(54) then
+	if keyp(54) or btnp(2) then
 		if current_scene_id > 1 then
 			current_scene_id = current_scene_id - 1
 			scene_frame = 0
 			scenes[current_scene_id].init()
 			--somatic_init(scenes[current_scene_id].start, 0)
-			somatic_seek(scenes[current_scene_id].start)
+			somatic_seek(scenes[current_scene_id].start*16)
 		end
 	end
 
@@ -105,24 +120,8 @@ function TIC()
 		exit()
 	end
 
-	if btnp(2) then -- left
-		--somatic_init(math.max(0, playingSongOrder - 1), 0)
-	end
-	if btnp(3) then -- right
-		-- clamping...
-		--local nextPattern = math.min(somatic_get_song_order_count() - 1, playingSongOrder + 1)
-		--somatic_init(nextPattern, 0)
-	end
-	if btnp(1) then -- down
-		--if track == -1 then
-			--somatic_init(lastKnownOrder, lastKnownRow)
-		--else
-		--	somatic_stop()
-		--end
-	end
-
 	--hide cursor
-	--poke(16379, 2)
+	poke(16379, 2)
 
 	-- get global music sync refs
 	local _pO = state.demoPatternIndex--playingSongOrder
@@ -138,9 +137,9 @@ function TIC()
 		scene_frame = 0
 		scenes[current_scene_id].init()
 	end
-	scenes[current_scene_id].frame(time())
+	scenes[current_scene_id].frame(time(), state.demoBeats)
 
-	print(
+	--[[print(
 		string.format(
 			"play:%s mute:%s beat:%.2f pat:%d row:%d",
 			state.isPlaying and "y" or "n",
@@ -152,11 +151,11 @@ function TIC()
 		0,
 		0,
 		6
-	)
+	)--]]
 
 	scene_frame = scene_frame + 1
 
---	print(current_scene_id .. " " .. _pO .. " " .. _row, 0, 130)
+	--print(current_scene_id .. " " .. _pO .. " " .. _row, 0, 130,12)
 end
 
 function BDR(l)

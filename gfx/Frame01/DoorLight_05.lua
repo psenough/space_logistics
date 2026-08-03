@@ -1,10 +1,10 @@
--- title:  C:\Users\Utilizador\AppData\Roaming\com.nesbox.tic\TIC-80\space_logistics\Frame01\\Arrow.png
+-- title:  C:\Users\Utilizador\AppData\Roaming\com.nesbox.tic\TIC-80\space_logistics\gfx\Frame01\\DoorLight_05.png
 -- author: TicMcTile
 -- script: lua
 
 local pal = "07F80060KBMBMCNFHCNFBLODDFPONHHFPPNMFHHKAPAHIDHLEGFCBHJHJCGDPGLDNFJMBEGKGPDHPOHPEPEPEPEJALCMGFMGGIDDMDHF0"
 
-local gfx = "0c000080D3E2A2D2E2A3D2EA5DDA47EA6DEA5D2A6DDA7DA10"
+local gfx = "0c000080A22HA5HDA4H2A3HAHA3HAHAHAAHAHAHAAHDA4HD2A3DHDHDA2HDHD2A2HDHDA2HDHD2A2HDHD2AHAHD3AAHAHAHAHHAHAHAHA49HAHD2AHAHDA51"
 
 -- the rle-decoder
 function unpac(str)

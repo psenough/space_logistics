@@ -9,7 +9,7 @@ function stars(t)
 	end
 end
 
-local F4ships= {
+F4ships = {
 	{"F4_Ship02",10,130,.14,-.3,{1,18,-18,38, 7,18,-20,40}},
 	{"F4_Ship03",80,160,.16,-.3,{1,30,-18,38, 11,30,-20,40}},
 	{"F4_Ship01",70,160,.1,-.4,{2,40,-12,50, 27,42,-12,50}},
@@ -23,8 +23,8 @@ function drawTrail(posx,posy,dx,dy)
 	end
 end
 
-local clouds = {}
-local maxclouds=3000
+clouds = {}
+maxclouds=3000
 
 function Frame04(t)
 	cls()

@@ -1,6 +1,6 @@
 
 scene_frame = 0
-current_scene_id = 1
+current_scene_id = 6
 
 function BOOT()
 	-- load same palette on both banks
@@ -63,7 +63,7 @@ scenes = {
 		start = 11,
 		row = 0,
 	},{
-		init = no_fn,
+		init = Frame06_init,
 		frame = Frame06,
 		bdr = no_fn,
 		start = 12,
@@ -72,7 +72,7 @@ scenes = {
 		init = no_fn,
 		frame = Frame07,
 		bdr = no_fn,
-		start = 14,
+		start = 13,
 		row = 0,
 	},{
 		init = no_fn,

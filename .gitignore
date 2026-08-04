@@ -1,2 +1,6 @@
 space_logistics.tic
 _cart_backups/
+
+# user-specific files
+local/
+.vscode/

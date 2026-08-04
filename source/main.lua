@@ -86,13 +86,14 @@ scenes = {
 _beats = 0
 
 function TIC()
+	local state = somatic_tick()
 	if keyp(55) or btnp(3) then
 		if current_scene_id < #scenes then
 			current_scene_id = current_scene_id + 1
 			scene_frame = 0
 			scenes[current_scene_id].init()
 			--somatic_init(scenes[current_scene_id].start, 0)
-			somatic_seek(scenes[current_scene_id].start*16)
+			state = somatic_seek(scenes[current_scene_id].start*16)
 		end
 	end
 	if keyp(54) or btnp(2) then
@@ -101,12 +102,14 @@ function TIC()
 			scene_frame = 0
 			scenes[current_scene_id].init()
 			--somatic_init(scenes[current_scene_id].start, 0)
-			somatic_seek(scenes[current_scene_id].start*16)
+			state = somatic_seek(scenes[current_scene_id].start*16)
 		end
+	end
+	if keyp(13) then -- M
+		state = somatic_set_options({ isMuted = not state.isMuted })
 	end
 
 	--local track, playingSongOrder, currentFrame, currentRow = somatic_get_state()
-	local state = somatic_tick()
 	local track = state.demoPatternIndex
 	local playingSongOrder = state.demoPatternIndex
 	local currentRow = state.demoPatternRow
@@ -154,6 +157,8 @@ function TIC()
 	)--]]
 
 	scene_frame = scene_frame + 1
+
+	somatic_end_frame()
 
 	--print(current_scene_id .. " " .. _pO .. " " .. _row, 0, 130,12)
 end

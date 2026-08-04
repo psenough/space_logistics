@@ -1,6 +1,6 @@
 
 scene_frame = 0
-current_scene_id = 6
+current_scene_id = 1
 
 function BOOT()
 	-- load same palette on both banks
@@ -69,7 +69,7 @@ scenes = {
 		start = 12,
 		row = 0,
 	},{
-		init = no_fn,
+		init = Frame07_init,
 		frame = Frame07,
 		bdr = no_fn,
 		start = 13,
@@ -78,7 +78,7 @@ scenes = {
 		init = no_fn,
 		frame = Frame08,
 		bdr = no_fn,
-		start = 16,
+		start = 14,
 		row = 0,
 	}
 }
@@ -121,7 +121,7 @@ function TIC()
 	end
 
 	--hide cursor
-	poke(16379, 2)
+	--poke(16379, 2)
 
 	-- get global music sync refs
 	local _pO = state.demoPatternIndex--playingSongOrder

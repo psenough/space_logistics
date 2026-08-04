@@ -26,9 +26,9 @@ local imx,imy=-1,-1 -- store initial mouse position
 --]]
 
 local quality = 100   -- curve quality
-
-function drawBezierCurves(t)
 --[[
+function drawBezierCurves(t)
+
 	local mx,my,mb=mouse()
 
 	if mb then
@@ -110,11 +110,10 @@ function drawBezierCurves(t)
 	if keyp(48) then
 		trace(dump)
 	end
---]]		
-	
 
 end
-
+--]]		
+	
 F05_st = 0
 
 function Frame05_init()
@@ -187,9 +186,9 @@ function Frame05b(tt)
 
 	local curves_b = {
 		{ st = 0, pivots={{77,109},{9,119},{36,77},{68,99},{230,104},{224,-30}}},
-		{ st = 600, pivots={{77,109},{9,119},{36,77},{74,74},{19,26},{8,-30}}},
+		{ st = 600, pivots={{77,109},{9,89},{36,77},{74,74},{19,26},{8,-30}}},
 		{ st = 1000, pivots={{77,109},{37,120},{68,99},{191,-30}}},
-		{ st = 2400, pivots={{77,109},{36,177},{77,119},{191,103},{259,135}}},
+		{ st = 2400, pivots={{77,109},{2,100},{77,19},{191,103},{259,135}}},
 		{ st = 2600, pivots={{77,109},{9,119},{34,76},{54,97},{131,126},{249,59}}},
 		{ st = 3500, pivots={{77,109},{9,119},{36,77},{26,95},{20,26},{165,-40}}}
 	}

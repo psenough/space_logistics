@@ -1,6 +1,12 @@
 
 scene_frame = 0
+<<<<<<< HEAD
 current_scene_id = 1
+=======
+current_scene_id = 6
+show_hud = false
+user_paused = false
+>>>>>>> origin/master
 
 function BOOT()
 	-- load same palette on both banks
@@ -85,14 +91,34 @@ scenes = {
 
 _beats = 0
 
+function RenderHud(state)
+	rect(0, 0, 240, 8, 0)
+
+	print(
+		string.format(
+			"scene:%d frame:%d beat:%.2f %d:%d",
+			current_scene_id,
+			scene_frame,
+			state.demoBeats,
+			state.demoPatternIndex,
+			state.demoPatternRow
+		),
+		0,
+		0,
+		12
+	)
+end
+
+
 function TIC()
+	local state = somatic_tick()
 	if keyp(55) or btnp(3) then
 		if current_scene_id < #scenes then
 			current_scene_id = current_scene_id + 1
 			scene_frame = 0
 			scenes[current_scene_id].init()
 			--somatic_init(scenes[current_scene_id].start, 0)
-			somatic_seek(scenes[current_scene_id].start*16)
+			state = somatic_seek(scenes[current_scene_id].start*16)
 		end
 	end
 	if keyp(54) or btnp(2) then
@@ -101,23 +127,35 @@ function TIC()
 			scene_frame = 0
 			scenes[current_scene_id].init()
 			--somatic_init(scenes[current_scene_id].start, 0)
-			somatic_seek(scenes[current_scene_id].start*16)
+			state = somatic_seek(scenes[current_scene_id].start*16)
 		end
+	end
+	if keyp(13) then -- M
+		state = somatic_set_options({ isMuted = not state.isMuted })
+	end
+	if keyp(48) then -- SPACE
+		user_paused = not user_paused
+		state = somatic_set_options({ isPlaying = not user_paused })
+	end
+	if keyp(16) then -- P
+		show_hud = not show_hud
 	end
 
 	--local track, playingSongOrder, currentFrame, currentRow = somatic_get_state()
-	local state = somatic_tick()
 	local track = state.demoPatternIndex
 	local playingSongOrder = state.demoPatternIndex
 	local currentRow = state.demoPatternRow
-	
 
-	if state.isPlaying then -- if playing
-		lastKnownOrder = playingSongOrder
-		lastKnownRow = currentRow
-	else
-		trace(" - SPACE LOGISTICS - ")
-		exit()
+	if not user_paused then
+		if state.isPlaying then
+			-- music is playing, update last known position
+			lastKnownOrder = playingSongOrder
+			lastKnownRow = currentRow
+		else
+			-- music not playing, but user did not request pause: assume song ended.
+			trace(" - SPACE LOGISTICS - ")
+			exit()
+		end
 	end
 
 	--hide cursor
@@ -139,21 +177,13 @@ function TIC()
 	end
 	scenes[current_scene_id].frame(time(), state.demoBeats)
 
-	--[[print(
-		string.format(
-			"play:%s mute:%s beat:%.2f pat:%d row:%d",
-			state.isPlaying and "y" or "n",
-			state.isMuted and "y" or "n",
-			state.demoBeats,
-			state.demoPatternIndex,
-			state.demoPatternRow
-		),
-		0,
-		0,
-		6
-	)--]]
+	if show_hud then
+		RenderHud(state)
+	end
 
 	scene_frame = scene_frame + 1
+
+	somatic_end_frame()
 
 	--print(current_scene_id .. " " .. _pO .. " " .. _row, 0, 130,12)
 end

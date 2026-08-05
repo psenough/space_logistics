@@ -1,12 +1,9 @@
 
 scene_frame = 0
-<<<<<<< HEAD
 current_scene_id = 1
-=======
-current_scene_id = 6
+
 show_hud = false
 user_paused = false
->>>>>>> origin/master
 
 function BOOT()
 	-- load same palette on both banks
@@ -63,28 +60,34 @@ scenes = {
 		start = 10,
 		row = 0,
 	},{
+		init = supernova_init,
+		frame = supernova,
+		bdr = no_fn,
+		start = 11,
+		row = 0,
+	},{
 		init = Frame05b_init,
 		frame = Frame05b,
 		bdr = no_fn,
-		start = 11,
+		start = 12,
 		row = 0,
 	},{
 		init = Frame06_init,
 		frame = Frame06,
 		bdr = no_fn,
-		start = 12,
+		start = 13,
 		row = 0,
 	},{
 		init = Frame07_init,
 		frame = Frame07,
 		bdr = no_fn,
-		start = 13,
+		start = 14,
 		row = 0,
 	},{
 		init = no_fn,
 		frame = Frame08,
 		bdr = no_fn,
-		start = 14,
+		start = 15,
 		row = 0,
 	}
 }

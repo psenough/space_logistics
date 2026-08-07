@@ -3,7 +3,6 @@ scene_frame = 0
 current_scene_id = 12
 
 show_hud = false
-user_paused = false
 
 function BOOT()
 	-- load same palette on both banks
@@ -26,6 +25,11 @@ function BOOT()
 	-- init scenes
 	scenes[current_scene_id].init()
 	somatic_seek(scenes[current_scene_id].start*16)
+
+	somatic_set_completion_callback(function ()
+		trace("song completed")
+		exit()
+	end)
 end
 
 scenes = {
@@ -109,18 +113,32 @@ _beats = 0
 function RenderHud(state)
 	rect(0, 0, 240, 8, 0)
 
+	-- convert millis to 00:00.000
+	local millis = state.demoMillis
+	local minutes = millis // 60000
+	local seconds = (millis % 60000) // 1000
+	local milliseconds = (millis % 1000) // 1
+	local time_str = string.format("%02d:%02d.%03d", minutes, seconds, milliseconds)
+
+	local blinkParity = time() // 500 % 2
+
 	print(
 		string.format(
-			"scene:%d frame:%d beat:%.2f %d:%d",
+			"%s scene:%d frame:%d beat:%.1f p%d r%d %s",
+			time_str,
 			current_scene_id,
 			scene_frame,
 			state.demoBeats,
 			state.demoPatternIndex,
-			state.demoPatternRow
+			state.demoPatternRow,
+			state.isPlaying and "" or (blinkParity == 0 and "PAUSED" or "")
 		),
 		0,
 		0,
-		12
+		12, -- color
+		true, -- fixed width
+		1, -- scale
+		true -- small font
 	)
 end
 
@@ -149,8 +167,7 @@ function TIC()
 		state = somatic_set_options({ isMuted = not state.isMuted })
 	end
 	if keyp(48) then -- SPACE
-		user_paused = not user_paused
-		state = somatic_set_options({ isPlaying = not user_paused })
+		state = somatic_set_options({ isPlaying = not state.isPlaying })
 	end
 	if keyp(16) then -- P
 		show_hud = not show_hud
@@ -161,16 +178,10 @@ function TIC()
 	local playingSongOrder = state.demoPatternIndex
 	local currentRow = state.demoPatternRow
 
-	if not user_paused then
-		if state.isPlaying then
-			-- music is playing, update last known position
-			lastKnownOrder = playingSongOrder
-			lastKnownRow = currentRow
-		else
-			-- music not playing, but user did not request pause: assume song ended.
-			trace(" - SPACE LOGISTICS - ")
-			exit()
-		end
+	if state.isPlaying then
+		-- music is playing, update last known position
+		lastKnownOrder = playingSongOrder
+		lastKnownRow = currentRow
 	end
 
 	--hide cursor

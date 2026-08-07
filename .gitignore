@@ -4,3 +4,6 @@ _cart_backups/
 # user-specific files
 local/
 .vscode/
+
+# when launching with ticbuild it likes to place an ephemeral remoting discovery file here.
+.ticbuild/

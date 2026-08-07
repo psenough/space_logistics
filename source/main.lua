@@ -1,6 +1,6 @@
 
 scene_frame = 0
-current_scene_id = 1
+current_scene_id = 12
 
 show_hud = false
 user_paused = false
@@ -96,7 +96,7 @@ scenes = {
 		start = 15,
 		row = 0,
 	},{
-		init = no_fn,
+		init = Frame08_init,
 		frame = Frame08,
 		bdr = no_fn,
 		start = 17,

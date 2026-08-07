@@ -69,12 +69,12 @@ function drawSpriteD(spr_id,spr_id2,x,y)
 	end
 end
 
-function stars_side(x,y)
-	for i=0,20 do
+function stars_side(t,x,y)
+	for i=0,50 do
 		circ((math.random(240)+x)%240,
 			 (math.random(136)+y)%136,
 			 math.random()*1.5,
-			 (4+math.random(2)//1*8)
+			 (4+math.random(2)//1*8)*math.abs(math.sin(t/math.random(10000))//1)
 			)
 	end
 end
@@ -89,8 +89,8 @@ function Frame01(t)
 
 	vbank(0)
 	cls()
-	math.randomseed(6)
-	stars_side(-sceneX,-sceneY)
+	math.randomseed(7)
+	stars_side(1000+t,-sceneX,-sceneY)
 
 	math.randomseed(t)
 

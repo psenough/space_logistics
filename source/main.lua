@@ -48,25 +48,31 @@ scenes = {
 		start = 6,
 		row = 0,
 	},{
-		init = no_fn,
-		frame = Frame04,
+		init = Frame05_notraces,
+		frame = Frame05,
 		bdr = no_fn,
 		start = 8,
 		row = 0,
 	},{
-		init = Frame05_init,
-		frame = Frame05,
+		init = Frame05_notraces,
+		frame = Frame05b,
 		bdr = no_fn,
-		start = 10,
+		start = 9,
 		row = 0,
 	},{
 		init = supernova_init,
 		frame = supernova,
 		bdr = no_fn,
+		start = 10,
+		row = 0,
+	},{
+		init = Frame05_init,
+		frame = Frame05,
+		bdr = no_fn,
 		start = 11,
 		row = 0,
 	},{
-		init = Frame05b_init,
+		init = Frame05_init,
 		frame = Frame05b,
 		bdr = no_fn,
 		start = 12,
@@ -85,9 +91,15 @@ scenes = {
 		row = 0,
 	},{
 		init = no_fn,
-		frame = Frame08,
+		frame = Frame04,
 		bdr = no_fn,
 		start = 15,
+		row = 0,
+	},{
+		init = no_fn,
+		frame = Frame08,
+		bdr = no_fn,
+		start = 17,
 		row = 0,
 	}
 }

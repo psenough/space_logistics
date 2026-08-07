@@ -1,10 +1,10 @@
 
 function stars(t)
-	for i=0,100 do
+	for i=0,50 do
 		circ(math.random(240),
 			(math.random(136)+t/200)%136,
 			math.random()*1.5,
-			(4+math.random(2)//1*8)*math.abs(math.sin(t/math.random(2000))//1)
+			 (4+math.random(2)//1*8)*math.abs(math.sin(t/math.random(10000))//1)
 			)
 	end
 end
@@ -31,7 +31,7 @@ function Frame04(t)
 
 	local tt=1
 
-	-- dithering
+	-- todo: vertical bands with dithering
 
 	math.randomseed(1)
 	stars(t)

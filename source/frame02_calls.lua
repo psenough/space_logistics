@@ -67,18 +67,20 @@ function Frame02(t,beats)
 		end
 	end
 
+	local sx = math.sin(t/2000)*3
+	local sy = math.sin(t/1800+1234+sx)*4
 	-- draw planet and spaceship
 	if id==0 then
 		drawSprite("Planet_01",86,30)
-		drawSprite("Ship_01",80,20)
+		drawSprite("Ship_01",80+sx,20+sy)
 	elseif id==1 then
 		drawSprite("Planet_02",86,30)
-		drawSprite("Ship_02",86,26)
+		drawSprite("Ship_02",86+sx,26+sy)
 	elseif id==2 then
 		drawSprite("Planet_03",86,30)
-		drawSprite("Ship_03",84,24)
+		drawSprite("Ship_03",84+sx,24+sy)
 	elseif id==3 then
 		drawSprite("Planet_04",86,30)
-		drawSprite("Ship_04",80,20)
+		drawSprite("Ship_04",80+sx,20+sy)
 	end	
 end

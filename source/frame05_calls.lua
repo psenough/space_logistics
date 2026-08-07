@@ -1,4 +1,13 @@
 
+function stars_noscroll(t)
+	for i=0,50 do
+		circ(math.random(240),
+			 math.random(136),
+			 math.random()*1.5,
+			 (4+math.random(2)//1*8)*math.abs(math.sin(t/math.random(10000))//1)
+			)
+	end
+end
 
 function lerp(a,b,t)
 	return {
@@ -115,101 +124,113 @@ end
 --]]		
 	
 F05_st = 0
+F05_traces = true
 
 function Frame05_init()
 	F05_st = time()
-	cls()
+	F05_traces = true
+end
 
-	math.randomseed(1)
-	stars(1000)
-	
-	--drawSprite("F5_PlanetBG",240-59,136-41)
-	drawSprite("F5_PlanetBG_02",20,20)
-
-	--drawSprite("F5_Ship02",60,100)
-	drawSprite("F5_Ship01",100,40)
+function Frame05_notraces()
+	F05_traces = false
 end
 
 function Frame05(tt)
 	--Frame05_init()
 	local t = tt - F05_st
 
-	local curves = {
-		{ st = 400, pivots={{136,77},{68,99},{230,104},{224,2}}},
-		{ st = 1000, pivots={{136,77},{74,74},{19,26},{8,0}}},
-		{ st = 1200, pivots={{137,78},{68,99},{0,100},{79,240}}},
-		{ st = 2400, pivots={{136,77},{77,119},{191,103},{239,135}}},
-		{ st = 3000, pivots={{134,76},{54,97},{131,126},{239,59}}},
-		{ st = 3500, pivots={{136,77},{26,95},{20,26},{165,0}}}
-	}
+	cls()
 
-	for c=1,#curves do
-		local st=curves[c].st
-		local piv=curves[c].pivots
-		local tt=(t-st)/30//1
-		if t > st and t < (st + 3000) then
-			local pre = pBezier(piv,0)
-			for i=1,quality do
-				local t=i/quality
-				local p=pre
-				local q=pBezier(piv,t)
-				if i<tt then line(p[1],p[2],q[1],q[2],9) end
-				if i==tt then
-					line(p[1],p[2],q[1],q[2],11)
-					--circ(p[1],p[2],2,12)
+	math.randomseed(1)
+	stars_noscroll(t+10000)
+	
+	--drawSprite("F5_PlanetBG",240-59,136-41)
+	drawSprite("F5_PlanetBG_02",20-t/9000,20)
+
+	--drawSprite("F5_Ship02",60,100)
+	drawSprite("F5_Ship01",100+t/3000,40-t/8000)
+
+	if (F05_traces) then
+		local curves = {
+			{ st = 0, pivots={{136,77},{68,99},{230,104},{224,2}}},
+			{ st = 1900, pivots={{136,77},{74,74},{19,26},{8,0}}},
+			{ st = 2100, pivots={{137,78},{68,99},{0,100},{79,240}}},
+			{ st = 2300, pivots={{136,77},{77,119},{191,103},{239,135}}},
+			{ st = 2500, pivots={{134,76},{54,97},{131,126},{239,59}}},
+			{ st = 3500, pivots={{136,77},{26,95},{20,26},{165,0}}},
+			{ st = 4900, pivots={{136,77},{84,74},{119,26},{108,0}}},
+			{ st = 5100, pivots={{137,78},{98,99},{0,100},{179,140}}},
+			{ st = 5300, pivots={{136,77},{97,119},{121,103},{9,0}}},
+			{ st = 5500, pivots={{134,76},{34,97},{31,26},{23,159}}},
+		}
+
+		for c=1,#curves do
+			local st=curves[c].st
+			local piv=curves[c].pivots
+			local tt=(t-st)/30//1
+			if t > st and t < (st + 8000) then
+				local pre = pBezier(piv,0)
+				for i=1,quality do
+					local t=i/quality
+					local p=pre
+					local q=pBezier(piv,t)
+					if i<tt then line(p[1],p[2],q[1],q[2],9) end
+					if i==tt then
+						line(p[1],p[2],q[1],q[2],11)
+						--circ(p[1],p[2],2,12)
+					end
+					pre=q
 				end
-				pre=q
 			end
 		end
 	end
-end
-
-
-function Frame05b_init()
-	F05_st = time()
-	cls()
-
-	math.randomseed(18)
-	stars(1000)
-	
-	drawSprite("F5_PlanetBG",240-59,136-41)
-	--drawSprite("F5_PlanetBG_02",20,20)
-
-	drawSprite("F5_Ship02",60,100)
-	--drawSprite("F5_Ship01",100,40)
 end
 
 function Frame05b(tt)
 	--Frame05_init()
 	local t = tt - F05_st
 
+	cls()
 
-	local curves_b = {
-		{ st = 0, pivots={{77,109},{9,119},{36,77},{68,99},{230,104},{224,-30}}},
-		{ st = 600, pivots={{77,109},{9,89},{36,77},{74,74},{19,26},{8,-30}}},
-		{ st = 1000, pivots={{77,109},{37,120},{68,99},{191,-30}}},
-		{ st = 2400, pivots={{77,109},{2,100},{77,19},{191,103},{259,135}}},
-		{ st = 2600, pivots={{77,109},{9,119},{34,76},{54,97},{131,126},{249,59}}},
-		{ st = 3500, pivots={{77,109},{9,119},{36,77},{26,95},{20,26},{165,-40}}}
-	}
+	math.randomseed(18)
+	stars_noscroll(t+10000)
+	
+	drawSprite("F5_PlanetBG",240-59,136-41)
+	--drawSprite("F5_PlanetBG_02",20,20)
+
+	drawSprite("F5_Ship02",62-t/8000,100)
+	--drawSprite("F5_Ship01",100,40)
+
+	if (F05_traces) then
+		local curves_b = {
+			{ st = 0, pivots={{77,109},{9,119},{36,77},{68,99},{230,104},{224,-30}}},
+			{ st = 600, pivots={{77,109},{9,89},{36,77},{74,74},{19,26},{8,-30}}},
+			{ st = 1200, pivots={{77,109},{7,120},{68,99},{191,-30}}},
+			{ st = 1800, pivots={{77,109},{2,100},{77,19},{191,103},{259,135}}},
+			{ st = 3400, pivots={{77,109},{9,119},{34,76},{54,97},{131,126},{249,59}}},
+			{ st = 4000, pivots={{77,109},{9,119},{36,77},{26,95},{20,26},{165,-40}}},
+			{ st = 4600, pivots={{77,110},{9,119},{6,97},{68,99},{230,102},{224,140}}},
+			{ st = 5200, pivots={{77,110},{2,69},{36,17},{74,174},{219,126}}},
+		}
 
 
-	for c=1,#curves_b do
-		local st=curves_b[c].st
-		local piv=curves_b[c].pivots
-		local tt=(t-st)/30//1
-		if t > st and t < (st + 3000) then
-			local pre = pBezier(piv,0)
-			for i=1,quality do
-				local t=i/quality
-				local p=pre
-				local q=pBezier(piv,t)
-				if i<tt then line(p[1],p[2],q[1],q[2],9) end
-				if i==tt then
-					line(p[1],p[2],q[1],q[2],11)
-					--circ(p[1],p[2],2,12)
+		for c=1,#curves_b do
+			local st=curves_b[c].st
+			local piv=curves_b[c].pivots
+			local tt=(t-st)/30//1
+			if t > st and t < (st + 8000) then
+				local pre = pBezier(piv,0)
+				for i=1,quality do
+					local t=i/quality
+					local p=pre
+					local q=pBezier(piv,t)
+					if i<tt then line(p[1],p[2],q[1],q[2],9) end
+					if i==tt then
+						line(p[1],p[2],q[1],q[2],11)
+						--circ(p[1],p[2],2,12)
+					end
+					pre=q
 				end
-				pre=q
 			end
 		end
 	end

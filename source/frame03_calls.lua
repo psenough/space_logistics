@@ -19,6 +19,7 @@ function drawFrame03_Ship(t,x,y)
 	if mode > 0 then 
 		drawShadowSprite("Frame03_Ship_Shadow",x,y+80,mode)
 	end
+	drawSprite("ContainerGrey",x,y+22)
 	drawSprite("Frame03_Ship",x,y)
 	--left
 	local jet_id1 = t//60%3+1 -- math.random(2)+1
@@ -83,11 +84,12 @@ local slabs = {
 }
 
 local Frame03_sprites = {
-	{"Beam",400,-400,2},
-	{"ContainerGrey",530,-300,1},
-	{"ContainerRed",620,-530,1},
+	{"ContainerRed",440,-230,1},
+	{"ContainerGrey",200,-200,1},
+	{"ContainerRed",640,-630,1},
 	{"ContainerSmall_01",380,-300,1},
-	{"ContainerSmall_01",430,-350,1}
+	{"ContainerSmall_01",430,-350,1},
+	{"Beam",400,-400,2}
 }
 
 function Frame03(t)

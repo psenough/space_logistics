@@ -1,6 +1,6 @@
 
 scene_frame = 0
-current_scene_id = 12
+current_scene_id = 1
 
 show_hud = false
 
@@ -27,7 +27,7 @@ function BOOT()
 	somatic_seek(scenes[current_scene_id].start*16)
 
 	somatic_set_completion_callback(function ()
-		trace("song completed")
+		trace(" - SPACE LOGISTICS - ")
 		exit()
 	end)
 end

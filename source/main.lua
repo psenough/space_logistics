@@ -1,6 +1,6 @@
 
 scene_frame = 0
-current_scene_id = 12
+current_scene_id = 13
 
 show_hud = false
 
@@ -104,6 +104,12 @@ scenes = {
 		frame = Frame08,
 		bdr = no_fn,
 		start = 17,
+		row = 0,
+	},{
+		init = tunnel_init,
+		frame = tunnel,
+		bdr = no_fn,
+		start = 19,
 		row = 0,
 	}
 }

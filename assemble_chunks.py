@@ -48,6 +48,7 @@ bank5 = bank5 + open("source\\frame06_calls.lua", "r").read()
 bank5 = bank5 + open("source\\frame07_calls.lua", "r").read()
 bank5 = bank5 + open("source\\frame08_calls.lua", "r").read()
 bank5 = bank5 + open("source\\supernova.lua", "r").read()
+bank5 = bank5 + open("source\\tunnel.lua", "r").read()
 bank5 = bank5 + open("source\\main.lua", "r").read()
 reference_cart.chunks.append(Chunk(ChunkType.CODE, 5, bytes(bank5,"ascii")))
 

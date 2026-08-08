@@ -1,7 +1,5 @@
 
-function drawSprite(spr_id,x,y)
-	local posx = x
-	local posy = y
+function drawSprite(spr_id,posx,posy)
 	local w = sprites[spr_id].w
 	local h = sprites[spr_id].h
 	local c = sprites[spr_id].data

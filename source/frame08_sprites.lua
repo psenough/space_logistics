@@ -52,5 +52,5 @@ function loadFrame08Sprites()
 	tomem(unpac(F8_Ship_03))
 	loadSprite("F8_Ship_03",76,45,1)
 	tomem(unpac(F8_Ship_04))
-	loadSprite("F8_Ship_04",76,45,1)
+	loadSprite("F8_Ship_04",76,58,1)
 end

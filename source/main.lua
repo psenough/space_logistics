@@ -105,6 +105,12 @@ scenes = {
 		bdr = no_fn,
 		start = 17,
 		row = 0,
+	},{
+		init = tunnel_init,
+		frame = tunnel,
+		bdr = no_fn,
+		start = 19,
+		row = 0,
 	}
 }
 

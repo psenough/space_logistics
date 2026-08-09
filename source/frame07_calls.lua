@@ -95,30 +95,28 @@ end
 
 function Frame07_init()
 	F07_st = time()
-	cls()
+	--cls()
 
-	math.randomseed(123)
-	stars(1000)
+	--math.randomseed(123)
+	--stars(1000)
 	
-	drawSprite("F7_Ship_01",240-226,10)
-	drawSprite("F7_Ship_02",10,100)
+	--drawSprite("F7_Ship_01",240-226,10)
+	--drawSprite("F7_Ship_02",10,100)
 end
 
 function Frame07(tt)
 	local t = tt - F07_st
 
 
---[[
 	cls()
 
 	math.randomseed(123)
-	stars(1000)
+	stars_noscroll(t+10000)
 	
 	drawSprite("F7_Ship_01",240-226,10)
 	drawSprite("F7_Ship_02",10,100)
 
-	drawBezierCurves(t)
---]]
+--	drawBezierCurves(t)
 
 	line(40,107,78,107,math.random(10,11))
 	line(84,107,88,107,math.random(10,11))
@@ -140,7 +138,7 @@ function Frame07(tt)
 		local st=curves[c].st
 		local piv=curves[c].pivots
 		local tt=(t-st)/30//1
-		if t > st and t < (st + 3000) then
+		if t > st and t < (st + 10000) then
 			local pre = pBezier(piv,0)
 			for i=1,quality do
 				local t=i/quality

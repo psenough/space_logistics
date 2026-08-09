@@ -198,7 +198,7 @@ function TIC()
 	end
 
 	--hide cursor
-	--poke(16379, 2)
+	poke(16379, 2)
 
 	-- get global music sync refs
 	local _pO = state.demoPatternIndex--playingSongOrder

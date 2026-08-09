@@ -1,4 +1,4 @@
--- title:  C:\Users\Utilizador\AppData\Roaming\com.nesbox.tic\TIC-80\space_logistics\Frame03\\Container_Red.png
+-- title:  C:\Users\Utilizador\AppData\Roaming\com.nesbox.tic\TIC-80\space_logistics\gfx\Frame03\\Container_Red.png
 -- author: TicMcTile
 -- script: lua
 

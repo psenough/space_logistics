@@ -98,9 +98,6 @@ F06_st = 0
 
 function Frame06_init()
 	F06_st = time()
-	cls(3)
-	drawSprite("F6_BG_Ditter",0,0)
-	drawSprite("F6_Ship",0,0)
 end
 
 function Frame06(tt)
@@ -108,6 +105,10 @@ function Frame06(tt)
 	--drawSprite("F6_BG_Ditter",0,0)
 	--drawSprite("F6_Ship",0,0)
 	--drawBezierCurves(tt - F06_st)
+
+	cls(3)
+	drawSprite("F6_BG_Ditter",0,0)
+	drawSprite("F6_Ship",0,0)
 
 	local curves = {
 		{ st = 400, pivots={{129,73},{190,109},{127,120},{250,13}}},

@@ -1,4 +1,4 @@
--- title:  C:\Users\Utilizador\AppData\Roaming\com.nesbox.tic\TIC-80\space_logistics\Frame03\\Jet_Sprite_03.png
+-- title:  C:\Users\Utilizador\AppData\Roaming\com.nesbox.tic\TIC-80\space_logistics\gfx\Frame03\\Jet_Sprite_03.png
 -- author: TicMcTile
 -- script: lua
 

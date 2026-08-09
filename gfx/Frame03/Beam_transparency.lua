@@ -1,4 +1,4 @@
--- title:  C:\Users\Utilizador\AppData\Roaming\com.nesbox.tic\TIC-80\space_logistics\Frame03\\Beam_transparency.png
+-- title:  C:\Users\Utilizador\AppData\Roaming\com.nesbox.tic\TIC-80\space_logistics\gfx\Frame03\\Beam_transparency.png
 -- author: TicMcTile
 -- script: lua
 

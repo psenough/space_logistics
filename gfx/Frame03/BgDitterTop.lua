@@ -1,4 +1,4 @@
--- title:  C:\Users\Utilizador\AppData\Roaming\com.nesbox.tic\TIC-80\space_logistics\Frame03\\BgDitterTop.png
+-- title:  C:\Users\Utilizador\AppData\Roaming\com.nesbox.tic\TIC-80\space_logistics\gfx\Frame03\\BgDitterTop.png
 -- author: TicMcTile
 -- script: lua
 

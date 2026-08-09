@@ -1,6 +1,6 @@
 
 scene_frame = 0
-current_scene_id = 13
+current_scene_id = 1
 
 show_hud = false
 
@@ -21,6 +21,7 @@ function BOOT()
 	loadFrame06Sprites() -- leaving hub ship in straights
 	loadFrame07Sprites() -- leaving moving hub ship
 	loadFrame08Sprites() -- modules
+	loadFrame09Sprites() -- xray
 
 	-- init scenes
 	scenes[current_scene_id].init()
@@ -110,6 +111,12 @@ scenes = {
 		frame = tunnel,
 		bdr = no_fn,
 		start = 19,
+		row = 0,
+	},{
+		init = Frame09_init,
+		frame = Frame09,
+		bdr = no_fn,
+		start = 21,
 		row = 0,
 	}
 }

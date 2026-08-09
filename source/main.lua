@@ -28,7 +28,7 @@ function BOOT()
 	somatic_seek(scenes[current_scene_id].start*16)
 
 	somatic_set_completion_callback(function ()
-		trace("song completed")
+		trace(" - SPACE LOGISTICS - ")
 		exit()
 	end)
 end

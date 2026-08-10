@@ -1,6 +1,6 @@
 
 scene_frame = 0
-current_scene_id = 1
+current_scene_id = 15
 
 show_hud = false
 
@@ -22,6 +22,7 @@ function BOOT()
 	loadFrame07Sprites() -- leaving moving hub ship
 	loadFrame08Sprites() -- modules
 	loadFrame09Sprites() -- xray
+	loadC01Sprites() -- triangle welding
 
 	-- init scenes
 	scenes[current_scene_id].init()
@@ -117,6 +118,12 @@ scenes = {
 		frame = Frame09,
 		bdr = no_fn,
 		start = 21,
+		row = 0,
+	},{
+		init = Construction01_init,
+		frame = Construction01,
+		bdr = no_fn,
+		start = 24,
 		row = 0,
 	}
 }

@@ -22,6 +22,7 @@ reference_cart.chunks.append(Chunk(ChunkType.CODE, 1, bytes(bank1,"ascii")))
 bank2 = ""
 bank2 = bank2 + open("source\\frame03_sprites.lua", "r").read()
 bank2 = bank2 + open("source\\frame04_sprites.lua", "r").read()
+bank2 = bank2 + open("source\\construction01_sprites.lua", "r").read()
 reference_cart.chunks.append(Chunk(ChunkType.CODE, 2, bytes(bank2,"ascii")))
 
 # bank 3
@@ -51,6 +52,7 @@ bank5 = bank5 + open("source\\frame08_calls.lua", "r").read()
 bank5 = bank5 + open("source\\frame09_calls.lua", "r").read()
 bank5 = bank5 + open("source\\supernova.lua", "r").read()
 bank5 = bank5 + open("source\\tunnel.lua", "r").read()
+bank5 = bank5 + open("source\\construction01_calls.lua", "r").read()
 bank5 = bank5 + open("source\\main.lua", "r").read()
 reference_cart.chunks.append(Chunk(ChunkType.CODE, 5, bytes(bank5,"ascii")))
 

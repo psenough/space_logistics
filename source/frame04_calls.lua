@@ -1,3 +1,4 @@
+-- idea: cloud lifetimes could use a gradient + lifetime so they fade out instead of disappearing
 
 function stars(t)
 	for i=0,50 do
@@ -9,7 +10,9 @@ function stars(t)
 	end
 end
 
-F4ships = {
+F4ships = nil
+
+F4shipsDefaults = {
 	{"F4_Ship02",10,130,.14,-.3,{1,18,-18,38, 7,18,-20,40}},
 	{"F4_Ship03",80,160,.16,-.3,{1,30,-18,38, 11,30,-20,40}},
 	{"F4_Ship01",70,160,.1,-.4,{2,40,-12,50, 27,42,-12,50}},
@@ -25,6 +28,17 @@ end
 
 clouds = {}
 maxclouds=3000
+cloudAngleBiasAmt01 = 0.5 -- how much bias to mix
+
+function Frame04_init()
+	clouds = {}
+	F4ships = deepcopy(F4shipsDefaults)
+
+	-- calc ship trajectory angles so clouds can follow
+	for i=1,#F4ships do
+		F4ships[i][7] = math.atan2(F4ships[i][5],F4ships[i][4])
+	end
+end
 
 function Frame04(t)
 	cls()
@@ -39,10 +53,28 @@ function Frame04(t)
 	math.randomseed(t)
 
 	for i=1,#clouds do
-		circ(clouds[i][1]+math.sin(t/2000+i)*2,clouds[i][2],clouds[i][3],clouds[i][4])
+		-- render clouds
+		circ(
+			clouds[i][1],
+			clouds[i][2],
+			clouds[i][3],
+			clouds[i][4]
+		)
 	end
 
-	-- update
+	-- update clouds
+	for i=#clouds,1,-1 do
+		local angleRad = clouds[i][5]
+		local speed = clouds[i][6]
+		clouds[i][1] = clouds[i][1] + math.cos(angleRad) * speed * tt
+		clouds[i][2] = clouds[i][2] + math.sin(angleRad) * speed * tt
+
+		if clouds[i][1]<-10 or clouds[i][1]>250 or clouds[i][2]<-10 or clouds[i][2]>150 then
+			table.remove(clouds,i) -- oob
+		end
+	end
+
+	-- update ships
 	for i=1,#F4ships do
 		F4ships[i][2] = F4ships[i][2] + F4ships[i][4]*tt
 		F4ships[i][3] = F4ships[i][3] + F4ships[i][5]*tt
@@ -59,11 +91,17 @@ function Frame04(t)
 
 			-- generate new clouds
 			if math.random()>.5 and #clouds < maxclouds then
+				local cloudAngleBiasRadians = F4ships[i][7]
+				local cloudOwnAngle =  (math.random() * 2 * 3.14159)
+				local cloudAngle = lerpScalar(cloudOwnAngle, cloudAngleBiasRadians, cloudAngleBiasAmt01)
 				clouds[#clouds+1] = {
 											F4ships[i][2]+F4ships[i][6][j],
 											F4ships[i][3]+F4ships[i][6][j+1],
-											math.random(4),
-											math.random(12,14) }
+											math.random(4), -- radius
+											math.random(12,14), -- color gradient
+											cloudAngle,
+											0.05 + math.random() * 0.15,-- speed
+										}
 			end
 		end
 

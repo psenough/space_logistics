@@ -98,7 +98,7 @@ scenes = {
 		start = 14,
 		row = 0,
 	},{ -- right place for this?
-		init = no_fn,
+		init = Frame04_init,
 		frame = Frame04,
 		bdr = no_fn,
 		start = 15,
@@ -259,6 +259,9 @@ function RenderHud(state)
 		1, -- scale
 		true -- small font
 	)
+	-- show mouse cursor coords
+	local mx, my = mouse()
+	print(string.format("(%d,%d)", mx, my), 0, 6, 12)
 end
 
 function TIC()
@@ -294,7 +297,11 @@ function TIC()
 	end
 
 	--hide cursor
-	--poke(16379, 2)
+	if show_hud then
+		poke(16379, 128) -- show cursor when hud is on
+	else
+		poke(16379, 2)
+	end
 
 	-- get global music sync refs
 	local _pO = state.demoPatternIndex--playingSongOrder

@@ -7,3 +7,22 @@ local/
 
 # when launching with ticbuild it likes to place an ephemeral remoting discovery file here.
 .ticbuild/
+
+# local / secret settings
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ticbuild generated
+build/
+
+# OS
+.DS_Store
+Thumbs.db
+

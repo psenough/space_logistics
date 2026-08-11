@@ -1,0 +1,39 @@
+{
+    "$schema": "./.ticbuild/ticbuild.schema.json",
+    "project": {
+        "name": "space_logistics",
+        "importDirs": [
+            "assets"
+        ],
+        "includeDirs": [
+            "src"
+        ],
+        "binDir": "./build/$(buildConfiguration)-bin",
+        "objDir": "./build/$(buildConfiguration)-obj",
+        "outputCartName": "$(project.name).tic"
+    },
+    "imports": [
+        {
+            "name": "song",
+            "path": "music/_music_no_fn.tic"
+        },
+        {
+            "name": "maincode",
+            "path": "source/main.lua"
+        }
+    ],
+    "assembly": {
+        "blocks": [
+            {
+                "asset": "song",
+                "chunks": ["MUSIC_PATTERNS", "MUSIC_TRACKS", "WAVEFORMS", "SFX"]
+            },
+            {
+                "asset": "maincode"
+            }
+        ],
+        "lua": {
+            "minify": false
+        }
+    }
+}

@@ -1,8 +1,45 @@
+--#include "import:song:CODE" -- include somatic music playroutine
+
+--#include "source/frame01_sprites.lua"
+--#include "source/frame02_sprites.lua"
+--#include "source/frame03_sprites.lua"
+--#include "source/frame04_sprites.lua"
+--#include "source/construction01_sprites.lua"
+--#include "source/frame05_sprites.lua"
+--#include "source/frame06_sprites.lua"
+--#include "source/frame09_sprites.lua"
+--#include "source/frame07_sprites.lua"
+--#include "source/frame08_sprites.lua"
+--#include "source/bootstrap.lua"
+--#include "source/frame01_calls.lua"
+--#include "source/frame02_calls.lua"
+--#include "source/frame03_calls.lua"
+--#include "source/frame04_calls.lua"
+--#include "source/frame05_calls.lua"
+--#include "source/frame06_calls.lua"
+--#include "source/frame07_calls.lua"
+--#include "source/frame08_calls.lua"
+--#include "source/frame09_calls.lua"
+--#include "source/supernova.lua"
+--#include "source/tunnel.lua"
+--#include "source/construction01_calls.lua"
 
 scene_frame = 0
-current_scene_id = 15
-
+current_scene_id = 1
 show_hud = false
+last_somatic_state = nil
+hmr_request = nil -- for HMR, tells TIC() to init.
+
+function SetScene(scene_id, do_seek)
+	if scene_id >= 1 and scene_id <= #scenes then
+		current_scene_id = scene_id
+		scene_frame = 0
+		scenes[current_scene_id].init()
+		if do_seek then
+			somatic_seek(scenes[current_scene_id].start*16)
+		end
+	end
+end
 
 function BOOT()
 	-- load same palette on both banks
@@ -24,14 +61,57 @@ function BOOT()
 	loadFrame09Sprites() -- xray
 	loadC01Sprites() -- triangle welding
 
-	-- init scenes
-	scenes[current_scene_id].init()
-	somatic_seek(scenes[current_scene_id].start*16)
-
 	somatic_set_completion_callback(function ()
 		trace(" - SPACE LOGISTICS - ")
 		exit()
 	end)
+
+	-- init scenes
+	SetScene(current_scene_id, true)
+end
+
+-- ticbuild allows HMR for tic80 carts. before the old cart is killed, the tic80 calls the
+-- returned function to get a state snapshot to pass to the next cart.
+function MakeHMRState()
+	if last_somatic_state == nil then
+		return nil
+	end
+	-- return current state
+	return {
+		yep_its_me = true,
+		scene_id = current_scene_id,
+		show_hud = show_hud,
+		is_playing = last_somatic_state.isPlaying,
+		is_muted = last_somatic_state.isMuted,
+	}
+end
+function HMR(state)
+	if state and state.yep_its_me
+	and type(state.scene_id) == "number"
+	and type(state.show_hud) == "boolean"
+	and type(state.is_playing) == "boolean" and type(state.is_muted) == "boolean"
+	then
+		if state.show_hud ~= nil then
+			show_hud = state.show_hud
+		end
+			hmr_request = {
+				current_scene_id = state.scene_id,
+				is_playing = state.is_playing,
+				is_muted = state.is_muted,
+			}
+	end
+	return MakeHMRState -- return callback
+end
+
+function HonorHMRState()
+	if hmr_request then
+		somatic_set_options({
+			isPlaying = hmr_request.is_playing,
+			isMuted = hmr_request.is_muted,
+		})
+		SetScene(hmr_request.current_scene_id, true)
+		hmr_request = nil
+	end
 end
 
 scenes = {
@@ -128,8 +208,6 @@ scenes = {
 	}
 }
 
-_beats = 0
-
 function RenderHud(state)
 	rect(0, 0, 240, 8, 0)
 
@@ -162,26 +240,16 @@ function RenderHud(state)
 	)
 end
 
-
 function TIC()
 	local state = somatic_tick()
+	
+	HonorHMRState()
+
 	if keyp(55) or btnp(3) then
-		if current_scene_id < #scenes then
-			current_scene_id = current_scene_id + 1
-			scene_frame = 0
-			scenes[current_scene_id].init()
-			--somatic_init(scenes[current_scene_id].start, 0)
-			state = somatic_seek(scenes[current_scene_id].start*16)
-		end
+		SetScene(current_scene_id + 1, true)
 	end
 	if keyp(54) or btnp(2) then
-		if current_scene_id > 1 then
-			current_scene_id = current_scene_id - 1
-			scene_frame = 0
-			scenes[current_scene_id].init()
-			--somatic_init(scenes[current_scene_id].start, 0)
-			state = somatic_seek(scenes[current_scene_id].start*16)
-		end
+		SetScene(current_scene_id - 1, true)
 	end
 	if keyp(13) then -- M
 		state = somatic_set_options({ isMuted = not state.isMuted })
@@ -229,6 +297,7 @@ function TIC()
 
 	scene_frame = scene_frame + 1
 
+	last_somatic_state = state
 	somatic_end_frame()
 
 	--print(current_scene_id .. " " .. _pO .. " " .. _row, 0, 130,12)

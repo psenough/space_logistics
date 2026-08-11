@@ -1,6 +1,6 @@
 
 scene_frame = 0
-current_scene_id = 1
+current_scene_id = 17
 
 show_hud = false
 
@@ -24,7 +24,7 @@ function BOOT()
 	loadFrame09Sprites() -- xray
 	loadFrame11Sprites() -- ship next to particle vortex
 	loadC01Sprites() -- triangle welding
-	--loadC02Sprites() -- ships departing
+	loadC02Sprites() -- ships departing
 	loadTunnelSprites() -- ships for side tunnel scene
 
 	-- init scenes
@@ -116,7 +116,7 @@ scenes = {
 		bdr = no_fn,
 		start = 19,
 		row = 0,
-	},{ -- one more briefcase in end or slower?
+	},{
 		init = Frame09_init,
 		frame = Frame09,
 		bdr = no_fn,
@@ -133,6 +133,12 @@ scenes = {
 		frame = Frame11,
 		bdr = no_fn,
 		start = 27,
+		row = 0,
+	},{ -- ships departing
+		init = Construction02_init,
+		frame = Construction02,
+		bdr = no_fn,
+		start = 29,
 		row = 0,
 	}
 }

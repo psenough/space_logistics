@@ -1,6 +1,6 @@
 
 scene_frame = 0
-current_scene_id = 15
+current_scene_id = 1
 
 show_hud = false
 
@@ -22,7 +22,10 @@ function BOOT()
 	loadFrame07Sprites() -- leaving moving hub ship
 	loadFrame08Sprites() -- modules
 	loadFrame09Sprites() -- xray
+	--loadFrame11Sprites() -- ship next to particle vortex
 	loadC01Sprites() -- triangle welding
+	--loadC02Sprites() -- ships departing
+	loadTunnelSprites() -- ships for side tunnel scene
 
 	-- init scenes
 	scenes[current_scene_id].init()
@@ -35,7 +38,7 @@ function BOOT()
 end
 
 scenes = {
-	{
+	{ -- missing "Space" on logo
 		init = no_fn,
 		frame = Frame01,
 		bdr = no_fn,
@@ -47,7 +50,7 @@ scenes = {
 		bdr = no_fn,
 		start = 4,
 		row = 0,
-	},{
+	},{ -- missing credits on left maybe?
 		init = no_fn,
 		frame = Frame03,
 		bdr = no_fn,
@@ -65,7 +68,7 @@ scenes = {
 		bdr = no_fn,
 		start = 9,
 		row = 0,
-	},{
+	},{ -- maybe needs a hud surrounding of some sort?
 		init = supernova_init,
 		frame = supernova,
 		bdr = no_fn,
@@ -83,19 +86,19 @@ scenes = {
 		bdr = no_fn,
 		start = 12,
 		row = 0,
-	},{
+	},{ -- not synced to music, does it matter?
 		init = Frame06_init,
 		frame = Frame06,
 		bdr = no_fn,
 		start = 13,
 		row = 0,
-	},{
+	},{ -- needs sharper turns on bezier, better thruster anim and syncs
 		init = Frame07_init,
 		frame = Frame07,
 		bdr = no_fn,
 		start = 14,
 		row = 0,
-	},{
+	},{ -- right place for this?
 		init = no_fn,
 		frame = Frame04,
 		bdr = no_fn,
@@ -107,23 +110,23 @@ scenes = {
 		bdr = no_fn,
 		start = 17,
 		row = 0,
-	},{
+	},{ -- maybe tune up background colors?!
 		init = tunnel_init,
 		frame = tunnel,
 		bdr = no_fn,
 		start = 19,
 		row = 0,
-	},{
+	},{ -- one more briefcase in end or slower?
 		init = Frame09_init,
 		frame = Frame09,
 		bdr = no_fn,
 		start = 21,
 		row = 0,
-	},{
+	},{ -- sync to music, right order of sequence?
 		init = Construction01_init,
 		frame = Construction01,
 		bdr = no_fn,
-		start = 24,
+		start = 25,
 		row = 0,
 	}
 }

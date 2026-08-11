@@ -152,6 +152,7 @@ C01_st=0
 function Construction01_init()
 	C01_RandSparks()
 	C01_st = time()
+	cls()
 end
 
 function Construction01(tt)

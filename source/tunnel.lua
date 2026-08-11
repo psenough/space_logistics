@@ -8,6 +8,9 @@ function tunnel(tt)
 	
 	cls()
 	math.randomseed(1)
+
+	--draw tunnel
+
 	local y1 = 36--46+math.sin(t/700+10)*20
 	local y2 = 100--110+math.sin(t/1000)*20
 
@@ -27,5 +30,27 @@ function tunnel(tt)
 		end
 		prevx = posx
 	end
+
+	-- draw ships
+
+	math.randomseed(t)
+
+	local slx = math.sin(t/1000)*10+t/60-60
+	local sly = 50+math.sin(t/800)*6
+	drawSprite("Tunnel_Shiplarge", slx, sly)
+	circ(slx+97,sly+54,math.random(2),math.random(3)+3)
+	
+	slx = math.sin(t/2100)*6+t/52-180
+	sly = 60+math.sin(t/1800)*4
+	drawSprite("Tunnel_Shipsmall_01", slx,sly)
+	circ(slx+1,sly+16,math.random(2),math.random(3)+3)
+	circ(slx+3,sly+19,math.random(1),math.random(3)+3)
+
+	slx = math.sin(t/2000+10)*6+t/52-235
+	sly = 55+math.sin(t/1700+2)*4
+	drawSprite("Tunnel_Shipsmall_02",slx,sly)
+	line(slx+2,sly+9,slx+6,sly+5,math.random(3)+3)
+
+	drawSprite("Tunnel_Shipsmall_03", math.sin(t/2100+20)*6+t/50-290, 90+math.sin(t/1900+4)*5)
 
 end

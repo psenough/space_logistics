@@ -1,6 +1,6 @@
 
 scene_frame = 0
-current_scene_id = 1
+current_scene_id = 16
 
 show_hud = false
 
@@ -22,7 +22,7 @@ function BOOT()
 	loadFrame07Sprites() -- leaving moving hub ship
 	loadFrame08Sprites() -- modules
 	loadFrame09Sprites() -- xray
-	--loadFrame11Sprites() -- ship next to particle vortex
+	loadFrame11Sprites() -- ship next to particle vortex
 	loadC01Sprites() -- triangle welding
 	--loadC02Sprites() -- ships departing
 	loadTunnelSprites() -- ships for side tunnel scene
@@ -127,6 +127,12 @@ scenes = {
 		frame = Construction01,
 		bdr = no_fn,
 		start = 25,
+		row = 0,
+	},{ 
+		init = Frame11_init,
+		frame = Frame11,
+		bdr = no_fn,
+		start = 27,
 		row = 0,
 	}
 }

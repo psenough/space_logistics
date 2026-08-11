@@ -1,0 +1,13 @@
+-- title:  C:\Users\Utilizador\AppData\Roaming\com.nesbox.tic\TIC-80\space_logistics\gfx\Frame11\\Rock_03.png
+-- author: TicPanel
+-- script: lua
+
+local pal = "1a1c2c5d275db13e53ef7d57ffcd75a7f07038b76425717929366f3b5dc941a6f673eff7f4f4f494b0c2566c86333c57"
+
+ -- No palette-routine found!
+
+local st = "A2P11A9PPO9P2A6PPO12PPA5PPO13PPA4P2O13PPA3P2O14PA3P3O3PO8PA2PBP2O3P2O6P2APBPPO4P3O6P3BP2O4P3O5BBPPBBP2O3PO8BBPB3P2O2P2O6BBPB4P2OP4O4PPBPPB5P3BPPO4PBBP2B11P4BBPPAPPB16PPA2PB5P2B7PA4P5APPB5PPA13PPB3PPA15P5A4"
+local sx = 23
+local sy = 20
+
+ -- No hexdata-routine found!

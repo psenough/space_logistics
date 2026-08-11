@@ -33,6 +33,7 @@
 scene_frame = 0
 current_scene_id = 1
 show_hud = false
+show_palette = false
 last_somatic_state = nil
 hmr_request = nil -- for HMR, tells TIC() to init.
 
@@ -264,6 +265,14 @@ function RenderHud(state)
 	print(string.format("(%d,%d)", mx, my), 0, 6, 12)
 end
 
+function RenderPalette()
+	local swatchSize = 240 // 16
+	for i = 0, 15 do
+		rect(i * swatchSize, 136 - swatchSize, swatchSize, swatchSize, i)
+		print(i, i * swatchSize + 2, 136 - swatchSize + 2, 0)
+	end
+end
+
 function TIC()
 	local state = somatic_tick()
 	
@@ -283,6 +292,9 @@ function TIC()
 	end
 	if keyp(16) then -- P
 		show_hud = not show_hud
+	end
+	if keyp(12) then -- L https://skyelynwaddell.github.io/tic80-manual-cheatsheet/#_buttons
+		show_palette = not show_palette
 	end
 
 	--local track, playingSongOrder, currentFrame, currentRow = somatic_get_state()
@@ -321,6 +333,9 @@ function TIC()
 
 	if show_hud then
 		RenderHud(state)
+	end
+	if show_palette then
+		RenderPalette()
 	end
 
 	scene_frame = scene_frame + 1

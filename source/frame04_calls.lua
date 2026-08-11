@@ -1,11 +1,10 @@
--- idea: cloud lifetimes could use a gradient + lifetime so they fade out instead of disappearing
 
 -- falling stars
 function stars(t)
 	for p = 1, 3 do
 		local speed = ((p + 1) / 400)
-		for i=0,100 do
-			circ(math.random(240),
+		for i=0,50 do
+			circ((math.random(240) - t * 0.4 * speed) % 240, -- a bit of side mvmt feels more cinematic; nice contrary mvmt to the ships & clouds
 				(math.random(136) + t * speed)%136,
 				math.random()*1.5,
 				(4+math.random(2)//1*8)*math.abs(math.sin(t/math.random(10000))//1) -- twinkle
@@ -22,20 +21,18 @@ F4shipsDefaults = {
 	{"F4_Ship01",70,160,.1,-.4,{2,40,-12,50, 27,42,-12,50}},
 }
 
-function drawTrail(posx,posy,dx,dy)
-	for i=0,3 do
-		local col=4
-		if math.random()>.5	then col = math.random(12,15) end
-		line(posx+math.random(3)-1,posy,posx+dx+math.random(3)-1,posy+dy,col)
-	end
-end
-
 clouds = {}
 maxclouds=3000
-cloudAngleBiasAmt01 = 0.5 -- how much bias to mix
+cloudAngleBiasAmt01 = 0.4 -- how much bias to mix
+
+-- similar to clouds
+trailClouds = {}
+trailCloudAngleBiasAmt01 = 0.9 -- how much bias to mix
+trialGradient = { 8, 1, 2, 3, 4 }
 
 function Frame04_init()
 	clouds = {}
+	trailClouds = {}
 	F4ships = deepcopy(F4shipsDefaults)
 
 	-- calc ship trajectory angles so clouds can follow
@@ -51,7 +48,7 @@ function Frame04(t)
 
 	-- todo: vertical bands with dithering
 
-	math.randomseed(1)
+	math.randomseed(1000)
 	stars(t)
 	
 	math.randomseed(t)
@@ -63,6 +60,21 @@ function Frame04(t)
 			clouds[i][2],
 			clouds[i][3],
 			clouds[i][4]
+		)
+	end
+
+	-- render trail clouds
+	for i=1,#trailClouds do
+		local cloud = trailClouds[i]
+		local age = cloud.age
+		-- gradient
+		local gradientIndex = math.floor((1 - (age / cloud.lifetime)) * #trialGradient)
+		local normAge = age / cloud.lifetime
+		circ(
+			cloud.x, -- x
+			cloud.y, -- y
+			(1 - normAge) * 2, -- radius
+			trialGradient[math.max(1, math.min(#trialGradient, gradientIndex))] -- color
 		)
 	end
 
@@ -78,6 +90,19 @@ function Frame04(t)
 		end
 	end
 
+	-- update trail clouds
+	for i=#trailClouds,1,-1 do
+		local angleRad = trailClouds[i].angle
+		local speed = trailClouds[i].speed
+		trailClouds[i].x = trailClouds[i].x + math.cos(angleRad) * speed * tt
+		trailClouds[i].y = trailClouds[i].y + math.sin(angleRad) * speed * tt
+
+		trailClouds[i].age = trailClouds[i].age + tt -- age
+		if trailClouds[i].x<-10 or trailClouds[i].x>250 or trailClouds[i].y<-10 or trailClouds[i].y>150 or trailClouds[i].age>=trailClouds[i].lifetime then
+			table.remove(trailClouds,i) -- oob or ded
+		end
+	end
+
 	-- update ships
 	for i=1,#F4ships do
 		F4ships[i][2] = F4ships[i][2] + F4ships[i][4]*tt
@@ -85,26 +110,34 @@ function Frame04(t)
 
 		drawSprite(F4ships[i][1],F4ships[i][2],F4ships[i][3])
 		
-		-- draw trails
 		for j=1,#F4ships[i][6],4 do
-			drawTrail(
-				F4ships[i][2]+F4ships[i][6][j],
-				F4ships[i][3]+F4ships[i][6][j+1],
-				F4ships[i][6][j+2],
-				F4ships[i][6][j+3])
-
-			-- generate new clouds
+			-- generate new trail clouds
 			if math.random()>.5 and #clouds < maxclouds then
-				local cloudAngleBiasRadians = F4ships[i][7]
+				local angleBiasRadians = F4ships[i][7]
+				local ownAngle =  (math.random() * 2 * 3.14159)
+				local cloudAngle = lerpAngular(ownAngle, angleBiasRadians, trailCloudAngleBiasAmt01)
+				trailClouds[#trailClouds+1] = {
+											x = F4ships[i][2]+F4ships[i][6][j],
+											y = F4ships[i][3]+F4ships[i][6][j+1],
+											lifetime = 100 + math.random(100),
+											age = 0,
+											angle = cloudAngle,
+											speed = 0.05 + math.random() * 0.15,
+										}
+			end
+
+			-- generate new gray clouds
+			if math.random()>.5 and #clouds < maxclouds then
+				local angleBiasRadians = F4ships[i][7]
 				local cloudOwnAngle =  (math.random() * 2 * 3.14159)
-				local cloudAngle = lerpScalar(cloudOwnAngle, cloudAngleBiasRadians, cloudAngleBiasAmt01)
+				local cloudAngle = lerpAngular(cloudOwnAngle, angleBiasRadians, cloudAngleBiasAmt01)
 				clouds[#clouds+1] = {
 											F4ships[i][2]+F4ships[i][6][j],
 											F4ships[i][3]+F4ships[i][6][j+1],
 											math.random(4), -- radius
 											math.random(12,14), -- color gradient
 											cloudAngle,
-											0.05 + math.random() * 0.15,-- speed
+											0.02 + math.random() * 0.05,-- speed
 										}
 			end
 		end

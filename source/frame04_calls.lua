@@ -1,12 +1,16 @@
 -- idea: cloud lifetimes could use a gradient + lifetime so they fade out instead of disappearing
 
+-- falling stars
 function stars(t)
-	for i=0,50 do
-		circ(math.random(240),
-			(math.random(136)+t/200)%136,
-			math.random()*1.5,
-			 (4+math.random(2)//1*8)*math.abs(math.sin(t/math.random(10000))//1)
-			)
+	for p = 1, 3 do
+		local speed = ((p + 1) / 400)
+		for i=0,100 do
+			circ(math.random(240),
+				(math.random(136) + t * speed)%136,
+				math.random()*1.5,
+				(4+math.random(2)//1*8)*math.abs(math.sin(t/math.random(10000))//1) -- twinkle
+				)
+		end
 	end
 end
 

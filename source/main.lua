@@ -1,6 +1,6 @@
 
 scene_frame = 0
-current_scene_id = 16
+current_scene_id = 1
 
 show_hud = false
 

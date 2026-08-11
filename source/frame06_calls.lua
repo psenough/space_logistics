@@ -94,6 +94,12 @@ function drawBezierCurves(t)
 end
 --]]
 
+function dust(x,y,seed,c)
+	dx=x+math.sin(time()/1000+seed)*25+math.sin(time()/500+11+seed)*20
+	dy=y+math.sin(time()/1000+seed)*10+math.sin(time()/800+1+seed)*20
+	pix(dx,dy,c)
+end
+
 F06_st = 0
 
 function Frame06_init()
@@ -125,7 +131,7 @@ function Frame06(tt)
 		local st=curves[c].st
 		local piv=curves[c].pivots
 		local tt=(t-st)/30//1
-		if t > st and t < (st + 3000) then
+		if t > st and t < (st + 8000) then
 			local pre = pBezier(piv,0)
 			for i=1,quality do
 				local t=i/quality
@@ -140,4 +146,13 @@ function Frame06(tt)
 			end
 		end
 	end
+
+	math.randomseed(1)
+	for i=0,250 do	
+		dust((200+math.random()*100-t/20)%255,
+					0+math.random()*150,
+					math.random()*50,
+					3)
+	end
+
 end

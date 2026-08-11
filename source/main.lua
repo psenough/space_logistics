@@ -4,12 +4,16 @@
 --#include "source/frame02_sprites.lua"
 --#include "source/frame03_sprites.lua"
 --#include "source/frame04_sprites.lua"
---#include "source/construction01_sprites.lua"
 --#include "source/frame05_sprites.lua"
 --#include "source/frame06_sprites.lua"
 --#include "source/frame09_sprites.lua"
 --#include "source/frame07_sprites.lua"
 --#include "source/frame08_sprites.lua"
+--#include "source/frame11_sprites.lua"
+--#include "source/tunnel_sprites.lua"
+--#include "source/construction01_sprites.lua"
+--#include "source/construction02_sprites.lua"
+
 --#include "source/bootstrap.lua"
 --#include "source/frame01_calls.lua"
 --#include "source/frame02_calls.lua"
@@ -20,15 +24,123 @@
 --#include "source/frame07_calls.lua"
 --#include "source/frame08_calls.lua"
 --#include "source/frame09_calls.lua"
+--#include "source/frame11_calls.lua"
 --#include "source/supernova.lua"
 --#include "source/tunnel.lua"
 --#include "source/construction01_calls.lua"
+--#include "source/construction02_calls.lua"
 
 scene_frame = 0
 current_scene_id = 1
 show_hud = false
 last_somatic_state = nil
 hmr_request = nil -- for HMR, tells TIC() to init.
+
+scenes = {
+	{ -- missing "Space" on logo
+		init = no_fn,
+		frame = Frame01,
+		bdr = no_fn,
+		start = 0,
+		row = 0,
+	},{
+		init = Frame02_init,
+		frame = Frame02,
+		bdr = no_fn,
+		start = 4,
+		row = 0,
+	},{ -- missing credits on left maybe?
+		init = no_fn,
+		frame = Frame03,
+		bdr = no_fn,
+		start = 6,
+		row = 0,
+	},{
+		init = Frame05_notraces,
+		frame = Frame05,
+		bdr = no_fn,
+		start = 8,
+		row = 0,
+	},{
+		init = Frame05_notraces,
+		frame = Frame05b,
+		bdr = no_fn,
+		start = 9,
+		row = 0,
+	},{ -- maybe needs a hud surrounding of some sort?
+		init = supernova_init,
+		frame = supernova,
+		bdr = no_fn,
+		start = 10,
+		row = 0,
+	},{
+		init = Frame05_init,
+		frame = Frame05,
+		bdr = no_fn,
+		start = 11,
+		row = 0,
+	},{
+		init = Frame05_init,
+		frame = Frame05b,
+		bdr = no_fn,
+		start = 12,
+		row = 0,
+	},{ -- not synced to music, does it matter?
+		init = Frame06_init,
+		frame = Frame06,
+		bdr = no_fn,
+		start = 13,
+		row = 0,
+	},{ -- needs sharper turns on bezier, better thruster anim and syncs
+		init = Frame07_init,
+		frame = Frame07,
+		bdr = no_fn,
+		start = 14,
+		row = 0,
+	},{ -- right place for this?
+		init = no_fn,
+		frame = Frame04,
+		bdr = no_fn,
+		start = 15,
+		row = 0,
+	},{
+		init = Frame08_init,
+		frame = Frame08,
+		bdr = no_fn,
+		start = 17,
+		row = 0,
+	},{ -- maybe tune up background colors?!
+		init = tunnel_init,
+		frame = tunnel,
+		bdr = no_fn,
+		start = 19,
+		row = 0,
+	},{
+		init = Frame09_init,
+		frame = Frame09,
+		bdr = no_fn,
+		start = 21,
+		row = 0,
+	},{ -- sync to music, right order of sequence?
+		init = Construction01_init,
+		frame = Construction01,
+		bdr = no_fn,
+		start = 25,
+		row = 0,
+	},{ 
+		init = Frame11_init,
+		frame = Frame11,
+		bdr = no_fn,
+		start = 27,
+		row = 0,
+	},{ -- ships departing
+		init = Construction02_init,
+		frame = Construction02,
+		bdr = no_fn,
+		start = 29,
+		row = 0,
+	}
+}
 
 function SetScene(scene_id, do_seek)
 	if scene_id >= 1 and scene_id <= #scenes then
@@ -59,7 +171,10 @@ function BOOT()
 	loadFrame07Sprites() -- leaving moving hub ship
 	loadFrame08Sprites() -- modules
 	loadFrame09Sprites() -- xray
+	loadFrame11Sprites() -- ship next to particle vortex
 	loadC01Sprites() -- triangle welding
+	loadC02Sprites() -- ships departing
+	loadTunnelSprites() -- ships for side tunnel scene
 
 	somatic_set_completion_callback(function ()
 		trace(" - SPACE LOGISTICS - ")
@@ -113,100 +228,6 @@ function HonorHMRState()
 		hmr_request = nil
 	end
 end
-
-scenes = {
-	{
-		init = no_fn,
-		frame = Frame01,
-		bdr = no_fn,
-		start = 0,
-		row = 0,
-	},{
-		init = Frame02_init,
-		frame = Frame02,
-		bdr = no_fn,
-		start = 4,
-		row = 0,
-	},{
-		init = no_fn,
-		frame = Frame03,
-		bdr = no_fn,
-		start = 6,
-		row = 0,
-	},{
-		init = Frame05_notraces,
-		frame = Frame05,
-		bdr = no_fn,
-		start = 8,
-		row = 0,
-	},{
-		init = Frame05_notraces,
-		frame = Frame05b,
-		bdr = no_fn,
-		start = 9,
-		row = 0,
-	},{
-		init = supernova_init,
-		frame = supernova,
-		bdr = no_fn,
-		start = 10,
-		row = 0,
-	},{
-		init = Frame05_init,
-		frame = Frame05,
-		bdr = no_fn,
-		start = 11,
-		row = 0,
-	},{
-		init = Frame05_init,
-		frame = Frame05b,
-		bdr = no_fn,
-		start = 12,
-		row = 0,
-	},{
-		init = Frame06_init,
-		frame = Frame06,
-		bdr = no_fn,
-		start = 13,
-		row = 0,
-	},{
-		init = Frame07_init,
-		frame = Frame07,
-		bdr = no_fn,
-		start = 14,
-		row = 0,
-	},{
-		init = no_fn,
-		frame = Frame04,
-		bdr = no_fn,
-		start = 15,
-		row = 0,
-	},{
-		init = Frame08_init,
-		frame = Frame08,
-		bdr = no_fn,
-		start = 17,
-		row = 0,
-	},{
-		init = tunnel_init,
-		frame = tunnel,
-		bdr = no_fn,
-		start = 19,
-		row = 0,
-	},{
-		init = Frame09_init,
-		frame = Frame09,
-		bdr = no_fn,
-		start = 21,
-		row = 0,
-	},{
-		init = Construction01_init,
-		frame = Construction01,
-		bdr = no_fn,
-		start = 24,
-		row = 0,
-	}
-}
 
 function RenderHud(state)
 	rect(0, 0, 240, 8, 0)
@@ -273,7 +294,7 @@ function TIC()
 	end
 
 	--hide cursor
-	poke(16379, 2)
+	--poke(16379, 2)
 
 	-- get global music sync refs
 	local _pO = state.demoPatternIndex--playingSongOrder

@@ -16,6 +16,7 @@ reference_cart = TICFile.open("music\\_music_no_fn.tic")
 bank1 = ""
 bank1 = bank1 + open("source\\frame01_sprites.lua", "r").read()
 bank1 = bank1 + open("source\\frame02_sprites.lua", "r").read()
+bank1 = bank1 + open("source\\frame11_sprites.lua", "r").read()
 reference_cart.chunks.append(Chunk(ChunkType.CODE, 1, bytes(bank1,"ascii")))
 
 # bank 2
@@ -36,6 +37,7 @@ reference_cart.chunks.append(Chunk(ChunkType.CODE, 3, bytes(bank3,"ascii")))
 bank4 = ""
 bank4 = bank4 + open("source\\frame07_sprites.lua", "r").read()
 bank4 = bank4 + open("source\\frame08_sprites.lua", "r").read()
+bank4 = bank4 + open("source\\tunnel_sprites.lua", "r").read()
 reference_cart.chunks.append(Chunk(ChunkType.CODE, 4, bytes(bank4,"ascii")))
 
 # bank 5
@@ -50,11 +52,18 @@ bank5 = bank5 + open("source\\frame06_calls.lua", "r").read()
 bank5 = bank5 + open("source\\frame07_calls.lua", "r").read()
 bank5 = bank5 + open("source\\frame08_calls.lua", "r").read()
 bank5 = bank5 + open("source\\frame09_calls.lua", "r").read()
+bank5 = bank5 + open("source\\frame11_calls.lua", "r").read()
 bank5 = bank5 + open("source\\supernova.lua", "r").read()
 bank5 = bank5 + open("source\\tunnel.lua", "r").read()
 bank5 = bank5 + open("source\\construction01_calls.lua", "r").read()
+bank5 = bank5 + open("source\\construction02_calls.lua", "r").read()
 bank5 = bank5 + open("source\\main.lua", "r").read()
 reference_cart.chunks.append(Chunk(ChunkType.CODE, 5, bytes(bank5,"ascii")))
+
+# bank 6
+bank6 = ""
+bank6 = bank6 + open("source\\construction02_sprites.lua", "r").read()
+reference_cart.chunks.append(Chunk(ChunkType.CODE, 6, bytes(bank6,"ascii")))
 
 
 # save it to the final destination

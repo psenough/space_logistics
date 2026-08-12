@@ -211,6 +211,7 @@ function MakeHMRState()
 		is_muted = last_somatic_state.isMuted,
 		mouse_origin_x = mouse_origin and mouse_origin.x or nil,
 		mouse_origin_y = mouse_origin and mouse_origin.y or nil,
+		show_palette = show_palette,
 	}
 end
 function HMR(state)
@@ -224,6 +225,9 @@ function HMR(state)
 		end
 		if state.mouse_origin_x ~= nil and state.mouse_origin_y ~= nil then
 			mouse_origin = { x = state.mouse_origin_x, y = state.mouse_origin_y }
+		end
+		if state.show_palette ~= nil then
+			show_palette = state.show_palette
 		end
 		hmr_request = {
 			current_scene_id = state.scene_id,

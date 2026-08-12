@@ -401,3 +401,7 @@ function RngNext(rng, min, max)
 		return value
 	end
 end
+
+function fract(x)
+  return x - (x//1)
+end

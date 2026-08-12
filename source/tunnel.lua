@@ -2,9 +2,13 @@
 TUNNEL_Gradient = {9, 10, 11, 12}
 TUNNEL_Gradient_Darker = {8, 9, 10, 11} -- same gradient but 1 shade darker
 
-TUNNEL_TrailParticles = { } 
+TUNNEL_TrailParticles = { } -- particle system created in init
 
-TUNNEL_TrailGradient = {1,2,3,4}
+TUNNEL_TrailGradient = {
+	--2,3,4, -- yellow/red
+	--7,6,5, -- green
+	3,4,6,5
+}
 TUNNEL_StructRng = nil
 
 function tunnel_init()
@@ -13,26 +17,30 @@ function tunnel_init()
 
 	-- each ship gets particle emitter
 	TUNNEL_TrailParticles = {
-		CreateParticlePool(300),
-		CreateParticlePool(300),
-		CreateParticlePool(300),
-		CreateParticlePool(300),
+		CreateParticlePool(500),
+		CreateParticlePool(500),
+		CreateParticlePool(500),
+		CreateParticlePool(500),
 	}
 end
 
-function renderStructure(t, bandFill01)
+function renderStructure(t, sparseBand)
 	local y1 = 36--46+math.sin(t/700+10)*20
 	local y2 = 100--110+math.sin(t/1000)*20
-	local bandWidth = 17
+	local bandWidth = 18
+	local maxX = (math.ceil(TIC_WIDTH / bandWidth) + 2) * bandWidth
 
-	local prevx = (-40-t/20)%280
-	for x=-20,260,bandWidth do
-		local bandFillPx = bandWidth * (bandFill01 and RngNext(TUNNEL_StructRng) or 1)
+	local prevx = (-bandWidth-t/20)%maxX
+	for x=-bandWidth,maxX,bandWidth do
+		local bandFillPx = bandWidth * lerpScalar(0.1, 0.9, RngNext(TUNNEL_StructRng))
+		if not sparseBand then
+			bandFillPx = bandWidth
+		end
 		local normColor = RngNext(TUNNEL_StructRng)
 		local colIndex = SelectNorm(TUNNEL_Gradient, normColor)
 		local col = TUNNEL_Gradient[colIndex]
 		local shadowCol = TUNNEL_Gradient_Darker[colIndex]
-		local posx = (x-t/20)%280-20
+		local posx = (x-t/20)%maxX-bandWidth
 		local seamSizeOnWall = RngNext(TUNNEL_StructRng, 2, 4) // 1 -- keep out of below loop otherwise it messes with rand sequence
 		if prevx < posx then
 			local x0 = prevx
@@ -72,9 +80,11 @@ function TUNNEL_AddTrailParticle(shipIndex, x, y)
 	local particle = {
 		x = x,
 		y = 0,
-		dx = r2 * -0.5,
-		dy = (r3-0.5)*0.03,
-		life = 100,
+		dx = lerpScalar(-0.2, -0.6, r2),
+		dy = (r3-0.5)*0.05,
+		life = 40,
+		-- custom props
+		lineLength = r2 * 1.4, -- should relate directly to dx. fastest particles = wider
 	}
 	AddParticleToPool(TUNNEL_TrailParticles[shipIndex], particle)
 end
@@ -83,8 +93,13 @@ function TUNNEL_RenderParticles(shipIndex, xOffset, yOffset)
 	local particles = TUNNEL_TrailParticles[shipIndex].particles
 	for i,p in ipairs(particles) do
 		local age01 = 1 -(p.age / p.life)
+		age01 = age01 * age01 --* age01  -- adjust curve so more energetic particles are sharper curve
 		local colIndex = SelectNorm(TUNNEL_TrailGradient, age01)
-		pix(p.x, p.y + yOffset, TUNNEL_TrailGradient[colIndex])
+		--pix(p.x, p.y + yOffset, TUNNEL_TrailGradient[colIndex])
+
+		line(p.x, p.y + yOffset, p.x + p.lineLength, p.y + yOffset, TUNNEL_TrailGradient[colIndex])
+		p.prevX = p.x
+		p.prevY = p.y
 	end
 end
 
@@ -98,9 +113,10 @@ end
 TUNNEL_HyperlineRng = nil
 
 function RenderHyperLine(t, x, y)
-	local throw = 4
-	local nominalLen = 10
-	local xoffset = (sin(t*0.08 + RngNext(TUNNEL_HyperlineRng) * 6.28) * throw) // 1
+	local throw = 12
+	local nominalLen = 4
+	local xoffset = fract(t * 0.008) * throw
+	--local xoffset = (sin(t*0.08 + RngNext(TUNNEL_HyperlineRng) * 6.28) * throw) // 1
 	--local xoffset = posOrNeg1(math.sin(t*0.04)) * 3 // 1
 	local startX = x - xoffset - nominalLen
 	line(startX, y, x, y, 14)
@@ -126,7 +142,7 @@ function tunnel(tt)
 	--draw tunnel
 	TUNNEL_StructRng = CreateRng(1)
 	renderStructure(t * 0.8)
-	renderStructure(t * 1.3, true)
+	renderStructure(t * 1.6, true)
 
 	--draw ships
 	local slx = math.sin(t/1000)*10+t/60-100
@@ -143,10 +159,10 @@ function tunnel(tt)
 
 	slx = math.sin(t/2100)*6+t/46-20
 	sly = 98+math.sin(t/1800)*4
-	RenderHyperLine(t, slx+0, sly+0)
-	--RenderHyperLine(t, slx+2, sly+28)
+	--RenderHyperLine(t, slx+0, sly+1)
+	RenderHyperLine(t, slx+3, sly+28)
 	drawSprite("Tunnel_Shipsmall_01", slx,sly)
-	pix(slx,sly,7) 
+	--pix(slx,sly,7) 
 	circ(slx+1,sly+16,math.random(2),math.random(3)+3)
 	circ(slx+3,sly+19,math.random(1),math.random(3)+3)
 	TUNNEL_AddTrailParticle(2, slx+3,sly+19)

@@ -1,5 +1,8 @@
 -- space logistics
 
+TIC_HEIGHT = 136
+TIC_WIDTH = 240
+
 local min, max = math.min, math.max
 local sin, cos, sqrt = math.sin, math.cos, math.sqrt
 
@@ -225,9 +228,6 @@ end
 
 --------------------------------------------------------------------------------------------------------
 
-TIC_HEIGHT = 136
-TIC_WIDTH = 240
-
 -- bayer 4x4 matrix normalized to 0..1
 B4N = {
 	0.5 / 16,
@@ -270,24 +270,29 @@ function ShadeCircleBayer(cx, cy, r, gradient, shadeFunc)
 	local r2 = r * r
 	local gradientCount = #gradient
 	local bayer = BAYER_MINUS_5
-	for y = -r, r do
-		local y2 = y * y
+
+	-- screen space clipping
+	local yFrom = max(-r, -cy) -- yfrom/to/y are relative to center.
+	local yTo = min(r, TIC_HEIGHT - 1 - cy)
+	for y = yFrom, yTo do
 		local screenY = cy+y
-		local screenY240 = screenY * 240
-		if screenY >= 0 and screenY < 136 then
-			for x = -r, r do
-				local screenX = cx+x
-				if screenX >= 0 and screenX < 240 then
-					if x*x + y2 <= r2 then
-						-- x and y are offsets from center; 
-						local tone01 = shadeFunc(cx+x, screenY)
-						if tone01 ~= nil then
-							--pix(screenX, screenY, col)
-							--pixBayer(screenX, screenY, gradient, gradientCount, tone01)
-							local b = bayer[screenY240 + screenX]
-							pix(screenX, screenY, gradient[max(1, min(gradientCount, (tone01 + b) * gradientCount)) // 1])
-						end
-					end
+		-- y is offset from center, screenY is actual pixel coordinate
+		local y2 = y * y
+		local span = sqrt(r2 - y2) // 1
+		local xFrom = max(-span, -cx) -- clipping
+		local xTo = min(span, TIC_WIDTH - 1 - cx)
+		local screenY240 = screenY * TIC_WIDTH
+		for x = xFrom, xTo do
+			local screenX = cx+x
+			-- x is offset from center, screenX is actual pixel coordinate
+			if x*x + y2 <= r2 then -- inside circle
+				-- x and y are offsets from center; 
+				local tone01 = shadeFunc(cx+x, screenY)
+				if tone01 ~= nil then
+					--pix(screenX, screenY, col)
+					--pixBayer(screenX, screenY, gradient, gradientCount, tone01)
+					local b = bayer[screenY240 + screenX]
+					pix(screenX, screenY, gradient[max(1, min(gradientCount, (tone01 + b) * gradientCount)) // 1])
 				end
 			end
 		end

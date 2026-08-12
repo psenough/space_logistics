@@ -183,6 +183,7 @@ function BOOT()
 	loadFrame11Sprites() -- ship next to particle vortex
 	loadC01Sprites() -- triangle welding
 	loadC02Sprites() -- ships departing
+	loadC03Sprites()
 	loadTunnelSprites() -- ships for side tunnel scene
 
 	somatic_set_completion_callback(function ()

@@ -1,19 +1,20 @@
 
 -- falling stars
-function stars(t)
-	for p = 1, 3 do
-		local speed = ((p + 1) / 400)
-		for i=0,50 do
-			circ((math.random(240) - t * 0.4 * speed) % 240, -- a bit of side mvmt feels more cinematic; nice contrary mvmt to the ships & clouds
-				(math.random(136) + t * speed)%136,
-				math.random()*1.5,
-				(4+math.random(2)//1*8)*math.abs(math.sin(t/math.random(10000))//1) -- twinkle
-				)
-		end
-	end
-end
+-- function stars(t)
+-- 	for p = 1, 3 do
+-- 		local speed = ((p + 1) / 400)
+-- 		for i=0,50 do
+-- 			circ((math.random(240) - t * 0.4 * speed) % 240, -- a bit of side mvmt feels more cinematic; nice contrary mvmt to the ships & clouds
+-- 				(math.random(136) + t * speed)%136,
+-- 				math.random()*1.5,
+-- 				(4+math.random(2)//1*8)*math.abs(math.sin(t/math.random(10000))//1) -- twinkle
+-- 				)
+-- 		end
+-- 	end
+-- end
 
 F4ships = nil
+F4starfield = nil
 
 F4shipsDefaults = {
 	{"F4_Ship02",10,130,.14,-.3,{1,18,-18,38, 7,18,-20,40}},
@@ -31,9 +32,18 @@ trailCloudAngleBiasAmt01 = 0.9 -- how much bias to mix
 trialGradient = { 8, 1, 2, 3, 4 }
 
 function Frame04_init()
+	math.randomseed(1000)
 	clouds = {}
 	trailClouds = {}
 	F4ships = deepcopy(F4shipsDefaults)
+	F4starfield = CreateStarField({
+		numParallaxLayers = 4,
+		density = 10,
+		dxMin = -0.01,
+		dxMax = -0.02,
+		radiusMin = 0.5,
+		radiusMax = 1
+	})
 
 	-- calc ship trajectory angles so clouds can follow
 	for i=1,#F4ships do
@@ -46,10 +56,10 @@ function Frame04(t)
 
 	local tt=1
 
-	-- todo: vertical bands with dithering
-
-	math.randomseed(1000)
-	stars(t)
+	--math.randomseed(1000)
+	--stars(t)
+	UpdateStarField(F4starfield)
+	RenderStarField(F4starfield, t)
 	
 	math.randomseed(t)
 
@@ -143,7 +153,5 @@ function Frame04(t)
 		end
 
 	end
-
-	--print(#clouds)
 
 end

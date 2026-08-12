@@ -22,6 +22,8 @@ F11_bgParticles = nil
 F11_fgRockPool = { 2, 3, 4 }
 F11_fgParticles = nil
 
+F11_Starfield = nil
+
 function AddRock(first, particleSystem, rockPool, speedMod)
 	local biasAngleRight = DxDyToAngle(1, 0)
 	local biasAngleLeft = DxDyToAngle(-1, 0)
@@ -61,7 +63,14 @@ function Frame11_init()
 	F11_st = time()
 	math.randomseed(12)
 
-	F11_Starfield = CreateStarField()
+	F11_Starfield = CreateStarField({
+		numParallaxLayers = 3,
+		density = 10,
+		dxMin = -0.02,
+		dxMax = -0.01,
+		dyMin = 0.00,
+		dyMax = 0.01
+	})
 
 	F11_bgParticles = CreateParticlePool(25)
 	for i=1, 20 do
@@ -112,9 +121,9 @@ function Frame11(tt)
 	
 	cls()
 
-	UpdateStarField(F11_Starfield, dt)
-	UpdateParticlePool(F11_bgParticles, dt)
-	UpdateParticlePool(F11_fgParticles, dt)
+	UpdateStarField(F11_Starfield)
+	UpdateParticlePool(F11_bgParticles)
+	UpdateParticlePool(F11_fgParticles)
 
 	RenderStarField(F11_Starfield, t)
 

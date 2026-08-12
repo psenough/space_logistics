@@ -147,6 +147,7 @@ function AddParticleToPool(pool, p)
 end
 
 function UpdateParticlePool(pool, dt)
+	dt = dt or 1
 	for i = #pool.particles, 1, -1 do
 		local p = pool.particles[i]
 		UpdateParticle(p, dt)
@@ -167,19 +168,17 @@ end
 -- star system... reuse particle system.
 
 StarGradient = { 15,14,13,12,4 }
---StarGradient = { 4, 12, 13, 14, 15 }
-F11_Starfield = nil
 
-function CreateStar(parallaxLayer01, init)
+function CreateStar(starField, params, parallaxLayer01, init)
 	local star = {
 		x = init and math.random(0, 240) or 241,
 		y = math.random(0, 136),
-		dx = -0.02 * parallaxLayer01,
-		dy = 0,
+		dx = lerpScalar(params.dxMin, params.dxMax, math.random()) * parallaxLayer01,
+		dy = lerpScalar(params.dyMin, params.dyMax, math.random()) * parallaxLayer01,
 		life = 99999, -- effectively infinite
 		onDeath = function(p)
-			local newStar = CreateStar(parallaxLayer01, false)
-			AddParticleToPool(F11_Starfield, newStar)
+			local newStar = CreateStar(starField, params, parallaxLayer01, false)
+			AddParticleToPool(starField, newStar)
 		end,
 		should86 = function(p)
 			return p.x < -20 or p.x > 260 or p.y < -20 or p.y > 156
@@ -187,39 +186,64 @@ function CreateStar(parallaxLayer01, init)
 		-- custom props
 		seed = math.random(),
 		colorIndex = math.random(1, #StarGradient) * parallaxLayer01,
-		radius = parallaxLayer01 * 0.1,
+		radius = lerpScalar(params.radiusMin, params.radiusMax, parallaxLayer01),
 	}
 	return star
 end
 
-function CreateStarField()
+function CreateStarField(params)
 	local stars = {}
-	local numParallaxLayers = 3
-	for parallaxLayer = 1, numParallaxLayers do
+	if not params then
+		params = {}
+	end
+	params.numParallaxLayers = params.numParallaxLayers or 3
+	params.density = params.density or 10
+	params.dxMin = params.dxMin or -0.015
+	params.dxMax = params.dxMax or 0.015
+	params.dyMin = params.dyMin or 0
+	params.dyMax = params.dyMax or 0
+	params.radiusMin = params.radiusMin or 0.1
+	params.radiusMax = params.radiusMax or 0.5
+
+	-- calc # of stars first
+	local starCount = 0
+	for parallaxLayer = 1, params.numParallaxLayers do
+		starCount = starCount + params.density * parallaxLayer
+	end
+
+	local starField = CreateParticlePool(starCount)
+	--starField.params = params
+
+	for parallaxLayer = 1, params.numParallaxLayers do
 		-- norm should actually hit  0 and 1
-		local layer01 = (parallaxLayer - 1) / (numParallaxLayers - 1)
-		local numStars = 10 * parallaxLayer
+		local layer01 = (parallaxLayer - 1) / (params.numParallaxLayers - 1)
+		local numStars = params.density * parallaxLayer
 		for i=1, numStars do
-			table.insert(stars, CreateStar(layer01, true))
+			table.insert(stars, CreateStar(starField, params, layer01, true))
 		end	
 	end
-	local starField = CreateParticlePool(#stars)
+
+	-- assert
+	if #stars ~= starCount then
+		error("star count mismatch")
+	end
+
 	for _, star in ipairs(stars) do
 		AddParticleToPool(starField, star)
 	end
 	return starField
 end
 
+-- dt = step units; optional - nominal = 1
 function UpdateStarField(starField, dt)
-	-- update existing stars
 	UpdateParticlePool(starField, dt)
 end
 
 function RenderStarField(starField, t)
 	for i,p in ipairs(starField.particles) do
 		-- twinkle effect nudges gradient index.
-		local twinkleRate = 0.02
-		local twinkle = math.sin(t * twinkleRate * p.seed) + 0.95 -- bias so it's mostly positive(on)
+		local twinkleRate = 0.005
+		local twinkle = math.sin(t * twinkleRate * p.seed + (6.28 * p.seed)) + 0.5 -- bias so it's mostly positive(on)
 		local twinkleIndexNudge = twinkle > 0 and 2 or 0
 		local colIndex = math.min(p.colorIndex + twinkleIndexNudge, #StarGradient)
 		circ(p.x, p.y, p.radius,  StarGradient[colIndex])

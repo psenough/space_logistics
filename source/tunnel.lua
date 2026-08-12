@@ -35,22 +35,22 @@ function tunnel(tt)
 
 	math.randomseed(t)
 
-	local slx = math.sin(t/1000)*10+t/60-60
-	local sly = 50+math.sin(t/800)*6
+	local slx = math.sin(t/1000)*10+t/60-100
+	local sly = 30+math.sin(t/800)*6
 	drawSprite("Tunnel_Shiplarge", slx, sly)
 	circ(slx+97,sly+54,math.random(2),math.random(3)+3)
 	
-	slx = math.sin(t/2100)*6+t/52-180
-	sly = 60+math.sin(t/1800)*4
+	slx = math.sin(t/2100)*6+t/46-20
+	sly = 98+math.sin(t/1800)*4
 	drawSprite("Tunnel_Shipsmall_01", slx,sly)
 	circ(slx+1,sly+16,math.random(2),math.random(3)+3)
 	circ(slx+3,sly+19,math.random(1),math.random(3)+3)
 
-	slx = math.sin(t/2000+10)*6+t/52-235
-	sly = 55+math.sin(t/1700+2)*4
+	slx = math.sin(t/2000+10)*6+t/30-80
+	sly = 5+math.sin(t/1700+2)*4
 	drawSprite("Tunnel_Shipsmall_02",slx,sly)
 	line(slx+2,sly+9,slx+6,sly+5,math.random(3)+3)
 
-	drawSprite("Tunnel_Shipsmall_03", math.sin(t/2100+20)*6+t/50-290, 90+math.sin(t/1900+4)*5)
+	drawSprite("Tunnel_Shipsmall_03", math.sin(t/2100+20)*6+t/58-140, 94+math.sin(t/1900+4)*5)
 
 end

@@ -13,6 +13,7 @@
 --#include "source/tunnel_sprites.lua"
 --#include "source/construction01_sprites.lua"
 --#include "source/construction02_sprites.lua"
+--#include "source/construction03_sprites.lua"
 
 --#include "source/bootstrap.lua"
 --#include "source/frame01_calls.lua"
@@ -29,6 +30,7 @@
 --#include "source/tunnel.lua"
 --#include "source/construction01_calls.lua"
 --#include "source/construction02_calls.lua"
+--#include "source/construction03_calls.lua"
 
 scene_frame = 0
 current_scene_id = 1
@@ -139,6 +141,12 @@ scenes = {
 		frame = Construction02,
 		bdr = no_fn,
 		start = 29,
+		row = 0,
+	},{
+		init = Construction03_init,
+		frame = Construction03,
+		bdr = no_fn,
+		start = 31,
 		row = 0,
 	}
 }

@@ -100,3 +100,14 @@ function lerpAngular(a,b,t)
   local diff = (b-a+math.pi)%(2*math.pi)-math.pi
   return a + diff*t
 end
+
+function angleToDxDy(angle, speed)
+  local dx = math.cos(angle) * speed
+  local dy = math.sin(angle) * speed
+  return dx, dy
+end
+
+function DxDyToAngle(dx, dy)
+  return math.atan2(dy, dx)
+end
+

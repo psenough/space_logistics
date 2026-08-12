@@ -5,9 +5,10 @@ TUNNEL_Gradient_Darker = {8, 9, 10, 11} -- same gradient but 1 shade darker
 TUNNEL_TrailParticles = { } -- particle system created in init
 
 TUNNEL_TrailGradient = {
-	--2,3,4, -- yellow/red
-	--7,6,5, -- green
-	3,4,6,5
+	--3, -- orange
+	4, -- yellow
+	11, -- cyan
+	6,5, -- greens
 }
 TUNNEL_StructRng = nil
 
@@ -82,7 +83,7 @@ function TUNNEL_AddTrailParticle(shipIndex, x, y)
 		y = 0,
 		dx = lerpScalar(-0.2, -0.6, r2),
 		dy = (r3-0.5)*0.05,
-		life = 40,
+		life = 50,
 		-- custom props
 		lineLength = r2 * 1.4, -- should relate directly to dx. fastest particles = wider
 	}
@@ -110,27 +111,28 @@ function posOrNeg1(x)
 	return 1
 end
 
-TUNNEL_HyperlineRng = nil
+TUNNEL_hyperLineIndex = 0
 
 function RenderHyperLine(t, x, y)
-	local throw = 12
-	local nominalLen = 4
-	local xoffset = fract(t * 0.008) * throw
-	--local xoffset = (sin(t*0.08 + RngNext(TUNNEL_HyperlineRng) * 6.28) * throw) // 1
-	--local xoffset = posOrNeg1(math.sin(t*0.04)) * 3 // 1
+	TUNNEL_hyperLineIndex = TUNNEL_hyperLineIndex + 1
+	local throw = 20
+	local nominalLen = 2
+	local randSpeed = lerpScalar(0.5, 1.0, hash11(TUNNEL_hyperLineIndex))
+	local xoffset = fract(t * 0.006 * randSpeed) * throw // 1
 	local startX = x - xoffset - nominalLen
-	line(startX, y, x, y, 14)
-	pix(startX - 2, y, 15)
-	pix(startX - 4, y, 13)
+	line(startX, y, x, y, 13)
+	pix(startX - 3, y, 15)
+	pix(startX - 6, y, 14)
 end
 
 function tunnel(tt)
 	local t = tt - tunnel_st
 
+	local thl = t
 	--t = 9000
 	
 	cls()
-	TUNNEL_HyperlineRng = CreateRng(1337)
+	TUNNEL_hyperLineIndex = 0
 
 	for i=1,#TUNNEL_TrailParticles do
 		local p = TUNNEL_TrailParticles[i]
@@ -147,11 +149,11 @@ function tunnel(tt)
 	--draw ships
 	local slx = math.sin(t/1000)*10+t/60-100
 	local sly = 30+math.sin(t/800)*6
-	RenderHyperLine(t, slx+116, sly+0)
-	RenderHyperLine(t, slx+20, sly+5)
-	--RenderHyperLine(t, slx+0, sly+22)
-	RenderHyperLine(t, slx+1, sly+38)
-	RenderHyperLine(t, slx + 110, sly + 76)
+	RenderHyperLine(thl, slx+116, sly+0)
+	RenderHyperLine(thl, slx+20, sly+5)
+	--RenderHyperLine(thl, slx+0, sly+22)
+	RenderHyperLine(thl, slx+1, sly+38)
+	RenderHyperLine(thl, slx + 110, sly + 76)
 	drawSprite("Tunnel_Shiplarge", slx, sly)
 	circ(slx+97,sly+54,math.random(2),math.random(3)+3)
 	TUNNEL_AddTrailParticle(1, slx+97,sly+54)
@@ -159,8 +161,8 @@ function tunnel(tt)
 
 	slx = math.sin(t/2100)*6+t/46-20
 	sly = 98+math.sin(t/1800)*4
-	--RenderHyperLine(t, slx+0, sly+1)
-	RenderHyperLine(t, slx+3, sly+28)
+	--RenderHyperLine(thl, slx+0, sly+1)
+	RenderHyperLine(thl, slx+3, sly+28)
 	drawSprite("Tunnel_Shipsmall_01", slx,sly)
 	--pix(slx,sly,7) 
 	circ(slx+1,sly+16,math.random(2),math.random(3)+3)

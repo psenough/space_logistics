@@ -1,112 +1,6 @@
---------------------------------------------------------------------------------------------------------
--- generic particle system
-function UpdateParticle(p,dt)
-	p.x = p.x + p.dx * dt
-	p.y = p.y + p.dy * dt
-	p.life = p.life - dt
-end
-
-function CreateParticlePool(maxParticles)
-	local pool = {}
-	pool.maxParticles = maxParticles or 1000
-	pool.particles = {}
-	return pool
-end
-
--- p should be { x=,y=,dx=,dy=,life=, onDeath, should86= }
--- onDeath called when it outives lifetime.
--- should86 is a function that returns true if the particle should be removed (e.g. OOB)
--- p can contain other fields.
-function AddParticleToPool(pool, p)
-	-- if max capacity, remove oldest particle (ok fifo regardless of particle lifetime)
-	p.age = 0
-	if #pool.particles >= pool.maxParticles then
-		table.remove(pool.particles, 1)
-	end
-	table.insert(pool.particles, p)
-end
-
-function UpdateParticlePool(pool, dt)
-	for i = #pool.particles, 1, -1 do
-		local p = pool.particles[i]
-		UpdateParticle(p, dt)
-		if p.life <= 0 then
-			table.remove(pool.particles, i)
-			if p.onDeath then
-				p.onDeath(p)
-			end
-		elseif p.should86 and p.should86(p) then
-			table.remove(pool.particles, i)
-			if p.onDeath then
-				p.onDeath(p)
-			end
-		end
-	end
-end
---------------------------------------------------------------------------------------------------------
--- star system... reuse particle system.
-
-StarGradient = { 15,14,13,12,4 }
---StarGradient = { 4, 12, 13, 14, 15 }
-F11_Starfield = nil
-
-function CreateStar(parallaxLayer01, init)
-	local star = {
-		x = init and math.random(0, 240) or 241,
-		y = math.random(0, 136),
-		dx = -0.02 * parallaxLayer01,
-		dy = 0,
-		life = 99999, -- effectively infinite
-		onDeath = function(p)
-			local newStar = CreateStar(parallaxLayer01, false)
-			AddParticleToPool(F11_Starfield, newStar)
-		end,
-		should86 = function(p)
-			return p.x < -20 or p.x > 260 or p.y < -20 or p.y > 156
-		end,
-		-- custom props
-		seed = math.random(),
-		colorIndex = math.random(1, #StarGradient) * parallaxLayer01,
-		radius = parallaxLayer01 * 0.1,
-	}
-	return star
-end
-
-function CreateStarField()
-	local stars = {}
-	local numParallaxLayers = 3
-	for parallaxLayer = 1, numParallaxLayers do
-		-- norm should actually hit  0 and 1
-		local layer01 = (parallaxLayer - 1) / (numParallaxLayers - 1)
-		local numStars = 10 * parallaxLayer
-		for i=1, numStars do
-			table.insert(stars, CreateStar(layer01, true))
-		end	
-	end
-	local starField = CreateParticlePool(#stars)
-	for _, star in ipairs(stars) do
-		AddParticleToPool(starField, star)
-	end
-	return starField
-end
-
-function UpdateStarField(starField, dt)
-	-- update existing stars
-	UpdateParticlePool(starField, dt)
-end
-
-function RenderStarField(starField, t)
-	for i,p in ipairs(starField.particles) do
-		-- twinkle effect nudges gradient index.
-		local twinkleRate = 0.02
-		local twinkle = math.sin(t * twinkleRate * p.seed) + 0.95 -- bias so it's mostly positive(on)
-		local twinkleIndexNudge = twinkle > 0 and 2 or 0
-		local colIndex = math.min(p.colorIndex + twinkleIndexNudge, #StarGradient)
-		circ(p.x, p.y, p.radius,  StarGradient[colIndex])
-	end
-end
 
 --------------------------------------------------------------------------------------------------------
+
 
 
 
@@ -180,38 +74,36 @@ function Frame11_init()
 	end
 end
 
-function ShadeCircle(cx, cy, r, shadeFunc)
-	local r2 = r * r
-	for y = -r, r do
-		local y2 = y * y
-		local screenY = cy+y
-		if screenY >= 0 and screenY < 136 then
-			for x = -r, r do
-				local screenX = cx+x
-				if screenX >= 0 and screenX < 240 then
-					if x*x + y2 <= r2 then
-						-- x and y are offsets from center; 
-						local col = shadeFunc(cx+x, screenY)
-						if col then
-							pix(screenX, screenY, col)
-						end
-					end
-				end
-			end
-		end
-	end
+F11_planetGradient = { 0,1,2,3,4,12 }
+
+function RenderPlanet(t)
+	--local cx, cy, r = 120, 68, 60
+	-- Later, this works unchanged with:
+	local cx, cy, r = 330, -450, 525
+
+	local invR = 1 / r
+	local phase = t * -0.0017
+	--local rotation = t * 0.0001
+	local scale = 6
+	--local cr, sr = cos(rotation), sin(rotation)
+
+	ShadeCircleBayer(cx, cy, r, F11_planetGradient, function(screenX, screenY)
+		local x = (screenX - cx) * invR -- normalize
+		local y = (cy - screenY) * invR
+		local z = sqrt(max(0, 1 - x*x - y*y)) -- unit sphere
+
+		-- interaction with rotated coords looks cool but is subtle and costs a lot of CPU
+		-- local px = cr*x - sr*z
+		-- local pz = sr*x + cr*z
+
+		local waves =
+			sin(scale*9*x + 5*y + phase) +
+			sin(scale*12*z - 7*y - phase*1.6) +
+			sin(scale*7*(x + z + y) + phase*0.61)
+
+		return z * (waves + 2) * 0.5
+	end)
 end
-
--- F11_planetGradient = { 2,3,4 }
--- function RenderPlanet(t)
--- 	circ(400,-400,525,1)-- diag template.
-
--- 	--ShadeCircle(400,-400,525, function(x, y, u, v)
--- 	ShadeCircle(120,68,60, function(x, y)
--- 		-- simple randomness.
--- 		return F11_planetGradient[math.random(1,#F11_planetGradient)]
--- 	end)
--- end
 
 function Frame11(tt)
 
@@ -229,8 +121,8 @@ function Frame11(tt)
 	-- planet
 	--circ(100,1000,900,1)-- horiz
 	--circ(1000,80, 900,1)-- vert
-	circ(400,-400,525,1)-- diag template.
-	--RenderPlanet(t);
+	---circ(400,-400,525,1)-- diag template.
+	RenderPlanet(t);
 
 	-- rocks behind
 	for i,p in ipairs(F11_bgParticles.particles) do

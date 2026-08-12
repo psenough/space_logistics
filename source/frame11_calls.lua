@@ -85,9 +85,33 @@ end
 
 F11_planetGradient = { 0,1,2,3,4,12 }
 
+-- idea here was to use something other than sin() to make the planet feel like it has more ridges, less molten/smooth.
+-- it ends up being a bit too subtle due to layering.
+-- function MakeLUT(sampleCount, func)
+-- 	local lut = {}
+-- 	for i=0, sampleCount-1 do
+-- 		local phase = ((i / sampleCount) - 0.5) * 6.28318530718 -- phase in -pi..pi
+-- 		lut[i + 1] = func(phase)
+-- 	end
+-- 	return lut
+-- end
+
+-- local F11_WAVE = MakeLUT(256, function(phase)
+-- 	local x = phase
+-- 	return math.abs(sin(x))
+-- end)
+
+-- local F11_WAVE_N = #F11_WAVE
+-- local F11_PHASE_TO_INDEX = F11_WAVE_N * 0.15915494309 -- 1/(2*pi)
+
+-- local function F11_RidgeWave(phase)
+-- 	-- no interpolation; cheap!
+-- 	local index = ((phase * F11_PHASE_TO_INDEX) % F11_WAVE_N) // 1
+-- 	return F11_WAVE[index + 1]
+-- end
+
 function RenderPlanet(t)
 	--local cx, cy, r = 120, 68, 60
-	-- Later, this works unchanged with:
 	local cx, cy, r = 330, -450, 525
 
 	local invR = 1 / r
@@ -101,16 +125,15 @@ function RenderPlanet(t)
 		local y = (cy - screenY) * invR
 		local z = sqrt(max(0, 1 - x*x - y*y)) -- unit sphere
 
-		-- interaction with rotated coords looks cool but is subtle and costs a lot of CPU
-		-- local px = cr*x - sr*z
-		-- local pz = sr*x + cr*z
-
 		local waves =
 			sin(scale*9*x + 5*y + phase) +
 			sin(scale*12*z - 7*y - phase*1.6) +
 			sin(scale*7*(x + z + y) + phase*0.61)
-
 		return z * (waves + 2) * 0.5
+
+		-- interaction with rotated coords looks cool but is subtle and costs a lot of CPU
+		-- local px = cr*x - sr*z
+		-- local pz = sr*x + cr*z
 	end)
 end
 

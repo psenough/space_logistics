@@ -293,6 +293,18 @@ function TIC()
 	if keyp(54) or btnp(2) then
 		SetScene(current_scene_id - 1, true)
 	end
+	if keyp(56) then -- HOME
+		SetScene(1, true)
+	end
+	if keyp(57) then -- END
+		SetScene(#scenes, true)
+	end
+	if keyp(54) then -- PGUP
+		SetScene(current_scene_id - 5, true)
+	end
+	if keyp(55) then -- PGDN
+		SetScene(current_scene_id + 5, true)
+	end
 	if keyp(13) then -- M
 		state = somatic_set_options({ isMuted = not state.isMuted })
 	end

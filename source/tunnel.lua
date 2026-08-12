@@ -3,6 +3,9 @@ function tunnel_init()
 	tunnel_st = time()
 end
 
+TUNNEL_Gradient = {9, 10, 11, 12}
+TUNNEL_Gradient_Darker = {8, 9, 10, 11} -- same gradient but 1 shade darker
+
 function tunnel(tt)
 	local t = tt - tunnel_st
 	
@@ -16,17 +19,35 @@ function tunnel(tt)
 
 	local prevx = (-40-t/20)%280
 	for x=-20,260,10 do
-	 col = math.random(4)+9
+		local normColor = math.random()
+		local colIndex = SelectNorm(TUNNEL_Gradient, normColor)
+		local col = TUNNEL_Gradient[colIndex]
+		local shadowCol = TUNNEL_Gradient_Darker[colIndex]
 		local posx = (x-t/20)%280-20
+		local seamSizeOnWall = math.random(3,15) -- keep out of below loop otherwise it messes with rand sequence
 		if prevx < posx then
+			-- ceiling
 			tri(posx,y1,posx*2-120,0,prevx*2-120,0,col)
 			tri(prevx,y1,posx,y1,prevx*2-120,0,col)
 		
+			-- wall
 			tri(posx,y1,posx,y2,prevx,y1,col)
 			tri(prevx,y1,posx,y2,prevx,y2,col)
 			
+			-- floor
 			tri(posx,y2,posx*2-120,136,prevx*2-120,136,col)
 			tri(prevx,y2,posx,y2,prevx*2-120,136,col)
+
+			-- draw kind of ambent occlusion effect on wall.
+			-- dynamic height of this effect actually makes no sense but it looks more dynamic than fixed,
+			-- probably due to bayer noise.
+			for seamRY = 0, seamSizeOnWall do
+				local seam01 = 1 - (seamRY / seamSizeOnWall)
+				local seamY1 = y1 + seamRY
+				hlineBayerShadow(prevx, posx, seamY1, shadowCol, seam01)
+				local seamY2 = y2 - seamRY
+				hlineBayerShadow(prevx, posx, seamY2, shadowCol, seam01)
+			end
 		end
 		prevx = posx
 	end

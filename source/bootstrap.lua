@@ -3,6 +3,20 @@
 TIC_HEIGHT = 136
 TIC_WIDTH = 240
 
+function assert(condition, message)
+	if not condition then
+		error(message or "assertion failed")
+	end
+end
+
+-- t is an array
+-- x = 0..1; 0 = left, 1 = right, evenly distributed over array.
+-- returns the INDEX (not value)
+-- yes this is not totally necessary but helps my tiny brain read code.
+function SelectNorm(t, x)
+	return ((x * #t) // 1) + 1
+end
+
 local min, max = math.min, math.max
 local sin, cos, sqrt = math.sin, math.cos, math.sqrt
 
@@ -287,6 +301,42 @@ function pixBayer(x, y, gradient, gradientCount, brightness)
 	local bayer = BAYER_MINUS_5[row + x]
 	local col = gradient[max(1, min(gradientCount, (brightness + bayer) * gradientCount)) // 1]
 	pix(x, y, col)
+end
+
+function hlineBayer(x1, x2, y, gradient, gradientCount, brightness)
+	-- screen clip.
+	if y < 0 or y >= TIC_HEIGHT then
+		return
+	end
+	x1 = max(0, x1) // 1
+	x2 = min(TIC_WIDTH - 1, x2) // 1
+	local row = (y * TIC_WIDTH) // 1
+	for x = x1, x2 do
+		local bayer = BAYER_MINUS_5[row + x]
+		local col = gradient[max(1, min(gradientCount, (brightness + bayer) * gradientCount)) // 1]
+		pix(x, y, col)
+	end
+end
+
+-- specialization of hline that draws only the shadow pixels. darkenAmt01 is amount of shade.
+function hlineBayerShadow(x1, x2, y, colorShadow, darkenAmt01)
+	-- screen clip.
+	if y < 0 or y >= TIC_HEIGHT then
+		return
+	end
+	x1 = max(0, x1) // 1
+	x2 = min(TIC_WIDTH - 1, x2) // 1
+	local row = (y * TIC_WIDTH) // 1
+	 -- offset to account for 0.5 bayer centering instead of calculating per pixel
+	 -- and a bit of bias so first row is not 100% shade
+	darkenAmt01 = darkenAmt01 - 0.6
+	for x = x1, x2 do
+		local bayer = BAYER_MINUS_5[row + x]
+		if darkenAmt01 > bayer then
+			local col = colorShadow
+			pix(x, y, col)
+		end
+	end
 end
 
 -- renders a circle with a shade function returning the 0..1 gradient position for the pixel.

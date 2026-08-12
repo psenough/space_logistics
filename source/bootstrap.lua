@@ -269,9 +269,11 @@ end
 function ShadeCircleBayer(cx, cy, r, gradient, shadeFunc)
 	local r2 = r * r
 	local gradientCount = #gradient
+	local bayer = BAYER_MINUS_5
 	for y = -r, r do
 		local y2 = y * y
 		local screenY = cy+y
+		local screenY240 = screenY * 240
 		if screenY >= 0 and screenY < 136 then
 			for x = -r, r do
 				local screenX = cx+x
@@ -281,7 +283,9 @@ function ShadeCircleBayer(cx, cy, r, gradient, shadeFunc)
 						local tone01 = shadeFunc(cx+x, screenY)
 						if tone01 ~= nil then
 							--pix(screenX, screenY, col)
-							pixBayer(screenX, screenY, gradient, gradientCount, tone01)
+							--pixBayer(screenX, screenY, gradient, gradientCount, tone01)
+							local b = bayer[screenY240 + screenX]
+							pix(screenX, screenY, gradient[max(1, min(gradientCount, (tone01 + b) * gradientCount)) // 1])
 						end
 					end
 				end

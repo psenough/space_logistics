@@ -38,6 +38,7 @@ show_hud = false
 show_palette = false
 last_somatic_state = nil
 hmr_request = nil -- for HMR, tells TIC() to init.
+mouse_origin = nil -- set explicit origin with 'o' for measuring distances
 
 scenes = {
 	{ -- missing "Space" on logo
@@ -208,6 +209,8 @@ function MakeHMRState()
 		show_hud = show_hud,
 		is_playing = last_somatic_state.isPlaying,
 		is_muted = last_somatic_state.isMuted,
+		mouse_origin_x = mouse_origin and mouse_origin.x or nil,
+		mouse_origin_y = mouse_origin and mouse_origin.y or nil,
 	}
 end
 function HMR(state)
@@ -219,11 +222,14 @@ function HMR(state)
 		if state.show_hud ~= nil then
 			show_hud = state.show_hud
 		end
-			hmr_request = {
-				current_scene_id = state.scene_id,
-				is_playing = state.is_playing,
-				is_muted = state.is_muted,
-			}
+		if state.mouse_origin_x ~= nil and state.mouse_origin_y ~= nil then
+			mouse_origin = { x = state.mouse_origin_x, y = state.mouse_origin_y }
+		end
+		hmr_request = {
+			current_scene_id = state.scene_id,
+			is_playing = state.is_playing,
+			is_muted = state.is_muted,
+		}
 	end
 	return MakeHMRState -- return callback
 end
@@ -271,7 +277,15 @@ function RenderHud(state)
 	)
 	-- show mouse cursor coords
 	local mx, my = mouse()
-	print(string.format("(%d,%d)", mx, my), 0, 6, 12)
+	if mouse_origin then
+		local dx = mx - mouse_origin.x
+		local dy = my - mouse_origin.y
+		print(string.format("(%d,%d) DXY=(%d,%d)", mx, my, dx, dy), 0, 6, 12)
+		line(mouse_origin.x, mouse_origin.y, mx, my, 12)
+	else
+		print(string.format("(%d,%d)", mx, my), 0, 6, 12)
+	end
+	--print(string.format("(%d,%d)", mx, my), 0, 6, 12)
 end
 
 function RenderPalette()
@@ -316,6 +330,14 @@ function TIC()
 	end
 	if keyp(12) then -- L https://skyelynwaddell.github.io/tic80-manual-cheatsheet/#_buttons
 		show_palette = not show_palette
+	end
+	if keyp(15) then -- O
+		if mouse_origin == nil then
+			local mx, my = mouse()
+			mouse_origin = { x = mx, y = my }
+		else
+			mouse_origin = nil
+		end
 	end
 
 	--local track, playingSongOrder, currentFrame, currentRow = somatic_get_state()

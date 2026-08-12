@@ -137,7 +137,7 @@ end
 function UpdateParticle(p,dt)
 	p.x = p.x + p.dx * dt
 	p.y = p.y + p.dy * dt
-	p.life = p.life - dt
+	p.age = p.age + dt
 end
 
 function CreateParticlePool(maxParticles)
@@ -165,7 +165,7 @@ function UpdateParticlePool(pool, dt)
 	for i = #pool.particles, 1, -1 do
 		local p = pool.particles[i]
 		UpdateParticle(p, dt)
-		if p.life <= 0 then
+		if p.age >= p.life then
 			table.remove(pool.particles, i)
 			if p.onDeath then
 				p.onDeath(p)
@@ -370,5 +370,34 @@ function ShadeCircleBayer(cx, cy, r, gradient, shadeFunc)
 				end
 			end
 		end
+	end
+end
+
+--------------------------------------------------------------------------------------------------------
+-- 1 input value, 1 output value, 0..1
+
+-- https://stackoverflow.com/questions/12964279/whats-the-origin-of-this-glsl-rand-one-liner
+function hash11(t)
+	local x = math.sin(t * 12.9898) * 43758.5453
+	return x - math.floor(x)
+end
+
+-- self-contained stateful rng; semantics like math.random.
+-- usage:
+-- local rng = CreateRng(12345)
+-- RngNext(rng) -- returns a number between 0 and 1
+-- RngNext(rng, min, max) -- returns a number between min and max
+function CreateRng(seed)
+	return { seed = seed or time() }
+end
+
+-- https://github.com/dylang/shortid/blob/master/lib/random/random-from-seed.js
+function RngNext(rng, min, max)
+	rng.seed = (rng.seed * 9301 + 49297) % 233280
+	local value = rng.seed / 233280
+	if min and max then
+		return min + value * (max - min)
+	else
+		return value
 	end
 end

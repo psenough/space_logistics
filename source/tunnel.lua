@@ -1,42 +1,53 @@
 
-function tunnel_init()
-	tunnel_st = time()
-end
-
 TUNNEL_Gradient = {9, 10, 11, 12}
 TUNNEL_Gradient_Darker = {8, 9, 10, 11} -- same gradient but 1 shade darker
 
-function tunnel(tt)
-	local t = tt - tunnel_st
-	
-	cls()
-	math.randomseed(1)
+TUNNEL_TrailParticles = { } 
 
-	--draw tunnel
+TUNNEL_TrailGradient = {1,2,3,4}
+TUNNEL_StructRng = nil
 
+function tunnel_init()
+	tunnel_st = time()
+	math.randomseed(766)
+
+	-- each ship gets particle emitter
+	TUNNEL_TrailParticles = {
+		CreateParticlePool(300),
+		CreateParticlePool(300),
+		CreateParticlePool(300),
+		CreateParticlePool(300),
+	}
+end
+
+function renderStructure(t, bandFill01)
 	local y1 = 36--46+math.sin(t/700+10)*20
 	local y2 = 100--110+math.sin(t/1000)*20
+	local bandWidth = 17
 
 	local prevx = (-40-t/20)%280
-	for x=-20,260,10 do
-		local normColor = math.random()
+	for x=-20,260,bandWidth do
+		local bandFillPx = bandWidth * (bandFill01 and RngNext(TUNNEL_StructRng) or 1)
+		local normColor = RngNext(TUNNEL_StructRng)
 		local colIndex = SelectNorm(TUNNEL_Gradient, normColor)
 		local col = TUNNEL_Gradient[colIndex]
 		local shadowCol = TUNNEL_Gradient_Darker[colIndex]
 		local posx = (x-t/20)%280-20
-		local seamSizeOnWall = math.random(3,15) -- keep out of below loop otherwise it messes with rand sequence
+		local seamSizeOnWall = RngNext(TUNNEL_StructRng, 2, 4) // 1 -- keep out of below loop otherwise it messes with rand sequence
 		if prevx < posx then
+			local x0 = prevx
+			local x1 = prevx + bandFillPx
 			-- ceiling
-			tri(posx,y1,posx*2-120,0,prevx*2-120,0,col)
-			tri(prevx,y1,posx,y1,prevx*2-120,0,col)
+			tri(x1,y1,x1*2-120,0,x0*2-120,0,col)
+			tri(x0,y1,x1,y1,x0*2-120,0,col)
 		
 			-- wall
-			tri(posx,y1,posx,y2,prevx,y1,col)
-			tri(prevx,y1,posx,y2,prevx,y2,col)
+			tri(x1,y1,x1,y2,x0,y1,col)
+			tri(x0,y1,x1,y2,x0,y2,col)
 			
 			-- floor
-			tri(posx,y2,posx*2-120,136,prevx*2-120,136,col)
-			tri(prevx,y2,posx,y2,prevx*2-120,136,col)
+			tri(x0,y2,x0*2-120,136,x1*2-120,136,col)
+			tri(x1,y2,x0,y2,x1*2-120,136,col)
 
 			-- draw kind of ambent occlusion effect on wall.
 			-- dynamic height of this effect actually makes no sense but it looks more dynamic than fixed,
@@ -51,27 +62,107 @@ function tunnel(tt)
 		end
 		prevx = posx
 	end
+end
 
-	-- draw ships
+function TUNNEL_AddTrailParticle(shipIndex, x, y)
+	local r1, r2, r3 = math.random(), math.random(), math.random()
+	if r1 < 0.3 then
+		return
+	end
+	local particle = {
+		x = x,
+		y = 0,
+		dx = r2 * -0.5,
+		dy = (r3-0.5)*0.03,
+		life = 100,
+	}
+	AddParticleToPool(TUNNEL_TrailParticles[shipIndex], particle)
+end
 
-	math.randomseed(t)
+function TUNNEL_RenderParticles(shipIndex, xOffset, yOffset)
+	local particles = TUNNEL_TrailParticles[shipIndex].particles
+	for i,p in ipairs(particles) do
+		local age01 = 1 -(p.age / p.life)
+		local colIndex = SelectNorm(TUNNEL_TrailGradient, age01)
+		pix(p.x, p.y + yOffset, TUNNEL_TrailGradient[colIndex])
+	end
+end
 
+function posOrNeg1(x)
+	if x < 0 then
+		return -1
+	end
+	return 1
+end
+
+TUNNEL_HyperlineRng = nil
+
+function RenderHyperLine(t, x, y)
+	local throw = 4
+	local nominalLen = 10
+	local xoffset = (sin(t*0.08 + RngNext(TUNNEL_HyperlineRng) * 6.28) * throw) // 1
+	--local xoffset = posOrNeg1(math.sin(t*0.04)) * 3 // 1
+	local startX = x - xoffset - nominalLen
+	line(startX, y, x, y, 14)
+	pix(startX - 2, y, 15)
+	pix(startX - 4, y, 13)
+end
+
+function tunnel(tt)
+	local t = tt - tunnel_st
+
+	--t = 9000
+	
+	cls()
+	TUNNEL_HyperlineRng = CreateRng(1337)
+
+	for i=1,#TUNNEL_TrailParticles do
+		local p = TUNNEL_TrailParticles[i]
+		if p then
+			UpdateParticlePool(p)
+		end
+	end
+
+	--draw tunnel
+	TUNNEL_StructRng = CreateRng(1)
+	renderStructure(t * 0.8)
+	renderStructure(t * 1.3, true)
+
+	--draw ships
 	local slx = math.sin(t/1000)*10+t/60-100
 	local sly = 30+math.sin(t/800)*6
+	RenderHyperLine(t, slx+116, sly+0)
+	RenderHyperLine(t, slx+20, sly+5)
+	--RenderHyperLine(t, slx+0, sly+22)
+	RenderHyperLine(t, slx+1, sly+38)
+	RenderHyperLine(t, slx + 110, sly + 76)
 	drawSprite("Tunnel_Shiplarge", slx, sly)
 	circ(slx+97,sly+54,math.random(2),math.random(3)+3)
-	
+	TUNNEL_AddTrailParticle(1, slx+97,sly+54)
+	TUNNEL_RenderParticles(1, slx+97, sly+54)
+
 	slx = math.sin(t/2100)*6+t/46-20
 	sly = 98+math.sin(t/1800)*4
+	RenderHyperLine(t, slx+0, sly+0)
+	--RenderHyperLine(t, slx+2, sly+28)
 	drawSprite("Tunnel_Shipsmall_01", slx,sly)
+	pix(slx,sly,7) 
 	circ(slx+1,sly+16,math.random(2),math.random(3)+3)
 	circ(slx+3,sly+19,math.random(1),math.random(3)+3)
+	TUNNEL_AddTrailParticle(2, slx+3,sly+19)
+	TUNNEL_RenderParticles(2, slx+3, sly+19)
 
 	slx = math.sin(t/2000+10)*6+t/30-80
 	sly = 5+math.sin(t/1700+2)*4
 	drawSprite("Tunnel_Shipsmall_02",slx,sly)
 	line(slx+2,sly+9,slx+6,sly+5,math.random(3)+3)
+	TUNNEL_AddTrailParticle(3, slx+6,sly+5)
+	TUNNEL_RenderParticles(3, slx+6, sly+5)
 
-	drawSprite("Tunnel_Shipsmall_03", math.sin(t/2100+20)*6+t/58-140, 94+math.sin(t/1900+4)*5)
+	slx = math.sin(t/2100+20)*6+t/58-140
+	sly = 94+math.sin(t/1900+4)*5
+	TUNNEL_AddTrailParticle(4, slx,sly+12)
+	TUNNEL_RenderParticles(4, slx, sly+12)
+	drawSprite("Tunnel_Shipsmall_03", slx, sly)
 
 end

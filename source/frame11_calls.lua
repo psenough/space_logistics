@@ -120,10 +120,18 @@ function RenderPlanet(t)
 	local scale = 6
 	--local cr, sr = cos(rotation), sin(rotation)
 
+	circ(cx, cy, r + 3, 8)
+	circ(cx, cy, r + 1, 9)
+
 	ShadeCircleBayer(cx, cy, r, F11_planetGradient, function(screenX, screenY)
 		local x = (screenX - cx) * invR -- normalize
 		local y = (cy - screenY) * invR
-		local z = sqrt(max(0, 1 - x*x - y*y)) -- unit sphere
+		local z = sqrt(1 - x*x - y*y) -- unit sphere
+
+		if z < 0.08 then
+			-- sharper adge
+			--return 6 * z
+		end
 
 		local waves =
 			sin(scale*9*x + 5*y + phase) +

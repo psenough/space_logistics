@@ -180,11 +180,12 @@ function BOOT()
 	loadFrame06Sprites() -- leaving hub ship in straights
 	loadFrame07Sprites() -- leaving moving hub ship
 	loadFrame08Sprites() -- modules
-	loadFrame09Sprites() -- xray
+	loadFrame09Sprites() -- xray scanning
 	loadFrame11Sprites() -- ship next to particle vortex
 	loadC01Sprites() -- triangle welding
 	loadC02Sprites() -- ships departing
-	loadC03Sprites()
+
+	loadC03Sprites() -- ship flying over factory elements
 	loadTunnelSprites() -- ships for side tunnel scene
 
 	somatic_set_completion_callback(function ()

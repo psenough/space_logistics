@@ -15,6 +15,7 @@
 --#include "source/construction02_sprites.lua"
 --#include "source/construction03_sprites.lua"
 --#include "source/spherescenes_sprites.lua"
+--#include "source/tunnel2_sprites.lua"
 
 --#include "source/bootstrap.lua"
 --#include "source/frame01_calls.lua"
@@ -33,9 +34,10 @@
 --#include "source/construction02_calls.lua"
 --#include "source/construction03_calls.lua"
 --#include "source/spherescenes_calls.lua"
+--#include "source/tunnel2_calls.lua"
 
 scene_frame = 0
-current_scene_id = 1
+current_scene_id = 19
 show_hud = false
 show_palette = false
 last_somatic_state = nil
@@ -152,6 +154,12 @@ scenes = {
 		start = 27,
 		row = 0,
 	},{
+		init = Tunnel2_init,
+		frame = Tunnel2,
+		bdr = no_fn,
+		start = 28,
+		row = 0,
+	},{
 		init = Frame09_init,
 		frame = Frame09, -- xray luggage
 		bdr = no_fn,
@@ -195,6 +203,7 @@ function BOOT()
 	loadC03Sprites() -- ship flying over factory elements
 	loadTunnelSprites() -- ships for side tunnel scene
 	loadSSSprites() -- sphere scenes
+	loadTunnel2Sprites() -- tunnel 2
 
 	somatic_set_completion_callback(function ()
 		trace(" - SPACE LOGISTICS - ")

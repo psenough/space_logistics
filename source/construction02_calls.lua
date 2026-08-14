@@ -89,7 +89,7 @@ function Construction02(tt)
 			if (t > C02_doors[i][4]) then
 				-- turn on thrusters
 				stpos = stpos + (t - C02_doors[i][4])/20
-				circ(stpos,ypos+8,math.random(2),math.random(3)+1)
+				circ(stpos,ypos+7,math.random(2),math.random(3)+1)
 			end
 			drawSpriteClipLeft(C02_doors[i][3],stpos,ypos,clip)
 			--print(doorx//1,doorx,0,12)

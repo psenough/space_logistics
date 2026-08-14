@@ -1,6 +1,6 @@
 
 --[[ drawing controllable pivots, borrowed code from elias
-local pivots={{133,83},{68,99},{230,104},{224,2}}
+local pivots={{133,83},{68,99},{68,120},{230,104},{224,2}}
 local selection=-1 -- pivot selected (-1 = none, otherwise Lua 1-based index)
 local mbt=0        -- mouse button time
 local imx,imy=-1,-1 -- store initial mouse position
@@ -92,41 +92,76 @@ function drawBezierCurves(t)
 end
 --]]
 
+F7_TrailGradient = {
+	12,11,10,11
+}
+
+function F7_AddTrailParticle(x, y)
+	local r1, r2, r3 = math.random(), math.random(), math.random()
+	if r1 < 0.3 then
+		return
+	end
+	local particle = {
+		x = x,
+		y = 0,
+		dx = lerpScalar(0.2, 0.6, r2),
+		dy = (r3-0.5)*0.05,
+		life = 50,
+		-- custom props
+		lineLength = r2 * 1.4, -- should relate directly to dx. fastest particles = wider
+	}
+	AddParticleToPool(F7_SmallShipParticles, particle)
+end
+
+function F7_RenderParticles(xOffset, yOffset)
+	local particles = F7_SmallShipParticles.particles
+	for i,p in ipairs(particles) do
+		local age01 = 1 -(p.age / p.life)
+		age01 = age01 * age01 --* age01  -- adjust curve so more energetic particles are sharper curve
+		local colIndex = SelectNorm(F7_TrailGradient, age01)
+
+		line(p.x, p.y + yOffset, p.x + p.lineLength, p.y + yOffset, F7_TrailGradient[colIndex])
+		p.prevX = p.x
+		p.prevY = p.y
+	end
+end
 
 function Frame07_init()
 	F07_st = time()
-	--cls()
-
-	--math.randomseed(123)
-	--stars(1000)
-	
-	--drawSprite("F7_Ship_01",240-226,10)
-	--drawSprite("F7_Ship_02",10,100)
+	math.randomseed(123)
+	F7_SmallShipParticles = CreateParticlePool(500)
 end
+
+F7_SmallShipParticles = {}
 
 function Frame07(tt)
 	local t = tt - F07_st
 
-
 	cls()
 
 	math.randomseed(123)
-	stars_noscroll(t+10000)
+	stars_side(10000+t,t/50,0)
+	math.randomseed(t)
 	
-	drawSprite("F7_Ship_01",240-226,10)
-	drawSprite("F7_Ship_02",10,100)
+	drawSprite("F7_Ship_01",240-226,10+math.sin(t/1200)*2)
+	drawSprite("F7_Ship_02",200-t/50,100)
+	UpdateParticlePool(F7_SmallShipParticles)
+	F7_AddTrailParticle(230-t/50,107)
+	F7_RenderParticles(230-t/50,107)
 
---	drawBezierCurves(t)
+	--drawBezierCurves(t)
 
-	line(40,107,78,107,math.random(10,11))
-	line(84,107,88,107,math.random(10,11))
-	line(92,107,95,107,math.random(10,11))
+	--line(40,107,78,107,math.random(10,11))
+	--line(84,107,88,107,math.random(10,11))
+	--line(92,107,95,107,math.random(10,11))
 
-	line(150,42,172,42,math.random(10,11))
-	line(178,42,182,42,math.random(10,11))
+	--line(150,42,172,42,math.random(10,11))
+	--line(178,42,182,42,math.random(10,11))
 
 	local curves = {
-		{ st = 0, pivots={{133,83},{68,99},{26,72},{-20,47}}},
+		--{ st = 0, pivots={{133,83},{68,99},{26,72},{-20,47}}},
+		{ st = 0, pivots={{133,83},{22,81},{79,109},{29,11},{13,-20}}},
+
 		{ st = 200, pivots={{141,86},{68,99},{116,132},{269,135}}},
 		{ st = 400, pivots={{137,85},{68,99},{174,135},{179,-20}}},
 		{ st = 1200, pivots={{141,85},{45,89},{16,22},{16,-20}}},

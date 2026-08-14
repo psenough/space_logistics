@@ -14,6 +14,7 @@
 --#include "source/construction01_sprites.lua"
 --#include "source/construction02_sprites.lua"
 --#include "source/construction03_sprites.lua"
+--#include "source/spherescenes_sprites.lua"
 
 --#include "source/bootstrap.lua"
 --#include "source/frame01_calls.lua"
@@ -31,6 +32,7 @@
 --#include "source/construction01_calls.lua"
 --#include "source/construction02_calls.lua"
 --#include "source/construction03_calls.lua"
+--#include "source/spherescenes_calls.lua"
 
 scene_frame = 0
 current_scene_id = 1
@@ -43,31 +45,31 @@ mouse_origin = nil -- set explicit origin with 'o' for measuring distances
 scenes = {
 	{ -- missing "Space" on logo
 		init = no_fn,
-		frame = Frame01,
+		frame = Frame01, -- ship docking
 		bdr = no_fn,
 		start = 0,
 		row = 0,
 	},{
 		init = Frame02_init,
-		frame = Frame02,
+		frame = Frame02, -- planets with ships in orbit
 		bdr = no_fn,
 		start = 4,
 		row = 0,
 	},{ -- missing credits on left maybe?
 		init = no_fn,
-		frame = Frame03,
+		frame = Frame03, -- cargo ship flying over slabs
 		bdr = no_fn,
 		start = 6,
 		row = 0,
 	},{
 		init = Frame05_notraces,
-		frame = Frame05,
+		frame = Frame05, -- stationary orbit 5a
 		bdr = no_fn,
 		start = 8,
 		row = 0,
 	},{
 		init = Frame05_notraces,
-		frame = Frame05b,
+		frame = Frame05b, -- stationary orbit 5b
 		bdr = no_fn,
 		start = 9,
 		row = 0,
@@ -79,75 +81,81 @@ scenes = {
 		row = 0,
 	},{
 		init = Frame05_init,
-		frame = Frame05,
+		frame = Frame05, -- 5a ships leaving
 		bdr = no_fn,
 		start = 11,
 		row = 0,
 	},{
 		init = Frame05_init,
-		frame = Frame05b,
+		frame = Frame05b, -- 5b ships leaving
 		bdr = no_fn,
 		start = 12,
 		row = 0,
 	},{ -- not synced to music, does it matter?
 		init = Frame06_init,
-		frame = Frame06,
+		frame = Frame06, -- dune ships leaving
 		bdr = no_fn,
 		start = 13,
 		row = 0,
 	},{ -- needs sharper turns on bezier, better thruster anim and syncs
 		init = Frame07_init,
-		frame = Frame07,
+		frame = Frame07, -- big ship, ships leaving
 		bdr = no_fn,
 		start = 14,
 		row = 0,
-	},{ -- right place for this?
+	},{
 		init = Frame04_init,
-		frame = Frame04,
+		frame = Frame04, -- take off
 		bdr = no_fn,
 		start = 15,
 		row = 0,
 	},{
 		init = Frame08_init,
-		frame = Frame08,
+		frame = Frame08, -- modules undocking
 		bdr = no_fn,
 		start = 17,
 		row = 0,
-	},{ -- maybe tune up background colors?!
+	},{
 		init = tunnel_init,
 		frame = tunnel,
 		bdr = no_fn,
 		start = 19,
 		row = 0,
-	},{
-		init = Frame09_init,
-		frame = Frame09,
+	},{ 
+		init = Frame11_init,
+		frame = Frame11, -- plasma orbit
 		bdr = no_fn,
 		start = 21,
 		row = 0,
 	},{ -- sync to music, right order of sequence?
 		init = Construction01_init,
-		frame = Construction01,
+		frame = Construction01, -- welding
 		bdr = no_fn,
-		start = 25,
-		row = 0,
-	},{ 
-		init = Frame11_init,
-		frame = Frame11,
-		bdr = no_fn,
-		start = 27,
-		row = 0,
-	},{ -- ships departing
-		init = Construction02_init,
-		frame = Construction02,
-		bdr = no_fn,
-		start = 29,
+		start = 22,
 		row = 0,
 	},{
 		init = Construction03_init,
-		frame = Construction03,
+		frame = Construction03, -- industrial planet elements
 		bdr = no_fn,
-		start = 31,
+		start = 23,
+		row = 0,
+	},{
+		init = Construction02_init,
+		frame = Construction02, -- ships departing big dock with parts
+		bdr = no_fn,
+		start = 25,
+		row = 0,
+	},{
+		init = SphereScenes_init,
+		frame = SphereScenes,
+		bdr = no_fn,
+		start = 27,
+		row = 0,
+	},{
+		init = Frame09_init,
+		frame = Frame09, -- xray luggage
+		bdr = no_fn,
+		start = 35,
 		row = 0,
 	}
 }
@@ -184,9 +192,9 @@ function BOOT()
 	loadFrame11Sprites() -- ship next to particle vortex
 	loadC01Sprites() -- triangle welding
 	loadC02Sprites() -- ships departing
-
 	loadC03Sprites() -- ship flying over factory elements
 	loadTunnelSprites() -- ships for side tunnel scene
+	loadSSSprites() -- sphere scenes
 
 	somatic_set_completion_callback(function ()
 		trace(" - SPACE LOGISTICS - ")

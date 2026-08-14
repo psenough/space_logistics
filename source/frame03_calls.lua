@@ -75,21 +75,21 @@ local slabs = {
 	{290,-40,10,6,7},
 	{360,-90,2,4,2},
 	{300,-300,10,8,6},
-	{496,-290,3,17,7},
-	{570,-290,8,7,2},
-	{570,-400,4,5,6},
-	{715,-395,5,14,7},
-	{410,-400,5,12,9},
-	{420,-450,6,2,9},
+	--{496,-290,3,17,7},
+	--{570,-290,8,7,2},
+	{450,-230,4,5,6},
+	{600,-200,5,8,2},
+	{570,-240,3,10,9},
+	--{420,-450,6,2,9},
 }
 
 local Frame03_sprites = {
-	{"ContainerRed",440,-230,1},
-	{"ContainerGrey",200,-200,1},
-	{"ContainerRed",640,-630,1},
-	{"ContainerSmall_01",380,-300,1},
-	{"ContainerSmall_01",430,-350,1},
-	{"Beam",400,-400,2}
+	{"ContainerRed",280,-130,1},
+	{"ContainerGrey",350,-80,1},
+	{"ContainerRed",640,-230,1},
+	{"ContainerSmall_01",140,-120,1},
+	{"ContainerSmall_01",170,-100,1},
+	{"Beam",250,-200,2}
 }
 
 function Frame03(t)
@@ -104,9 +104,9 @@ function Frame03(t)
 		if slabs[i][1] < -100 then
 			slabs[i][1] = slabs[i][1] + 500
 		end
-		slabs[i][2]=slabs[i][2] + tt
+		slabs[i][2]=slabs[i][2] + tt*.7
 		if slabs[i][2] > 140 then
-			slabs[i][2] = slabs[i][2] - 500
+			slabs[i][2] = slabs[i][2] - 500*.7
 		end
 		
 		-- draw
@@ -124,9 +124,9 @@ function Frame03(t)
 		if Frame03_sprites[i][2] < -100 then
 			Frame03_sprites[i][2] = Frame03_sprites[i][2] + 500
 		end
-		Frame03_sprites[i][3]=Frame03_sprites[i][3] + tt*Frame03_sprites[i][4]
+		Frame03_sprites[i][3]=Frame03_sprites[i][3] + tt*Frame03_sprites[i][4]*.7
 		if Frame03_sprites[i][3] > 140 then
-			Frame03_sprites[i][3] = Frame03_sprites[i][3] - 500
+			Frame03_sprites[i][3] = Frame03_sprites[i][3] - 500*.7
 		end
 		
 		-- draw

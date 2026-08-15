@@ -154,7 +154,7 @@ function tunnel(tt)
 	--RenderHyperLine(thl, slx+0, sly+22)
 	RenderHyperLine(thl, slx+1, sly+38)
 	RenderHyperLine(thl, slx + 110, sly + 76)
-	drawSprite("Tunnel_Shiplarge", slx, sly)
+	drawSprite("Tunnel_Shiplarge_"..string.format("%02d", t//60%6+1), slx, sly)
 	circ(slx+97,sly+54,math.random(2),math.random(3)+3)
 	TUNNEL_AddTrailParticle(1, slx+97,sly+54)
 	TUNNEL_RenderParticles(1, slx+97, sly+54)
@@ -163,7 +163,7 @@ function tunnel(tt)
 	sly = 98+math.sin(t/1800)*4
 	--RenderHyperLine(thl, slx+0, sly+1)
 	RenderHyperLine(thl, slx+3, sly+28)
-	drawSprite("Tunnel_Shipsmall_01", slx,sly)
+	drawSprite("Tunnel_Shipsmall_01_"..string.format("%02d", t//60%4+1), slx,sly)
 	--pix(slx,sly,7) 
 	circ(slx+1,sly+16,math.random(2),math.random(3)+3)
 	circ(slx+3,sly+19,math.random(1),math.random(3)+3)
@@ -172,7 +172,7 @@ function tunnel(tt)
 
 	slx = math.sin(t/2000+10)*6+t/30-80
 	sly = 5+math.sin(t/1700+2)*4
-	drawSprite("Tunnel_Shipsmall_02",slx,sly)
+	drawSprite("Tunnel_Shipsmall_02_"..string.format("%02d", t//60%4+1),slx,sly)
 	line(slx+2,sly+9,slx+6,sly+5,math.random(3)+3)
 	TUNNEL_AddTrailParticle(3, slx+6,sly+5)
 	TUNNEL_RenderParticles(3, slx+6, sly+5)
@@ -181,6 +181,6 @@ function tunnel(tt)
 	sly = 94+math.sin(t/1900+4)*5
 	TUNNEL_AddTrailParticle(4, slx,sly+12)
 	TUNNEL_RenderParticles(4, slx, sly+12)
-	drawSprite("Tunnel_Shipsmall_03", slx, sly)
+	drawSprite("Tunnel_Shipsmall_03_"..string.format("%02d", t//60%6+1), slx, sly)
 
 end

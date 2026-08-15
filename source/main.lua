@@ -17,6 +17,7 @@
 --#include "source/spherescenes_sprites.lua"
 --#include "source/tunnel2_sprites.lua"
 --#include "source/endscene_sprites.lua"
+--#include "source/hud_sprites.lua"
 
 --#include "source/bootstrap.lua"
 
@@ -33,7 +34,6 @@
 --#include "source/frame08_calls.lua"
 --#include "source/frame09_calls.lua"
 --#include "source/frame11_calls.lua"
---#include "source/supernova.lua"
 --#include "source/tunnel.lua"
 --#include "source/construction01_calls.lua"
 --#include "source/construction02_calls.lua"
@@ -41,6 +41,7 @@
 --#include "source/spherescenes_calls.lua"
 --#include "source/tunnel2_calls.lua"
 --#include "source/endscene_calls.lua"
+--#include "source/hud_calls.lua"
 
 scene_frame = 0
 current_scene_id = 1
@@ -92,9 +93,9 @@ scenes = {
 		start = 9,
 		row = 0,
 	},{ -- maybe needs a hud surrounding of some sort?
-		init = supernova_init,
-		frame = supernova,
-		name = "supernova",
+		init = HUD_01_init,
+		frame = HUD_01_Scene,
+		name = "HUD_01_Scene",
 		bdr = no_fn,
 		start = 10,
 		row = 0,
@@ -148,9 +149,9 @@ scenes = {
 		start = 19,
 		row = 0,
 	},{ -- hud red alert
-		init = supernova_init,
-		frame = supernova,
-		name = "supernova",
+		init = HUD_01_init,
+		frame = HUD_01_Scene,
+		name = "HUD_01_Scene",
 		bdr = no_fn,
 		start = 21,
 		row = 0,
@@ -258,6 +259,7 @@ function BOOT()
 	loadSSSprites() -- sphere scenes
 	loadTunnel2Sprites() -- tunnel 2
 	loadEndSceneSprites() -- end scene
+	loadHUDSprites() -- HUD
 
 	somatic_set_completion_callback(function ()
 		trace(" - SPACE LOGISTICS - ")

@@ -10,7 +10,20 @@
         ],
         "binDir": "./build/$(buildConfiguration)-bin",
         "objDir": "./build/$(buildConfiguration)-obj",
-        "outputCartName": "$(project.name).tic"
+        "outputCartName": "$(project.name).tic",
+        "metadata": {
+            "title": "$(project.name)",
+            "author": "TPOLM",
+            "desc": "demo released at Xenium 2026",
+            "script": "Lua",
+            "version": "1.0.0"
+        }
+    },
+    "preprocessor": {
+        "defines": {
+            // default config = debug.
+            "DEBUG": true
+        }
     },
     "imports": [
         {
@@ -39,13 +52,6 @@
         }
     },
     "buildConfigurations": {
-        "debug": {
-            "preprocessor": {
-                "defines": {
-                    "DEBUG": true
-                }
-            }
-        },
         "release": {
             "preprocessor": {
                 "defines": {

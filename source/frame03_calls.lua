@@ -117,6 +117,10 @@ function Frame03(t, demoBeats, somaticState)
 		local c = slabs[i][5]
 		drawIsoSlab(posx,posy,ux,uy,c)
 	end
+
+	drawSprite("BgDitterTop",0,0)
+	drawSprite("BgDitterBottom",240-90,136-58)
+
 	-- draw sprites
 	for i=1,#Frame03_sprites do
 		-- update
@@ -130,16 +134,17 @@ function Frame03(t, demoBeats, somaticState)
 		end
 		
 		-- draw
-		drawSprite(Frame03_sprites[i][1],Frame03_sprites[i][2],Frame03_sprites[i][3])
+		if Frame03_sprites[i][1] ~= "Beam" then
+			drawSprite(Frame03_sprites[i][1],Frame03_sprites[i][2],Frame03_sprites[i][3])
+		end
 	end
-
-	drawSprite("BgDitterTop",0,0)
-	drawSprite("BgDitterBottom",240-90,136-58)
 
 	local shipPosX=70
 	local shipPosY=30
 
 	drawFrame03_Ship(t,shipPosX,shipPosY)
 	TwinkleTick(somaticState)
+
+	drawSprite("Beam",Frame03_sprites[#Frame03_sprites][2],Frame03_sprites[#Frame03_sprites][3])
 
 end

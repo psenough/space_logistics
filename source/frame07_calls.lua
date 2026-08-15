@@ -144,10 +144,6 @@ function Frame07(tt)
 	math.randomseed(t)
 	
 	drawSprite("F7_Ship_01",240-226,10+math.sin(t/1200)*2)
-	drawSprite("F7_Ship_02",200-t/50,100)
-	UpdateParticlePool(F7_SmallShipParticles)
-	F7_AddTrailParticle(230-t/50,107)
-	F7_RenderParticles(230-t/50,107)
 
 	--drawBezierCurves(t)
 
@@ -188,5 +184,10 @@ function Frame07(tt)
 			end
 		end
 	end
+
+	drawSprite("F7_Ship_02",200-t/50,100)
+	UpdateParticlePool(F7_SmallShipParticles)
+	F7_AddTrailParticle(230-t/50,107)
+	F7_RenderParticles(230-t/50,107)
 
 end

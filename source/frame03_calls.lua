@@ -92,7 +92,7 @@ local Frame03_sprites = {
 	{"Beam",250,-200,2}
 }
 
-function Frame03(t)
+function Frame03(t, demoBeats, somaticState)
 	cls()
 	math.randomseed(1)
 
@@ -140,5 +140,6 @@ function Frame03(t)
 	local shipPosY=30
 
 	drawFrame03_Ship(t,shipPosX,shipPosY)
+	TwinkleTick(somaticState)
 
 end

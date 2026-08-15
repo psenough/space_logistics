@@ -136,8 +136,7 @@ function stars_side(t,x,y)
 	end
 end
 
-function Frame01(t)
-
+function Frame01(t, demoBeats, somaticState)
 	local dooropen=18000
 	local sceneX=t/105
 	local sceneY=-t/65
@@ -194,6 +193,8 @@ function Frame01(t)
 		if math.sin(time()/500+i)*math.sin(time()/400+i*3) > 0 then line(0,i,100,i,0) end
 	end
 	drawSprite("LogoBackdrop",0,4)
+
+	TwinkleTick(somaticState)
 
 	vbank(0)
 

@@ -39,7 +39,7 @@ function Frame02_init()
 	vbank(0)
 end
 
-function Frame02(t,beats)
+function Frame02(t,beats, somaticState)
 	cls()
 	local id=beats//8%4
 	math.randomseed(id)
@@ -83,4 +83,5 @@ function Frame02(t,beats)
 		drawSprite("Planet_04",86,30)
 		drawSprite("Ship_04",80+sx,20+sy)
 	end	
+	TwinkleTick(somaticState)
 end

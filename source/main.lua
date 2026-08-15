@@ -17,6 +17,9 @@
 --#include "source/spherescenes_sprites.lua"
 
 --#include "source/bootstrap.lua"
+
+--#include "source/twinkles.lua"
+
 --#include "source/frame01_calls.lua"
 --#include "source/frame02_calls.lua"
 --#include "source/frame03_calls.lua"
@@ -41,6 +44,7 @@ show_palette = false
 last_somatic_state = nil
 hmr_request = nil -- for HMR, tells TIC() to init.
 mouse_origin = nil -- set explicit origin with 'o' for measuring distances
+hud_messages = {}
 
 scenes = {
 	{ -- missing "Space" on logo
@@ -49,24 +53,28 @@ scenes = {
 		bdr = no_fn,
 		start = 0,
 		row = 0,
+		rowHandler = TwinkleRowHandler,
 	},{
 		init = Frame02_init,
 		frame = Frame02, -- planets with ships in orbit
 		bdr = no_fn,
 		start = 4,
 		row = 0,
+		rowHandler = TwinkleRowHandler,
 	},{ -- missing credits on left maybe?
 		init = no_fn,
 		frame = Frame03, -- cargo ship flying over slabs
 		bdr = no_fn,
 		start = 6,
 		row = 0,
+		rowHandler = TwinkleRowHandler,
 	},{
 		init = Frame05_notraces,
 		frame = Frame05, -- stationary orbit 5a
 		bdr = no_fn,
 		start = 8,
 		row = 0,
+		rowHandler = TwinkleRowHandler,
 	},{
 		init = Frame05_notraces,
 		frame = Frame05b, -- stationary orbit 5b
@@ -164,10 +172,18 @@ function SetScene(scene_id, do_seek)
 	if scene_id >= 1 and scene_id <= #scenes then
 		current_scene_id = scene_id
 		scene_frame = 0
+		TwinkleNewScene(current_scene_id)
 		scenes[current_scene_id].init()
 		if do_seek then
 			somatic_seek(scenes[current_scene_id].start*16)
 		end
+	end
+end
+
+function handleSomaticRow(state)
+	local sceneRowHandler = scenes[current_scene_id].rowHandler
+	if sceneRowHandler then
+		sceneRowHandler(state)
 	end
 end
 
@@ -200,6 +216,8 @@ function BOOT()
 		trace(" - SPACE LOGISTICS - ")
 		exit()
 	end)
+
+	somatic_set_row_callback(handleSomaticRow)
 
 	-- init scenes
 	SetScene(current_scene_id, true)
@@ -258,6 +276,10 @@ function HonorHMRState()
 	end
 end
 
+function AddHudMessage(msg)
+	table.insert(hud_messages, msg)
+end
+
 function RenderHud(state)
 	rect(0, 0, 240, 8, 0)
 
@@ -298,6 +320,12 @@ function RenderHud(state)
 	else
 		print(string.format("(%d,%d)", mx, my), 0, 6, 12)
 	end
+
+	-- render hud messages line by line.
+	for i, msg in ipairs(hud_messages) do
+		print(msg, 0, 6 + i * 6, 12)
+	end
+
 	--print(string.format("(%d,%d)", mx, my), 0, 6, 12)
 end
 
@@ -310,6 +338,7 @@ function RenderPalette()
 end
 
 function TIC()
+	hud_messages = {}
 	local state = somatic_tick()
 	
 	HonorHMRState()
@@ -385,7 +414,7 @@ function TIC()
 		scene_frame = 0
 		scenes[current_scene_id].init()
 	end
-	scenes[current_scene_id].frame(time(), state.demoBeats)
+	scenes[current_scene_id].frame(time(), state.demoBeats, state)
 
 	if show_hud then
 		RenderHud(state)

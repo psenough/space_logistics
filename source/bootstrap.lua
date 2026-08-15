@@ -318,7 +318,7 @@ function hlineBayer(x1, x2, y, gradient, gradientCount, brightness)
 	end
 end
 
--- specialization of hline that draws only the shadow pixels. darkenAmt01 is amount of shade.
+-- specialization of hline that draws only the shadow pixels (others = transparent). darkenAmt01 is amount of shade.
 function hlineBayerShadow(x1, x2, y, colorShadow, darkenAmt01)
 	-- screen clip.
 	if y < 0 or y >= TIC_HEIGHT then
@@ -336,6 +336,21 @@ function hlineBayerShadow(x1, x2, y, colorShadow, darkenAmt01)
 			local col = colorShadow
 			pix(x, y, col)
 		end
+	end
+end
+
+function vlineBayer(x, y1, y2, gradient, gradientCount, brightness)
+	-- screen clip.
+	if x < 0 or x >= TIC_WIDTH then
+		return
+	end
+	y1 = max(0, y1) // 1
+	y2 = min(TIC_HEIGHT - 1, y2) // 1
+	for y = y1, y2 do
+		local row = (y * TIC_WIDTH) // 1
+		local bayer = BAYER_MINUS_5[row + x]
+		local col = gradient[max(1, min(gradientCount, (brightness + bayer) * gradientCount)) // 1]
+		pix(x, y, col)
 	end
 end
 
@@ -396,7 +411,7 @@ function RngNext(rng, min, max)
 	rng.seed = (rng.seed * 9301 + 49297) % 233280
 	local value = rng.seed / 233280
 	if min and max then
-		return min + value * (max - min)
+		return (min + value * (max - min)) // 1
 	else
 		return value
 	end

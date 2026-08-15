@@ -135,7 +135,7 @@ function Frame05_notraces()
 	F05_traces = false
 end
 
-function Frame05(tt)
+function Frame05(tt, demoBeats, somaticState)
 	--Frame05_init()
 	local t = tt - F05_st
 
@@ -184,6 +184,8 @@ function Frame05(tt)
 			end
 		end
 	end
+
+	TwinkleTick(somaticState)
 end
 
 function Frame05b(tt)

@@ -13,7 +13,7 @@ end
 
 function EndScene(tt)
 
-	local t = (tt - EndScene2_st)
+	local t = (tt - EndScene_st)
 	math.randomseed(t)
 
 	cls()

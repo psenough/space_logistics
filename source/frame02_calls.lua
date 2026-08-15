@@ -32,15 +32,50 @@ function rotate(points, pitch, roll, yaw)
 	return {ox,oy,oz}
 end
 
+F02_orbits = nil
+
 function Frame02_init()
 	cls()
 	vbank(1)
 	cls()
 	vbank(0)
+
+	local gradients = { { 0,15, 15, 15,  14, 14, 13 } } -- grayscale (+12 bright white)
+	local speed = 0.001-- 0.015
+	local speedVariance = 0.005
+	local orbitRadius = 50--40
+
+	F02_orbits = CreateParticleOrbitEffect({
+		particleCount = 250,
+		orbitRadiusMin = orbitRadius,
+		orbitRadiusMax = orbitRadius + 10,
+		speedMin = speed - speedVariance,
+		speedMax = speed + speedVariance,
+		gradients = gradients,
+		biasMix = 0.99,
+		biasInclination = 1.65,
+		biasAscendingNode = 0.13,
+	})
 end
+
+F02_planetSprites = {
+	"Planet_01",
+	"Planet_02",
+	"Planet_03",
+	"Planet_04",
+}
+F02_shipSprites = {
+	"Ship_01",
+	"Ship_02",
+	"Ship_03",
+	"Ship_04",
+}
 
 function Frame02(t,beats, somaticState)
 	cls()
+
+	UpdateParticleOrbitEffect(F02_orbits)
+
 	local id=beats//8%4
 	math.randomseed(id)
 	local r=500
@@ -70,18 +105,14 @@ function Frame02(t,beats, somaticState)
 	local sx = math.sin(t/2000)*3
 	local sy = math.sin(t/1800+1234+sx)*4
 	-- draw planet and spaceship
-	if id==0 then
-		drawSprite("Planet_01",86,30)
-		drawSprite("Ship_01",80+sx,20+sy)
-	elseif id==1 then
-		drawSprite("Planet_02",86,30)
-		drawSprite("Ship_02",86+sx,26+sy)
-	elseif id==2 then
-		drawSprite("Planet_03",86,30)
-		drawSprite("Ship_03",84+sx,24+sy)
-	elseif id==3 then
-		drawSprite("Planet_04",86,30)
-		drawSprite("Ship_04",80+sx,20+sy)
-	end	
+
+	RenderParticleOrbitEffect(F02_orbits, 35+86, 35+30, false)
+
+	drawSprite(F02_planetSprites[id+1],86,30)
+
+	RenderParticleOrbitEffect(F02_orbits, 35+86, 35+30, true)
+
+	drawSprite(F02_shipSprites[id+1],80+sx,20+sy)
+
 	TwinkleTick(somaticState)
 end

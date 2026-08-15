@@ -1,3 +1,5 @@
+-- todo: maybe bias away from center of screen; bias away from previous.
+
 do
 	local gTwinkleParticles = nil
 	local gTwinkleRng = nil
@@ -54,7 +56,6 @@ do
 			life01 = clamp01(life01 * life01) -- better fadeout curve.
 			local selectedGradIndex = SelectNorm(p.gradient, life01) // 1
 			local color = p.gradient[selectedGradIndex]
-			trace(string.format("%s", type(p.gradient)))
 			local darkerColor = math.max(color - 1, 0)
 
 			local size = 7 * life01

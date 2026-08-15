@@ -125,27 +125,92 @@ end
 	
 F05_st = 0
 F05_traces = true
+F05_orbits = nil
 
-function Frame05_init()
+F05_darkGrayGradient = { 0,15,15, 15, 14 } -- grayscale (+12 bright white)
+F05_grayGradient = { 0,15,15, 15, 14, 13 } -- grayscale (+12 bright white)
+F05_redYellowGradient = { 0, 1, 2, 3, 4 } -- red-yellow
+F05_blueGradient = { 0, 8, 8, 8, 9,  9, 10 } -- blue (+11 bright cyan)
+F05_greenGradient = { 0,0, 7, 7, 6, 5 } -- green
+
+function Frame05_initShared(traces, gradients)
 	F05_st = time()
-	F05_traces = true
+	F05_traces = traces or false
+
+	local speed = 0.0007
+	local orbitRadius = 58
+
+	F05_orbits = CreateParticleOrbitEffect({
+		particleCount = 1500,
+		orbitRadiusMin = orbitRadius,
+		orbitRadiusMax = orbitRadius + 30,
+		speedMin = speed,
+		speedMax = speed * 1.05,
+		gradients = gradients,
+		renderRadiusMax = 1,
+		biasInclination = 1.4,
+		biasAscendingNode = 0.5,
+		biasMix = 0.985,
+	})
 end
 
-function Frame05_notraces()
-	F05_traces = false
+function Frame05_init()
+	-- with trails, use more subtle gradient.
+	Frame05_initShared(true, { F05_darkGrayGradient })
+end
+
+function Frame05_notraces() -- init
+	Frame05_initShared(false, { F05_grayGradient, F05_blueGradient, F05_greenGradient })
+end
+
+function Frame05b_initShared(traces)
+	F05_st = time()
+	F05_traces = tracess
+
+	local speed = 0.001-- 0.015
+	local orbitRadius = 71
+
+	F05_orbits = CreateParticleOrbitEffect({
+		particleCount = 60,
+		orbitRadiusMin = orbitRadius,
+		orbitRadiusMax = orbitRadius,
+		speedMin = speed,
+		speedMax = speed * 1.05,
+		gradients = { F05_blueGradient, F05_greenGradient },
+		biasMix = 0,
+	})
+end
+
+function Frame05b_init()
+	Frame05b_initShared(true)
+end
+
+function Frame05b_notraces() -- init.
+	Frame05b_initShared(false)
 end
 
 function Frame05(tt, demoBeats, somaticState)
 	--Frame05_init()
 	local t = tt - F05_st
 
+	UpdateParticleOrbitEffect(F05_orbits)
+
 	cls()
 
 	math.randomseed(1)
 	stars_noscroll(t+10000)
 	
+	local planetX = 20-t/9000
+	local planetY = 20
+	local planetOffsetX, planetOffsetY = 49,49
+
+	RenderParticleOrbitEffect(F05_orbits, planetX + planetOffsetX, planetY + planetOffsetY, false)
+
 	--drawSprite("F5_PlanetBG",240-59,136-41)
-	drawSprite("F5_PlanetBG_02",20-t/9000,20)
+	drawSprite("F5_PlanetBG_02",planetX,planetY)
+
+	RenderParticleOrbitEffect(F05_orbits, planetX + planetOffsetX, planetY + planetOffsetY, true)
+
 
 	--drawSprite("F5_Ship02",60,100)
 	drawSprite("F5_Ship01",100+t/3000,40-t/8000)
@@ -192,13 +257,21 @@ function Frame05b(tt)
 	--Frame05_init()
 	local t = tt - F05_st
 
+	UpdateParticleOrbitEffect(F05_orbits)
+
 	cls()
 
 	math.randomseed(18)
 	stars_noscroll(t+10000)
-	
-	drawSprite("F5_PlanetBG",240-59,136-41)
+
+	local planetX, planetY = 240-59,136-41
+	local planetOffsetX, planetOffsetY = 65-4,69-4
+
+	RenderParticleOrbitEffect(F05_orbits, planetX + planetOffsetX, planetY + planetOffsetY, false)
+
+	drawSprite("F5_PlanetBG",planetX,planetY)
 	--drawSprite("F5_PlanetBG_02",20,20)
+	RenderParticleOrbitEffect(F05_orbits, planetX + planetOffsetX, planetY + planetOffsetY, true)
 
 	drawSprite("F5_Ship02",62-t/8000,100)
 	--drawSprite("F5_Ship01",100,40)

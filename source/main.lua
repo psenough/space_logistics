@@ -21,6 +21,7 @@
 --#include "source/bootstrap.lua"
 
 --#include "source/twinkles.lua"
+--#include "source/particle_orbits.lua"
 
 --#include "source/frame01_calls.lua"
 --#include "source/frame02_calls.lua"
@@ -54,6 +55,7 @@ scenes = {
 	{ -- missing "Space" on logo
 		init = no_fn,
 		frame = Frame01, -- ship docking
+		name = "Frame01",
 		bdr = no_fn,
 		start = 0,
 		row = 0,
@@ -61,6 +63,7 @@ scenes = {
 	},{
 		init = Frame02_init,
 		frame = Frame02, -- planets with ships in orbit
+		name = "Frame02",
 		bdr = no_fn,
 		start = 4,
 		row = 0,
@@ -68,6 +71,7 @@ scenes = {
 	},{ -- missing credits on left maybe?
 		init = no_fn,
 		frame = Frame03, -- cargo ship flying over slabs
+		name = "Frame03",
 		bdr = no_fn,
 		start = 6,
 		row = 0,
@@ -75,115 +79,134 @@ scenes = {
 	},{
 		init = Frame05_notraces,
 		frame = Frame05, -- stationary orbit 5a
+		name = "Frame05",
 		bdr = no_fn,
 		start = 8,
 		row = 0,
 		rowHandler = TwinkleRowHandler,
 	},{
-		init = Frame05_notraces,
+		init = Frame05b_notraces,
 		frame = Frame05b, -- stationary orbit 5b
+		name = "Frame05b",
 		bdr = no_fn,
 		start = 9,
 		row = 0,
 	},{ -- maybe needs a hud surrounding of some sort?
 		init = supernova_init,
 		frame = supernova,
+		name = "supernova",
 		bdr = no_fn,
 		start = 10,
 		row = 0,
 	},{
 		init = Frame05_init,
 		frame = Frame05, -- 5a ships leaving
+		name = "Frame05",
 		bdr = no_fn,
 		start = 11,
 		row = 0,
 	},{
-		init = Frame05_init,
+		init = Frame05b_init,
 		frame = Frame05b, -- 5b ships leaving
+		name = "Frame05b",
 		bdr = no_fn,
 		start = 12,
 		row = 0,
 	},{ -- not synced to music, does it matter?
 		init = Frame06_init,
 		frame = Frame06, -- dune ships leaving
+		name = "Frame06",
 		bdr = no_fn,
 		start = 13,
 		row = 0,
 	},{ -- needs sharper turns on bezier, better thruster anim and syncs
 		init = Frame07_init,
 		frame = Frame07, -- big ship, ships leaving
+		name = "Frame07",
 		bdr = no_fn,
 		start = 14,
 		row = 0,
 	},{
 		init = Frame04_init,
 		frame = Frame04, -- take off
+		name = "Frame04",
 		bdr = no_fn,
 		start = 15,
 		row = 0,
 	},{
 		init = Frame08_init,
 		frame = Frame08, -- modules undocking
+		name = "Frame08",
 		bdr = no_fn,
 		start = 16,
 		row = 32,
 	},{
 		init = tunnel_init,
 		frame = tunnel,
+		name = "tunnel",
 		bdr = no_fn,
 		start = 19,
 		row = 0,
 	},{ -- hud red alert
 		init = supernova_init,
 		frame = supernova,
+		name = "supernova",
 		bdr = no_fn,
 		start = 21,
 		row = 0,
 	},{
 		init = Frame11_init,
 		frame = Frame11, -- plasma orbit
+		name = "Frame11",
 		bdr = no_fn,
 		start = 23,
 		row = 0,
 	},{
 		init = Construction03_init,
 		frame = Construction03, -- industrial planet elements
+		name = "Construction03",
 		bdr = no_fn,
 		start = 25,
 		row = 0,
 	},{ -- sync to music, right order of sequence?
 		init = Construction01_init,
 		frame = Construction01, -- welding
+		name = "Construction01",
 		bdr = no_fn,
 		start = 28,
 		row = 0,
 	},{
 		init = Tunnel2_init,
 		frame = Tunnel2,
+		name = "Tunnel2",
 		bdr = no_fn,
 		start = 29,
 		row = 0,
 	},{
 		init = Construction02_init,
 		frame = Construction02, -- ships departing big dock with parts
+		name = "Construction02",
 		bdr = no_fn,
 		start = 31,
 		row = 0,
 	},{
 		init = SphereScenes_init,
 		frame = SphereScenes,
+		name = "SphereScenes",
 		bdr = no_fn,
 		start = 33,
 		row = 0,
 	},{
 		init = EndScene_init,
 		frame = EndScene,
+		name = "EndScene",
 		bdr = no_fn,
 		start = 36,
 		row = 0,
 	},{
 		init = Frame09_init,
 		frame = Frame09, -- xray luggage
+		name = "Frame09",
 		bdr = no_fn,
 		start = 39,
 		row = 0,
@@ -315,16 +338,18 @@ function RenderHud(state)
 	local time_str = string.format("%02d:%02d.%03d", minutes, seconds, milliseconds)
 
 	local blinkParity = time() // 500 % 2
+	local current_scene = scenes[current_scene_id] or {}
 
 	print(
 		string.format(
-			"%s scene:%d frame:%d beat:%.1f p%d r%d %s",
+			"%s scn:%d frm:%d beat:%.1f p%d r%d %s %s",
 			time_str,
 			current_scene_id,
 			scene_frame,
 			state.demoBeats,
 			state.demoPatternIndex,
 			state.demoPatternRow,
+			current_scene.name or "",
 			state.isPlaying and "" or (blinkParity == 0 and "PAUSED" or "")
 		),
 		0,

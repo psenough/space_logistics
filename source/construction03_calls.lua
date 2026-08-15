@@ -34,6 +34,8 @@ function Construction03(tt)
 
 	cls()
 
+	drawSprite("C3_Bg_ditter",0,0)
+
 	local it = 1
 
 	-- draw sprites
@@ -51,8 +53,6 @@ function Construction03(tt)
 		-- draw
 		drawSprite(C03_sprites[i][1],C03_sprites[i][2],C03_sprites[i][3])
 	end
-
-	drawSprite("C3_Bg_ditter",0,0)
 
 	local shipPosX=30+math.sin(time()/2000)*2
 	local shipPosY=20+math.sin(time()/1000)*2

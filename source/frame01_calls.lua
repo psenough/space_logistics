@@ -77,7 +77,7 @@ function drawDoorOpenAnim(t,st,et,x,y)
 	if t>=et then t=et end
 	local door_id = 11-10*((t-st)/(et-st))//1
 	--print(door_id,0,0,12)
-	local spr_id = "Door_"..string.format("%02d", door_id)
+	local spr_id = "F1_Door_"..string.format("%02d", door_id)
 	local w=sprites[spr_id].w
 	local h=sprites[spr_id].h
 	local tw=53
@@ -89,7 +89,7 @@ function drawDoorOpenAnim(t,st,et,x,y)
 	local doorlight_id = door_id//2+1
 	--print(doorlight_id,0,0,12)
 	if doorlight_id <= 5 then
-		local sprl_id = "DoorLight_"..string.format("%02d", doorlight_id)
+		local sprl_id = "F1_DoorLight_"..string.format("%02d", doorlight_id)
 		local dw=sprites[sprl_id].w
 		local dh=sprites[sprl_id].h
 		local tdw=46
@@ -155,21 +155,21 @@ function Frame01(t, demoBeats, somaticState)
 	local posShipX=65-sceneX+t/66
 	local posShipY=50+math.sin(t/8000)*2-sceneY-t/65
 	tri(posGateX-40,posGateY,240,0,240,136,0)
-	drawSprite("BgDither",posGateX-40,posGateY)
+	drawSprite("F1_BgDither",posGateX-40,posGateY)
 	drawDoorOpenAnim(t,dooropen,dooropen+1600,posGateX+53,posGateY+22)
 
 	-- draw under to get black over stars
 	if (t<(dooropen+200)) then
-		drawSprite("Ship01",posShipX,posShipY)
+		drawSprite("F1_Ship01",posShipX,posShipY)
 	end
 
 	vbank(1)
 	cls()
 	if (t<(dooropen+200)) then
-		drawSprite("Ship01",posShipX,posShipY)
+		drawSprite("F1_Ship01",posShipX,posShipY)
 	else
 		--drawSpriteD("Ship01","Ship02",posShipX,posShipY)
-		drawSprite("Ship02",posShipX,posShipY)
+		drawSprite("F1_Ship02",posShipX,posShipY)
 	end
 	--else
 	-- drawSprite("Ship02",posShipX,posShipY)
@@ -188,11 +188,13 @@ function Frame01(t, demoBeats, somaticState)
 
 	--if math.random() > 0.5 then	drawSprite("Logo",10,104) end
 
-	drawSprite("Logo",10,104)
-	for i=104,140 do
+	drawSprite("F1_Logo02",21,74)
+
+	drawSprite("F1_Logo",10,104)
+	for i=74,140 do
 		if math.sin(time()/500+i)*math.sin(time()/400+i*3) > 0 then line(0,i,100,i,0) end
 	end
-	drawSprite("LogoBackdrop",0,4)
+	drawSprite("F1_LogoBackdrop",0,4)
 
 	TwinkleTick(somaticState)
 

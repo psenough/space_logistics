@@ -20,6 +20,14 @@ end
 local min, max = math.min, math.max
 local sin, cos, sqrt = math.sin, math.cos, math.sqrt
 
+
+function clamp01(x)
+	if x < 0 then return 0 end
+	if x > 1 then return 1 end
+	return x
+end
+
+
 local pal = "07F80060KBMBMCNFHCNFBLODDFPONHHFPPNMFHHKAPAHIDHLEGFCBHJHJCGDPGLDNFJMBEGKGPDHPOHPEPEPEPEJALCMGFMGGIDDMDHF0"
 
 -- the rle-decoder
@@ -122,9 +130,10 @@ function lerpAngular(a,b,t)
   return a + diff*t
 end
 
-function angleToDxDy(angle, speed)
-  local dx = math.cos(angle) * speed
-  local dy = math.sin(angle) * speed
+-- speed or radius...
+function polarToCartesian(angle, length)
+  local dx = math.cos(angle) * length
+  local dy = math.sin(angle) * length
   return dx, dy
 end
 
@@ -340,6 +349,9 @@ function hlineBayerShadow(x1, x2, y, colorShadow, darkenAmt01)
 end
 
 function vlineBayer(x, y1, y2, gradient, gradientCount, brightness)
+	x = x // 1
+	y1 = y1 // 1
+	y2 = y2 // 1
 	-- screen clip.
 	if x < 0 or x >= TIC_WIDTH then
 		return
@@ -349,6 +361,11 @@ function vlineBayer(x, y1, y2, gradient, gradientCount, brightness)
 	for y = y1, y2 do
 		local row = (y * TIC_WIDTH) // 1
 		local bayer = BAYER_MINUS_5[row + x]
+--#ifdef DEBUG
+		if bayer == nil then
+			error(string.format("bayer is nil at x=%d, y=%d", x, y))
+		end
+--#endif
 		local col = gradient[max(1, min(gradientCount, (brightness + bayer) * gradientCount)) // 1]
 		pix(x, y, col)
 	end

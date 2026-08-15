@@ -3,34 +3,87 @@
 do
 	local gTwinkleParticles = nil
 	local gTwinkleRng = nil
+	local gScheduledTwinkles = {}
 
 	function TwinkleNewScene(sceneNumber)
 		gTwinkleParticles = CreateParticlePool(50)
-		gTwinkleRng = CreateRng(5151 + sceneNumber)
-	end
-
-	function clamp01(x)
-		if x < 0 then return 0 end
-		if x > 1 then return 1 end
-		return x
+		gTwinkleRng = CreateRng(1 + sceneNumber)
+		gScheduledTwinkles = {}
 	end
 
 	TwinkleNewScene(0)
 
-	local gTwinkleGradient1 = { 0, 15, 14, 13, 12 } -- white
-	local gTwinkleGradient2 = { 0, 1, 2, 3, 4 } -- red-yellow
+	local gTwinkleGradient1 = { 15, 14, 13, 12 } -- white
+	local gTwinkleGradient2 = { 1, 2, 3, 4 } -- red-yellow
+
+	-- sub-twinkles get different, darker color.
+	local gSubTwinkleGradient1 = { 15, 15, 14, 13 } -- white
+	local gSubTwinkleGradient2 = { 1, 1, 2, 3 } -- red-yellow
+
+	-- generates x,y screen coords whose distribution is biased away from the center of the screen
+	function GetRandomCoordInSpanBiasedAwayFromCenter(min, max)
+		local span = max - min
+		--local centerBias = 0.5 -- 0.5 = no bias; 1.0 = full bias away from center.
+		local r = RngNext(gTwinkleRng) - 0.5 -- -0.5 to 0.5 such that 0 is center.
+		local sign = r < 0 and -1 or 1
+		local rAbs = math.abs(r)
+		local rAbsBiased = math.sqrt(rAbs) -- inflates the curve; higher values favored = towards edge.
+		local center = (min + max) / 2
+		return center + sign * rAbsBiased * (span / 2)
+	end
+	function GetRandomScreenPosition()
+		local x = GetRandomCoordInSpanBiasedAwayFromCenter(0, TIC_WIDTH)
+		local y = GetRandomCoordInSpanBiasedAwayFromCenter(0, TIC_HEIGHT)
+		return x, y
+	end
+
+	-- get random position within a donut-shaped region around x,y
+	function GetSubTwinklePosition(x, y)
+		local rInside = 5
+		local rOutside = 15
+		local r = lerpScalar(rInside, rOutside, RngNext(gTwinkleRng))
+		local angle = RngNext(gTwinkleRng, 0, 6.28)
+		return x + math.cos(angle) * r, y + math.sin(angle) * r
+	end
 
 	function AddTwinkle()
-		local particle = {
-			x = RngNext(gTwinkleRng, 0, TIC_WIDTH),
-			y = RngNext(gTwinkleRng, 0, TIC_HEIGHT),
-			dx = 0,
-			dy = 0,
-			life = 75,
-			-- custom
-			gradient = RngNext(gTwinkleRng) > 0.5 and gTwinkleGradient1 or gTwinkleGradient2,
-		}
-		AddParticleToPool(gTwinkleParticles, particle)
+		for i = 1,1 do
+			local x,y = GetRandomScreenPosition()
+			local gradientRand = RngNext(gTwinkleRng)
+			local particle = {
+				x = x,
+				y = y,
+				dx = 0,
+				dy = 0,
+				life = 75,
+				-- custom
+				gradient = gradientRand > 0.5 and gTwinkleGradient1 or gTwinkleGradient2,
+				strength = 1,
+			}
+			AddParticleToPool(gTwinkleParticles, particle)
+			-- schedule a couple more twinkles in the next few frames, positioned near this one.
+			for j = 1,5 do
+				local subX,subY = GetSubTwinklePosition(x, y)
+				local subParticle = {
+					x = subX,
+					y = subY,
+					dx = 0,
+					dy = 0,
+					life = 75,-- / j,
+					-- custom
+					gradient = gradientRand > 0.5 and gSubTwinkleGradient1 or gSubTwinkleGradient2,
+					strength = 0.25, -- fade out the sub-twinkles a bit more.
+				}
+
+				local delayMillis = 120 * j
+
+				gScheduledTwinkles[#gScheduledTwinkles + 1] = {
+					millisRemaining = delayMillis,
+					particle = subParticle
+				}
+				--AddParticleToPool(gTwinkleParticles, particle)
+			end
+		end
 	end
 
 	function TwinkleRowHandler(state)
@@ -48,6 +101,16 @@ do
 			AddTwinkle()
 		end
 
+		-- realize any scheduled twinkles.
+		for i = #gScheduledTwinkles, 1, -1 do
+			local scheduled = gScheduledTwinkles[i]
+			scheduled.millisRemaining = scheduled.millisRemaining - state.wallDeltaMillis
+			if scheduled.millisRemaining <= 0 then
+				AddParticleToPool(gTwinkleParticles, scheduled.particle)
+				table.remove(gScheduledTwinkles, i)
+			end
+		end
+
 		UpdateParticlePool(gTwinkleParticles)
 
 		for i = 1, #gTwinkleParticles.particles do
@@ -58,7 +121,7 @@ do
 			local color = p.gradient[selectedGradIndex]
 			local darkerColor = math.max(color - 1, 0)
 
-			local size = 7 * life01
+			local size = 7 * life01 * p.strength
 
 			hlineBayer(p.x - size, p.x + 1 + size, p.y, p.gradient, #p.gradient, life01)
 			vlineBayer(p.x, p.y - size, p.y + 1 + size, p.gradient, #p.gradient, life01)

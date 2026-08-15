@@ -33,7 +33,7 @@ function AddRock(first, particleSystem, rockPool, speedMod)
 	local angle = lerpAngular(ownAngle, biasAngle, biasAmt)
 	local speed = math.random(5, 20) / 1000
 	speed = speed * speedMod-- * 10
-	local dx, dy = angleToDxDy(angle, speed)
+	local dx, dy = polarToCartesian(angle, speed)
 	-- if moving left, spawn on right. if moving right, spawn on left.
 	local x = dx < 0 and 260 or -20
 	if first then

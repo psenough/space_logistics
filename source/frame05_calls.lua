@@ -143,7 +143,7 @@ function Frame05_initShared(traces, gradients)
 	F05_orbits = CreateParticleOrbitEffect({
 		particleCount = 2000,
 		orbitRadiusMin = orbitRadius,
-		orbitRadiusMax = orbitRadius + 40,
+		orbitRadiusMax = orbitRadius + 60,
 		speedMin = speed * 0.1,
 		speedMax = speed,
 		gradients = gradients,

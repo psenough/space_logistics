@@ -16,6 +16,7 @@
 --#include "source/construction03_sprites.lua"
 --#include "source/spherescenes_sprites.lua"
 --#include "source/tunnel2_sprites.lua"
+--#include "source/endscene_sprites.lua"
 
 --#include "source/bootstrap.lua"
 --#include "source/frame01_calls.lua"
@@ -35,6 +36,7 @@
 --#include "source/construction03_calls.lua"
 --#include "source/spherescenes_calls.lua"
 --#include "source/tunnel2_calls.lua"
+--#include "source/endscene_calls.lua"
 
 scene_frame = 0
 current_scene_id = 1
@@ -145,7 +147,7 @@ scenes = {
 		init = Construction01_init,
 		frame = Construction01, -- welding
 		bdr = no_fn,
-		start = 27,
+		start = 28,
 		row = 0,
 	},{
 		init = Tunnel2_init,
@@ -153,7 +155,6 @@ scenes = {
 		bdr = no_fn,
 		start = 29,
 		row = 0,
-	
 	},{
 		init = Construction02_init,
 		frame = Construction02, -- ships departing big dock with parts
@@ -167,10 +168,16 @@ scenes = {
 		start = 33,
 		row = 0,
 	},{
+		init = EndScene_init,
+		frame = EndScene,
+		bdr = no_fn,
+		start = 36,
+		row = 0,
+	},{
 		init = Frame09_init,
 		frame = Frame09, -- xray luggage
 		bdr = no_fn,
-		start = 35,
+		start = 39,
 		row = 0,
 	}
 }
@@ -211,6 +218,7 @@ function BOOT()
 	loadTunnelSprites() -- ships for side tunnel scene
 	loadSSSprites() -- sphere scenes
 	loadTunnel2Sprites() -- tunnel 2
+	loadEndSceneSprites() -- end scene
 
 	somatic_set_completion_callback(function ()
 		trace(" - SPACE LOGISTICS - ")

@@ -1,4 +1,4 @@
--- title:  LogoBackdropExtended.png
+-- title:  C:\Users\Utilizador\AppData\Roaming\com.nesbox.tic\TIC-80\space_logistics\gfx\Frame01\\LogoBackdropExtended.png
 -- author: TicPanel
 -- script: lua
 

@@ -182,18 +182,18 @@ function Frame01(t, demoBeats, somaticState)
 	circ(posShipX+7,25+posShipY,math.random(2),math.random(2)+1)
 
 	-- clip right
-	rect(posGateX+102,0,100,136,0)
+	--rect(posGateX+102,0,100,136,0)
 	-- clip top of gate
-	tri(posGateX+10,posGateY, 240,0, 240,posGateY+62, 0)
+	--tri(posGateX+10,posGateY, 240,0, 240,posGateY+62, 0)
+	drawSprite("F1_GateMask",posGateX-39,posGateY)
 
 	--if math.random() > 0.5 then	drawSprite("Logo",10,104) end
 
-	drawSprite("F1_Logo02",21,74)
-
-	drawSprite("F1_Logo",10,104)
-	for i=74,140 do
-		if math.sin(time()/500+i)*math.sin(time()/400+i*3) > 0 then line(0,i,100,i,0) end
-	end
+	drawSprite("F1_Logo02",12,74)
+	drawSprite("F1_Logo",12,104)
+	--for i=74,140 do
+	--	if math.sin(time()/500+i)*math.sin(time()/400+i*3) > 0 then line(0,i,100,i,0) end
+	--end
 	drawSprite("F1_LogoBackdrop",0,4)
 
 	TwinkleTick(somaticState)

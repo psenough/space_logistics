@@ -270,6 +270,7 @@ function BOOT()
 	SetScene(current_scene_id, true)
 end
 
+--#ifdef DEBUG
 -- ticbuild allows HMR for tic80 carts. before the old cart is killed, the tic80 calls the
 -- returned function to get a state snapshot to pass to the next cart.
 function MakeHMRState()
@@ -322,7 +323,9 @@ function HonorHMRState()
 		hmr_request = nil
 	end
 end
+--#endif -- DEBUG
 
+--#ifdef DEBUG
 function AddHudMessage(msg)
 	table.insert(hud_messages, msg)
 end
@@ -385,12 +388,15 @@ function RenderPalette()
 		print(i, i * swatchSize + 2, 136 - swatchSize + 2, 0)
 	end
 end
+--#endif -- DEBUG
 
 function TIC()
 	hud_messages = {}
 	local state = somatic_tick()
 	
+	--#ifdef DEBUG
 	HonorHMRState()
+	--#endif
 
 	if keyp(55) or btnp(3) then
 		SetScene(current_scene_id + 1, true)
@@ -398,6 +404,7 @@ function TIC()
 	if keyp(54) or btnp(2) then
 		SetScene(current_scene_id - 1, true)
 	end
+	--#ifdef DEBUG
 	if keyp(56) then -- HOME
 		SetScene(1, true)
 	end
@@ -430,6 +437,7 @@ function TIC()
 			mouse_origin = nil
 		end
 	end
+	--#endif -- DEBUG
 
 	--local track, playingSongOrder, currentFrame, currentRow = somatic_get_state()
 	local track = state.demoPatternIndex
@@ -443,11 +451,11 @@ function TIC()
 	end
 
 	--hide cursor
-	if show_hud then
-		poke(16379, 128) -- show cursor when hud is on
-	else
-		poke(16379, 2)
-	end
+	--#ifdef DEBUG
+	poke(16379, show_hud and 128 or 2) -- show cursor when hud is on
+	--#else
+	poke(16379, 2) -- hide cursor always in release
+	--#endif
 
 	-- get global music sync refs
 	local _pO = state.demoPatternIndex--playingSongOrder
@@ -465,12 +473,14 @@ function TIC()
 	end
 	scenes[current_scene_id].frame(time(), state.demoBeats, state)
 
+	--#ifdef DEBUG
 	if show_hud then
 		RenderHud(state)
 	end
 	if show_palette then
 		RenderPalette()
 	end
+	--#endif
 
 	scene_frame = scene_frame + 1
 

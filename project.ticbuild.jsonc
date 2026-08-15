@@ -29,11 +29,30 @@
                 "chunks": ["MUSIC_PATTERNS", "MUSIC_TRACKS", "WAVEFORMS", "SFX"]
             },
             {
-                "asset": "maincode"
+                "asset": "maincode",
+                //"chunks": ["CODE_COMPRESSED"]
+                "chunks": ["CODE"]
             }
         ],
         "lua": {
             "minify": false
+        }
+    },
+    "buildConfigurations": {
+        "debug": {
+            "defines": [
+                "DEBUG"
+            ]
+        },
+        "release": {
+            "defines": [
+                "RELEASE"
+            ],
+            "assembly": {
+                "lua": {
+                    "minify": true
+                }
+            }
         }
     }
 }

@@ -26,15 +26,15 @@ Tunnel2_Ship = "A35D98EA95C33BC63DDEA93C33BC6B56CCDDEA91C5B28C6BP56BCCDDEA89C5BC
 
 function loadTunnel2Sprites()
 	loadExtendedSprite(unpac_noheader(Tunnel2_Engine),"Tunnel2_Engine",38,37,0)
-	loadExtendedSprite(unpac_noheader(Tunnel2_Shine_01),"Tunnel2_Shine_01",179,65,0)
-	loadExtendedSprite(unpac_noheader(Tunnel2_Shine_02),"Tunnel2_Shine_02",180,65,0)
-	loadExtendedSprite(unpac_noheader(Tunnel2_Shine_03),"Tunnel2_Shine_03",180,65,0)
-	loadExtendedSprite(unpac_noheader(Tunnel2_Shine_04),"Tunnel2_Shine_04",177,65,0)
-	loadExtendedSprite(unpac_noheader(Tunnel2_Shine_05),"Tunnel2_Shine_05",177,65,0)
-	loadExtendedSprite(unpac_noheader(Tunnel2_Shine_06),"Tunnel2_Shine_06",177,65,0)
-	loadExtendedSprite(unpac_noheader(Tunnel2_Shine_07),"Tunnel2_Shine_07",179,65,0)
-	loadExtendedSprite(unpac_noheader(Tunnel2_Shine_08),"Tunnel2_Shine_08",174,65,0)
-	loadExtendedSprite(unpac_noheader(Tunnel2_Shine_09),"Tunnel2_Shine_09",175,65,0)
-	loadExtendedSprite(unpac_noheader(Tunnel2_Shine_10),"Tunnel2_Shine_10",177,65,0)
+	loadExtendedSprite(unpac_noheader(Tunnel2_Shine_01),"Tunnel2_Shine_01",179,65,0) --1
+	loadExtendedSprite(unpac_noheader(Tunnel2_Shine_02),"Tunnel2_Shine_02",180,65,0) --2
+	loadExtendedSprite(unpac_noheader(Tunnel2_Shine_03),"Tunnel2_Shine_03",180,65,0) --2
+	loadExtendedSprite(unpac_noheader(Tunnel2_Shine_04),"Tunnel2_Shine_04",177,65,0) --5
+	loadExtendedSprite(unpac_noheader(Tunnel2_Shine_05),"Tunnel2_Shine_05",177,65,0) --5
+	loadExtendedSprite(unpac_noheader(Tunnel2_Shine_06),"Tunnel2_Shine_06",177,65,0) --5
+	loadExtendedSprite(unpac_noheader(Tunnel2_Shine_07),"Tunnel2_Shine_07",179,65,0) --3
+	loadExtendedSprite(unpac_noheader(Tunnel2_Shine_08),"Tunnel2_Shine_08",174,65,0) --8
+	loadExtendedSprite(unpac_noheader(Tunnel2_Shine_09),"Tunnel2_Shine_09",175,65,0) --7
+	loadExtendedSprite(unpac_noheader(Tunnel2_Shine_10),"Tunnel2_Shine_10",177,65,0) --5
 	loadExtendedSprite(unpac_noheader(Tunnel2_Ship),"Tunnel2_Ship",197,65,0)
 end

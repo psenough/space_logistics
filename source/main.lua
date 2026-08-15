@@ -37,7 +37,7 @@
 --#include "source/tunnel2_calls.lua"
 
 scene_frame = 0
-current_scene_id = 19
+current_scene_id = 1
 show_hud = false
 show_palette = false
 last_somatic_state = nil
@@ -115,41 +115,35 @@ scenes = {
 		init = Frame08_init,
 		frame = Frame08, -- modules undocking
 		bdr = no_fn,
-		start = 17,
-		row = 0,
+		start = 16,
+		row = 32,
 	},{
 		init = tunnel_init,
 		frame = tunnel,
 		bdr = no_fn,
 		start = 19,
 		row = 0,
-	},{ 
-		init = Frame11_init,
-		frame = Frame11, -- plasma orbit
+	},{ -- hud red alert
+		init = supernova_init,
+		frame = supernova,
 		bdr = no_fn,
 		start = 21,
 		row = 0,
-	},{ -- sync to music, right order of sequence?
-		init = Construction01_init,
-		frame = Construction01, -- welding
+	},{
+		init = Frame11_init,
+		frame = Frame11, -- plasma orbit
 		bdr = no_fn,
-		start = 22,
+		start = 23,
 		row = 0,
 	},{
 		init = Construction03_init,
 		frame = Construction03, -- industrial planet elements
 		bdr = no_fn,
-		start = 23,
-		row = 0,
-	},{
-		init = Construction02_init,
-		frame = Construction02, -- ships departing big dock with parts
-		bdr = no_fn,
 		start = 25,
 		row = 0,
-	},{
-		init = SphereScenes_init,
-		frame = SphereScenes,
+	},{ -- sync to music, right order of sequence?
+		init = Construction01_init,
+		frame = Construction01, -- welding
 		bdr = no_fn,
 		start = 27,
 		row = 0,
@@ -157,7 +151,20 @@ scenes = {
 		init = Tunnel2_init,
 		frame = Tunnel2,
 		bdr = no_fn,
-		start = 28,
+		start = 29,
+		row = 0,
+	
+	},{
+		init = Construction02_init,
+		frame = Construction02, -- ships departing big dock with parts
+		bdr = no_fn,
+		start = 31,
+		row = 0,
+	},{
+		init = SphereScenes_init,
+		frame = SphereScenes,
+		bdr = no_fn,
+		start = 33,
 		row = 0,
 	},{
 		init = Frame09_init,

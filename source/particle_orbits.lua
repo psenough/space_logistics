@@ -41,17 +41,17 @@ do
 		for i = 1, fx.particleCount do
 			local radiusRnd = math.random()
 			local radius = lerpScalar(fx.orbitRadiusMin, fx.orbitRadiusMax, radiusRnd)
-			local speed = lerpScalar(fx.speedMin, fx.speedMax, math.random())
+			local speed = lerpScalar(fx.speedMin, fx.speedMax, radiusRnd) -- also base on radius; outer particles = faster.
 			local phase = math.random() * 6.28
 
 			-- orbit is defined by 2 angles; make it easy to make uniform distributions.
 			-- another way to do this would be to
 			local inclination = math.random() * 6.28 -- rotation around X (tilt away from screen)
 			local ascendingNode = math.random() * 6.28 -- rotation around Z (effectively screen 2D rotation)
-			--ascendingNode = lerpAngular(ascendingNode, biasAscendingNode, biasAmt) -- bias towards 0 so the orbits are more aligned.
+			--ascendingNode = lerpAngular(ascendingNode, biasAscendingNode, biasAmt)
 
-			inclination = lerpAngular(inclination, biasInclination, biasAmt) -- bias towards 0 so the orbits are more aligned.
-			ascendingNode = lerpAngular(ascendingNode, biasAscendingNode, biasAmt) -- bias towards 0 so the orbits are more aligned.
+			inclination = lerpAngular(inclination, biasInclination, biasAmt)
+			ascendingNode = lerpAngular(ascendingNode, biasAscendingNode, biasAmt)
 
 			local cosInclination = math.cos(inclination)
 			local sinInclination = math.sin(inclination)

@@ -127,30 +127,30 @@ F05_st = 0
 F05_traces = true
 F05_orbits = nil
 
-F05_darkGrayGradient = { 0,15,15, 15, 14 } -- grayscale (+12 bright white)
+F05_darkGrayGradient = { 15,15,15, 15, 14 } -- grayscale (+12 bright white)
 F05_grayGradient = { 0,15,15, 15, 14, 13 } -- grayscale (+12 bright white)
 F05_redYellowGradient = { 0, 1, 2, 3, 4 } -- red-yellow
-F05_blueGradient = { 0, 8, 8, 8, 9,  9, 10 } -- blue (+11 bright cyan)
-F05_greenGradient = { 0,0, 7, 7, 6, 5 } -- green
+F05_blueGradient = { 8, 8, 8, 8, 9,  9, 10 } -- blue (+11 bright cyan)
+F05_greenGradient = { 7,7, 7, 7, 6, 5 } -- green
 
 function Frame05_initShared(traces, gradients)
 	F05_st = time()
 	F05_traces = traces or false
 
-	local speed = 0.0007
+	local speed = 0.002
 	local orbitRadius = 58
 
 	F05_orbits = CreateParticleOrbitEffect({
-		particleCount = 1500,
+		particleCount = 2000,
 		orbitRadiusMin = orbitRadius,
-		orbitRadiusMax = orbitRadius + 30,
-		speedMin = speed,
-		speedMax = speed * 1.05,
+		orbitRadiusMax = orbitRadius + 40,
+		speedMin = speed * 0.1,
+		speedMax = speed,
 		gradients = gradients,
 		renderRadiusMax = 1,
-		biasInclination = 1.4,
+		biasInclination = 1.45, -- half pi (1.57) = edge-on.
 		biasAscendingNode = 0.5,
-		biasMix = 0.985,
+		biasMix = 0.995,
 	})
 end
 

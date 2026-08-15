@@ -40,14 +40,18 @@
     },
     "buildConfigurations": {
         "debug": {
-            "defines": [
-                "DEBUG"
-            ]
+            "preprocessor": {
+                "defines": {
+                    "DEBUG": true
+                }
+            }
         },
         "release": {
-            "defines": [
-                "RELEASE"
-            ],
+            "preprocessor": {
+                "defines": {
+                    "RELEASE": true
+                }
+            },
             "assembly": {
                 "lua": {
                     "minify": true

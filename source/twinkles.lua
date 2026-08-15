@@ -39,9 +39,9 @@ do
 
 	-- get random position within a donut-shaped region around x,y
 	function GetSubTwinklePosition(x, y)
-		local rInside = 5
-		local rOutside = 15
-		local r = lerpScalar(rInside, rOutside, RngNext(gTwinkleRng))
+		local rInside = 0
+		local rOutside = 10
+		local r = lerpScalar(rInside, rOutside, RngNext(gTwinkleRng)  ^ 2) -- bias towards inside of donut.
 		local angle = RngNext(gTwinkleRng, 0, 6.28)
 		return x + math.cos(angle) * r, y + math.sin(angle) * r
 	end
@@ -55,33 +55,35 @@ do
 				y = y,
 				dx = 0,
 				dy = 0,
-				life = 75,
+				life = 85,
 				-- custom
 				gradient = gradientRand > 0.5 and gTwinkleGradient1 or gTwinkleGradient2,
 				strength = 1,
 			}
 			AddParticleToPool(gTwinkleParticles, particle)
-			-- schedule a couple more twinkles in the next few frames, positioned near this one.
-			for j = 1,5 do
+
+			-- schedule a couple more twinkles in future ticks.
+			local subtwinkleCount = 20
+			for j = 1, subtwinkleCount do
+				local normj = 1 - (j / subtwinkleCount)
 				local subX,subY = GetSubTwinklePosition(x, y)
 				local subParticle = {
 					x = subX,
 					y = subY,
 					dx = 0,
 					dy = 0,
-					life = 75,-- / j,
+					life = 33,-- lerpScalar(25, 50, normj),
 					-- custom
 					gradient = gradientRand > 0.5 and gSubTwinkleGradient1 or gSubTwinkleGradient2,
-					strength = 0.25, -- fade out the sub-twinkles a bit more.
+					strength = 0.2,--0.25 * normj, -- fade out the sub-twinkles a bit more.
 				}
 
-				local delayMillis = 120 * j
+				local delayMillis = 40 * j
 
 				gScheduledTwinkles[#gScheduledTwinkles + 1] = {
 					millisRemaining = delayMillis,
 					particle = subParticle
 				}
-				--AddParticleToPool(gTwinkleParticles, particle)
 			end
 		end
 	end

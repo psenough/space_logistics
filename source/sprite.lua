@@ -18,9 +18,8 @@ function createCachedSprite(spr_id, posx, posy)
 		if screenY >= 0 and screenY < TIC_HEIGHT() then-- clip to screen
 			local srcRow = y*w
 			local rowBase = screenY * TIC_WIDTH() + posx
-			local x0 = max(0, -posx)
-			local x1 = min(w, TIC_WIDTH()-posx)
-
+			local x0 = max(0, ceil(-posx))
+			local x1 = min(w, ceil(TIC_WIDTH()-posx))
 			for x=x0,x1-1 do
 				local col = c[x+srcRow]
 				if (col ~= bkg) then
@@ -53,11 +52,13 @@ function drawSprite(spr_id,posx,posy)
 		local srcRow = y*w
 		local screenY = posy+y
 		if screenY >= 0 and screenY < TIC_HEIGHT() then-- clip to screen
-			local x0 = max(0, -posx)
-			local x1 = min(w, TIC_WIDTH()-posx) -- only draw pixels that are on screen
+			local x0 = max(0, ceil(-posx))
+			local x1 = min(w, ceil(TIC_WIDTH()-posx))
 			for x=x0,x1-1 do
 				local col = c[x+srcRow]
-				if (col ~= bkg) then pix(posx+x,screenY,col) end
+				if (col ~= bkg) then
+					pix(posx+x,screenY,col)
+				end
 			end
 		end
 	end

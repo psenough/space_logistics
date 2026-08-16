@@ -8,9 +8,16 @@ function EndScene_init()
 	vbank(1)
 	cls()
 	vbank(0)
+
+	TwinkleSetStarPositions({
+		{ 167,32 },
+		{ 18,100 },
+		{ 62, 20 },
+		{ 152, 60 },
+		{ 200, 30 }})
 end
 
-function EndScene(tt)
+function EndScene(tt, _, somaticState, sceneTime)
 
 	local t = (tt - EndScene_st)
 	math.randomseed(t)
@@ -49,5 +56,5 @@ function EndScene(tt)
 	circb(65,61,10,12)
 	pix(65,61,12)
 	
-
+	TwinkleTick(somaticState, "starz")
 end

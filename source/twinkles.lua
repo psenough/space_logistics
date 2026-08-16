@@ -24,13 +24,24 @@ do
 	local gTwinkleRng = nil
 	local gScheduledTwinkles = {}
 
+	TWINKLE_explicitStarPositions = nil
+	TWINKLE_starSequence = 0
+
 	function TwinkleNewScene(sceneNumber)
 		gTwinkleParticles = CreateParticlePool(50)
 		gTwinkleRng = CreateRng(1 + sceneNumber)
+		TWINKLE_explicitStarPositions = nil
 		gScheduledTwinkles = {}
+		TWINKLE_starSequence = 0
 	end
 
 	TwinkleNewScene(0)
+
+	-- set explicit positions for twinkles.
+	-- array of vec2 positions.
+	function TwinkleSetStarPositions(positions)
+		TWINKLE_explicitStarPositions = positions
+	end
 
 	local gTwinkleGradient1 = { 15, 14, 13, 12 } -- white
 	local gTwinkleGradient2 = { 1, 2, 3, 4 } -- red-yellow
@@ -51,6 +62,13 @@ do
 		return center + sign * rAbsBiased * (span / 2)
 	end
 	function GetRandomScreenPosition()
+		if TWINKLE_explicitStarPositions then
+			local pos = TWINKLE_explicitStarPositions[TWINKLE_starSequence + 1]
+			if pos then
+				TWINKLE_starSequence = TWINKLE_starSequence + 1
+				return pos[1], pos[2]
+			end
+		end
 		local x = GetRandomCoordInSpanBiasedAwayFromCenter(0, TIC_WIDTH())
 		local y = GetRandomCoordInSpanBiasedAwayFromCenter(0, TIC_HEIGHT())
 		return x, y
@@ -154,10 +172,17 @@ do
 		if state.sideChannel == "twinkle2" then
 			AddTwinkle()
 		end
+		if state.sideChannel == "endaccent" then
+			AddTwinkle()
+		end
 	end
 
-	function TwinkleTick(state, twinkleType)
+	function TwinkleTick(state, twinkleType, additionalRandomSeed)
 		twinkle_current_type = twinkleType
+
+		if additionalRandomSeed then
+			gTwinkleRng = CreateRng(1 + state.wallMillis + additionalRandomSeed)
+		end
 
 		-- hit t to manually add twinkle.
 		--#ifdef DEBUG

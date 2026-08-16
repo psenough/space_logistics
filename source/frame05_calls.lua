@@ -146,7 +146,7 @@ function Frame05_initShared(traces, gradients)
 		renderRadiusMax = 1,
 		biasInclination = 1.45, -- half pi (1.57) = edge-on.
 		biasAscendingNode = 0.5,
-		biasMix = 0.995,
+		biasMix = 1, -- 0.995
 	})
 end
 

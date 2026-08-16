@@ -1,7 +1,9 @@
 -- space logistics --
 
-TIC_HEIGHT = 136
-TIC_WIDTH = 240
+--#pragma once
+
+--#macro TIC_HEIGHT() => 136
+--#macro TIC_WIDTH() => 240
 
 function assert(condition, message)
 	if not condition then
@@ -296,16 +298,16 @@ B4N = {
 
 local BAYER_MINUS_5 = {}
 -- precompute bayer offsets for each pixel in the screen.
-for sy = 0, TIC_HEIGHT - 1 do
+for sy = 0, TIC_HEIGHT() - 1 do
 	local y4 = (sy % 4) * 4
-	local row = sy * TIC_WIDTH
-	for sx = 0, TIC_WIDTH - 1 do
+	local row = sy * TIC_WIDTH()
+	for sx = 0, TIC_WIDTH() - 1 do
 		BAYER_MINUS_5[row + sx] = (B4N[y4 + (sx % 4) + 1] - 0.5)
 	end
 end
 
 function pixBayer(x, y, gradient, gradientCount, brightness)
-	local row = y * TIC_WIDTH
+	local row = y * TIC_WIDTH()
 	local bayer = BAYER_MINUS_5[row + x]
 	local col = gradient[max(1, min(gradientCount, (brightness + bayer) * gradientCount)) // 1]
 	pix(x, y, col)
@@ -313,12 +315,12 @@ end
 
 function hlineBayer(x1, x2, y, gradient, gradientCount, brightness)
 	-- screen clip.
-	if y < 0 or y >= TIC_HEIGHT then
+	if y < 0 or y >= TIC_HEIGHT() then
 		return
 	end
 	x1 = max(0, x1) // 1
-	x2 = min(TIC_WIDTH - 1, x2) // 1
-	local row = (y * TIC_WIDTH) // 1
+	x2 = min(TIC_WIDTH() - 1, x2) // 1
+	local row = (y * TIC_WIDTH()) // 1
 	for x = x1, x2 do
 		local bayer = BAYER_MINUS_5[row + x]
 		local col = gradient[max(1, min(gradientCount, (brightness + bayer) * gradientCount)) // 1]
@@ -329,12 +331,12 @@ end
 -- specialization of hline that draws only the shadow pixels (others = transparent). darkenAmt01 is amount of shade.
 function hlineBayerShadow(x1, x2, y, colorShadow, darkenAmt01)
 	-- screen clip.
-	if y < 0 or y >= TIC_HEIGHT then
+	if y < 0 or y >= TIC_HEIGHT() then
 		return
 	end
 	x1 = max(0, x1) // 1
-	x2 = min(TIC_WIDTH - 1, x2) // 1
-	local row = (y * TIC_WIDTH) // 1
+	x2 = min(TIC_WIDTH() - 1, x2) // 1
+	local row = (y * TIC_WIDTH()) // 1
 	 -- offset to account for 0.5 bayer centering instead of calculating per pixel
 	 -- and a bit of bias so first row is not 100% shade
 	darkenAmt01 = darkenAmt01 - 0.6
@@ -352,13 +354,13 @@ function vlineBayer(x, y1, y2, gradient, gradientCount, brightness)
 	y1 = y1 // 1
 	y2 = y2 // 1
 	-- screen clip.
-	if x < 0 or x >= TIC_WIDTH then
+	if x < 0 or x >= TIC_WIDTH() then
 		return
 	end
 	y1 = max(0, y1) // 1
-	y2 = min(TIC_HEIGHT - 1, y2) // 1
+	y2 = min(TIC_HEIGHT() - 1, y2) // 1
 	for y = y1, y2 do
-		local row = (y * TIC_WIDTH) // 1
+		local row = (y * TIC_WIDTH()) // 1
 		local bayer = BAYER_MINUS_5[row + x]
 --#ifdef DEBUG
 		if bayer == nil then
@@ -378,15 +380,15 @@ function ShadeCircleBayer(cx, cy, r, gradient, shadeFunc)
 
 	-- screen space clipping
 	local yFrom = max(-r, -cy) -- yfrom/to/y are relative to center.
-	local yTo = min(r, TIC_HEIGHT - 1 - cy)
+	local yTo = min(r, TIC_HEIGHT() - 1 - cy)
 	for y = yFrom, yTo do
 		local screenY = cy+y
 		-- y is offset from center, screenY is actual pixel coordinate
 		local y2 = y * y
 		local span = sqrt(r2 - y2) // 1
 		local xFrom = max(-span, -cx) -- clipping
-		local xTo = min(span, TIC_WIDTH - 1 - cx)
-		local screenY240 = screenY * TIC_WIDTH
+		local xTo = min(span, TIC_WIDTH() - 1 - cx)
+		local screenY240 = screenY * TIC_WIDTH()
 		for x = xFrom, xTo do
 			local screenX = cx+x
 			-- x is offset from center, screenX is actual pixel coordinate

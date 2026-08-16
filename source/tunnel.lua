@@ -29,7 +29,7 @@ function renderStructure(t, sparseBand)
 	local y1 = 36--46+math.sin(t/700+10)*20
 	local y2 = 100--110+math.sin(t/1000)*20
 	local bandWidth = 18
-	local maxX = (math.ceil(TIC_WIDTH / bandWidth) + 2) * bandWidth
+	local maxX = (math.ceil(TIC_WIDTH() / bandWidth) + 2) * bandWidth
 
 	local prevx = (-bandWidth-t/20)%maxX
 	for x=-bandWidth,maxX,bandWidth do

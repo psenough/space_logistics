@@ -32,8 +32,8 @@ do
 		return center + sign * rAbsBiased * (span / 2)
 	end
 	function GetRandomScreenPosition()
-		local x = GetRandomCoordInSpanBiasedAwayFromCenter(0, TIC_WIDTH)
-		local y = GetRandomCoordInSpanBiasedAwayFromCenter(0, TIC_HEIGHT)
+		local x = GetRandomCoordInSpanBiasedAwayFromCenter(0, TIC_WIDTH())
+		local y = GetRandomCoordInSpanBiasedAwayFromCenter(0, TIC_HEIGHT())
 		return x, y
 	end
 
@@ -99,9 +99,11 @@ do
 
 	function TwinkleTick(state)
 		-- hit t to manually add twinkle.
+		--#ifdef DEBUG
 		if keyp(20) then -- T
 			AddTwinkle()
 		end
+		--#endif
 
 		-- realize any scheduled twinkles.
 		for i = #gScheduledTwinkles, 1, -1 do

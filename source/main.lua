@@ -44,6 +44,14 @@
 --#include "source/hud_calls.lua"
 
 scene_frame = 0
+-- the scene orchestrator tracks scene-based timing, so scenes have a stable timing
+-- reference.
+scene_timing_start = nil
+scene_timing = {
+	demoMillis = 0,
+	demoBeats = 0,
+	wallMillis = 0,
+}
 current_scene_id = 1
 show_hud = false
 show_palette = false
@@ -220,10 +228,32 @@ scenes = {
 	}
 }
 
+function ResetSceneTiming()
+	scene_timing_start = nil
+	scene_timing.demoMillis = 0
+	scene_timing.demoBeats = 0
+	scene_timing.wallMillis = 0
+end
+
+function UpdateSceneTiming(somaticState)
+	if scene_timing_start == nil then
+		scene_timing_start = {
+			demoMillis = somaticState.demoMillis,
+			demoBeats = somaticState.demoBeats,
+			wallMillis = somaticState.wallMillis,
+		}
+	end
+
+	scene_timing.demoMillis = somaticState.demoMillis - scene_timing_start.demoMillis
+	scene_timing.demoBeats = somaticState.demoBeats - scene_timing_start.demoBeats
+	scene_timing.wallMillis = somaticState.wallMillis - scene_timing_start.wallMillis
+end
+
 function SetScene(scene_id, do_seek)
 	if scene_id >= 1 and scene_id <= #scenes then
 		current_scene_id = scene_id
 		scene_frame = 0
+		ResetSceneTiming()
 		TwinkleNewScene(current_scene_id)
 		scenes[current_scene_id].init()
 		if do_seek then
@@ -463,14 +493,15 @@ function DemoTIC()
 	if
 		current_scene_id < #scenes
 		and _pO >= scenes[current_scene_id + 1].start
-		and _row ~= 255
 		and _row >= scenes[current_scene_id + 1].row
 	then
 		current_scene_id = current_scene_id + 1
 		scene_frame = 0
+		ResetSceneTiming()
 		scenes[current_scene_id].init()
 	end
-	scenes[current_scene_id].frame(time(), state.demoBeats, state)
+	UpdateSceneTiming(state)
+	scenes[current_scene_id].frame(time(), state.demoBeats, state, scene_timing)
 
 	--#ifdef DEBUG
 	if show_hud then
@@ -487,11 +518,6 @@ function DemoTIC()
 	somatic_end_frame()
 
 	--print(current_scene_id .. " " .. _pO .. " " .. _row, 0, 130,12)
-end
-
-function LoadingTIC()
-	cls(0)
-	print("LOADING...", 100, 68, 12)
 end
 
 current_boot_task_index = 1
@@ -529,8 +555,8 @@ function TIC()
 			local progress01 = current_boot_task_index / #BootTasks
 			local barWidth = 199
 			local barHeight = 13
-			local barX = (TIC_WIDTH - barWidth) // 2
-			local barY = (TIC_HEIGHT - barHeight) // 2
+			local barX = (TIC_WIDTH() - barWidth) // 2
+			local barY = (TIC_HEIGHT() - barHeight) // 2
 			rect(barX, barY, barWidth, barHeight, 8)
 			rect(barX, barY, barWidth * progress01, barHeight, 9)
 		else

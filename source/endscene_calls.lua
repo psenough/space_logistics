@@ -21,5 +21,12 @@ function EndScene(tt)
 	drawSprite("End_Moon",20,40)
 
 	drawSprite("End_Planet",320-174,136-102)
+
+
+	drawSprite("End_LogoLines",0,0)
+	drawSprite("End_ORing2",41,38)
+	drawSprite("End_Title",37,44)
+	circb(65,61,10,12)
+	pix(65,61,12)
 	
 end

@@ -9,13 +9,6 @@ function stars_noscroll(t)
 	end
 end
 
-function lerp(a,b,t)
-	return {
-		(1-t)*a[1]+t*b[1],
-		(1-t)*a[2]+t*b[2]
-	}
-end
-
 function pBezier(a,t)
 	while #a>1 do
 		local b={}

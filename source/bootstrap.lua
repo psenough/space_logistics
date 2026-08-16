@@ -15,11 +15,11 @@ end
 -- x = 0..1; 0 = left, 1 = right, evenly distributed over array.
 -- returns the INDEX (not value)
 -- yes this is not totally necessary but helps my tiny brain read code.
-function SelectNorm(t, x)
-	return ((x * #t) // 1) + 1
+function SelectNorm(table, x)
+	return ((x * #table) // 1) + 1
 end
 
-local min, max, random = math.min, math.max, math.random
+local min, max, random, ceil = math.min, math.max, math.random, math.ceil
 local sin, cos, sqrt = math.sin, math.cos, math.sqrt
 
 function clamp01(x)
@@ -122,6 +122,14 @@ function deepcopy(orig)
     return copy
 end
 
+-- a and b are {x,y}; returns {x,y}
+function lerp(a,b,t)
+	return {
+		(1-t)*a[1]+t*b[1],
+		(1-t)*a[2]+t*b[2]
+	}
+end
+
 function lerpScalar(a,b,t)
   return a + (b-a)*t
 end
@@ -129,6 +137,12 @@ end
 function lerpAngular(a,b,t)
   local diff = (b-a+math.pi)%(2*math.pi)-math.pi
   return a + diff*t
+end
+
+function bilerpScalar(a,b,c,d,tx,ty)
+  local ab = lerpScalar(a,b,tx)
+  local cd = lerpScalar(c,d,tx)
+  return lerpScalar(ab,cd,ty)
 end
 
 -- speed or radius...
@@ -141,6 +155,15 @@ end
 function DxDyToAngle(dx, dy)
   return math.atan2(dy, dx)
 end
+
+function normalize2D(x,y)
+    local len = math.sqrt(x*x + y*y)
+    if len == 0 then
+        return 0,0
+    end
+    return x/len, y/len
+end
+
 
 --------------------------------------------------------------------------------------------------------
 -- generic particle system
@@ -437,4 +460,26 @@ end
 
 function fract(x)
   return x - (x//1)
+end
+
+
+-- callback receives x,y,t01 normalized along the line 0..1
+function VisitPixelsAlongLine(x0, y0, x1, y1, callback)
+	-- bresenham
+	local dx = x1 - x0
+	local dy = y1 - y0
+	local steps = math.max(math.abs(dx), math.abs(dy))
+	if steps == 0 then
+		callback(x0, y0, 0)
+		return
+	end
+	local xInc = dx / steps
+	local yInc = dy / steps
+	local x = x0
+	local y = y0
+	for i=0,steps do
+		callback(math.floor(x), math.floor(y), i/steps)
+		x = x + xInc
+		y = y + yInc
+	end
 end

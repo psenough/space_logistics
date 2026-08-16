@@ -1,7 +1,9 @@
 --#include "booster_streaks.lua"
 
 C03_bg = nil
-C03_streaks = nil
+C03_streaksBigShip = nil
+C03_streaksShip01 = nil
+C03_streaksShip02 = nil
 C03_last_wall_millis = 0
 C03_sprites = nil
 
@@ -49,10 +51,10 @@ function C03_UpdateShipStripeThresholds(t)
 end
 
 -- specialization of drawsprite with some palette swapping / dithering.
-function C03_DrawBigShip(posx, posy, t)
+function C03_DrawSpriteStripped(spr,posx, posy, t)
 	C03_UpdateShipStripeThresholds(t)
 
-	local sprite = sprites["C3_BigShip"]
+	local sprite = sprites[spr]
 	local w = sprite.w
 	local h = sprite.h
 	local c = sprite.data
@@ -124,6 +126,33 @@ C03_emitter2 = {
 	d0 = { -314, 146 },
 	d1 = { -314, 146 },
 }
+C03_emitter3Ship01 = {
+	x0 = 140,
+	y0 = 94,
+	width = 41,
+	height = 21,
+
+	d0 = { -336, 118 },
+	d1 = { -314, 146 },
+}
+C03_emitter4Ship02 = {
+	x0 = 16,
+	y0 = 22,
+	width = 7,
+	height = 7,
+
+	d0 = { -336, 146 },
+	d1 = { -314, 146 },
+}
+C03_emitter5Ship02 = {
+	x0 = 2,
+	y0 = 6,
+	width = 3,
+	height = 74,
+
+	d0 = { -336, 146 },
+	d1 = { -314, 146 },
+}
 
 function C03_CreateBoosterStreakSystem(edge, t0, t1)
 	-- define the emitter segment of the provided edge.
@@ -155,11 +184,20 @@ function Construction03_init()
 
 	C03_sprites = deepcopy(C03_spriteTemplate)
 
-	C03_streaks = {
+	C03_streaksBigShip = {
 		C03_CreateBoosterStreakSystem(C03_emitter1TopEdge, 0.0, 0.33),
 		C03_CreateBoosterStreakSystem(C03_emitter1TopEdge, 1.0, 0.66),
 		C03_CreateBoosterStreakSystem(C03_emitter1RightEdge, 0.0, 1.0),
 		C03_CreateBoosterStreakSystem(C03_emitter2, 0.0, 1.0),
+	}
+
+	C03_streaksShip01 = {
+		C03_CreateBoosterStreakSystem(C03_emitter3Ship01, 0.0, 0.33),
+	}
+
+	C03_streaksShip02 = {
+		C03_CreateBoosterStreakSystem(C03_emitter4Ship02, 0.0, 0.33),
+		C03_CreateBoosterStreakSystem(C03_emitter5Ship02, 0.0, 0.33),
 	}
 end
 
@@ -167,7 +205,15 @@ function Construction03(tt, beats, somaticState, sceneTime)
 	local t = sceneTime.wallMillis
 	math.randomseed(t)
 
-	for _, s in ipairs(C03_streaks) do
+	for _, s in ipairs(C03_streaksBigShip) do
+		UpdateBoosterStreaks(s, somaticState.wallDeltaMillis)
+	end
+
+	for _, s in ipairs(C03_streaksShip01) do
+		UpdateBoosterStreaks(s, somaticState.wallDeltaMillis)
+	end
+
+	for _, s in ipairs(C03_streaksShip02) do
 		UpdateBoosterStreaks(s, somaticState.wallDeltaMillis)
 	end
 
@@ -195,9 +241,27 @@ function Construction03(tt, beats, somaticState, sceneTime)
 
 	local shipPosX = 30 + sin(t / 2000) * 2
 	local shipPosY = 20 + sin(t / 1000) * 2
-
-	C03_DrawBigShip(shipPosX, shipPosY, t)
-	for _, s in ipairs(C03_streaks) do
+	C03_DrawSpriteStripped("C3_BigShip",shipPosX, shipPosY, t)
+	for _, s in ipairs(C03_streaksBigShip) do
 		RenderBoosterStreaks(s, shipPosX, shipPosY)
 	end
+
+	-- bottom right ship
+	--drawSprite("C3_Ship01", 170 + sin(t/1800+123)*2, 90 + sin(t/900+13)*2)
+	shipPosX = 170 + sin(t/1800+123)*2
+	shipPosY = 90 + sin(t/900+13)*2
+	C03_DrawSpriteStripped("C3_Ship01", shipPosX, shipPosY, t+1260)
+	for _, s in ipairs(C03_streaksShip01) do
+		RenderBoosterStreaks(s, shipPosX, shipPosY)
+	end
+
+	-- top left ship
+	--drawSprite("C3_Ship02",30 + sin(t/1700+23)*1.5,16 + sin(t/800+3)*2)
+	shipPosX = 30 + sin(t/1700+23)*1.5
+	shipPosY = 16 + sin(t/800+3)*2
+	C03_DrawSpriteStripped("C3_Ship02",shipPosX, shipPosY, t/2+2260)
+	for _, s in ipairs(C03_streaksShip02) do
+		RenderBoosterStreaks(s, shipPosX, shipPosY)
+	end
+
 end

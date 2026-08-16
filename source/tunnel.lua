@@ -12,9 +12,14 @@ TUNNEL_TrailGradient = {
 }
 TUNNEL_StructRng = nil
 
+-- when nil, no pulsing. when set, y falls.
+TUNNEL_pulseY = nil
+
 function tunnel_init()
 	tunnel_st = time()
 	math.randomseed(766)
+
+	TUNNEL_pulseY = nil
 
 	-- each ship gets particle emitter
 	TUNNEL_TrailParticles = {
@@ -23,6 +28,14 @@ function tunnel_init()
 		CreateParticlePool(500),
 		CreateParticlePool(500),
 	}
+end
+
+
+function tunnel_music_row(state)
+	if state.sideChannel and state.sideChannel ~= "" then
+		-- pulse.
+		TUNNEL_pulseY = 1
+	end
 end
 
 function renderStructure(t, sparseBand)
@@ -37,7 +50,10 @@ function renderStructure(t, sparseBand)
 		if not sparseBand then
 			bandFillPx = bandWidth
 		end
-		local normColor = RngNext(TUNNEL_StructRng)
+		local normColor = (RngNext(TUNNEL_StructRng) * 0.9)
+		if TUNNEL_pulseY then
+			normColor = normColor * TUNNEL_pulseY
+		end
 		local colIndex = SelectNorm(TUNNEL_Gradient, normColor)
 		local col = TUNNEL_Gradient[colIndex]
 		local shadowCol = TUNNEL_Gradient_Darker[colIndex]
@@ -130,7 +146,18 @@ function tunnel(tt)
 
 	local thl = t
 	--t = 9000
-	
+
+	if TUNNEL_pulseY then
+		TUNNEL_pulseY = TUNNEL_pulseY * 0.9
+	end
+
+	-- hit t to manually accent.
+	--#ifdef DEBUG
+	if keyp(20) then -- T
+		TUNNEL_pulseY = 1
+	end
+	--#endif
+
 	cls()
 	TUNNEL_hyperLineIndex = 0
 

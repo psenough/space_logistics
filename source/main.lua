@@ -162,6 +162,7 @@ scenes = {
 		bdr = no_fn,
 		start = 19,
 		row = 0,
+		rowHandler = tunnel_music_row,
 	},{ -- hud red alert
 		init = HUD_01_init,
 		frame = HUD_01_Scene,

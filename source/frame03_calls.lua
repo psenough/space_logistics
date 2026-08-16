@@ -1,5 +1,15 @@
 
-function drawShadowSprite(spr_id,x,y,mode)
+-- for each palette entry, provide a darker color.
+F03_shadowMap ={
+	0, -- black = black.
+	0, 1, 2, 3, -- red-yellow gradient.
+	6, 7, 15, -- green. dark green doesn't really exist; use gray.
+	--entry index 8.
+	0, 8, 9, 10, -- blue.
+	13, 14, 15, 0
+}
+
+function drawShadowSprite(spr_id,x,y)
 	local posx = x
 	local posy = y
 	local w = sprites[spr_id].w
@@ -7,18 +17,35 @@ function drawShadowSprite(spr_id,x,y,mode)
 	local c = sprites[spr_id].data
 	local bkg = sprites[spr_id].bg
 	for y=0,h-1 do
-		for x=y%2,w-1,mode do
-				local col = c[x+y*w]
-				if (col ~= bkg) then pix(posx+x,posy+y,col) end
+		local screenY = posy + y
+		if screenY >= 0 and screenY < TIC_HEIGHT() then
+			local srcRow = y * w
+			local screenRow = screenY * TIC_WIDTH()
+			local x0 = max(0, ceil(-posx))
+			local x1 = min(w, ceil(TIC_WIDTH()-posx))
+			for x=x0,x1-1 do
+				local col = c[srcRow + x]
+				if (col ~= bkg) then
+					-- pix(posx+x,posy+y,col)
+					local sx = posx+x
+					local sy = posy+y
+					local p = sx + sy * TIC_WIDTH()
+					local col = peek4(p)
+					local bayer = BAYER_MINUS_5[p]
+					if bayer > 0 then
+						poke4(p,F03_shadowMap[col+1])
+					end
+				end
+			end
 		end
 	end
 end
 
 function drawFrame03_Ship(t,x,y)
-	local mode = t//30%3
-	if mode > 0 then 
-		drawShadowSprite("Frame03_Ship_Shadow",x,y+80,mode)
-	end
+	local mode = 1--t//30%3
+	--if mode > 0 then 
+	drawShadowSprite("Frame03_Ship_Shadow",x,y+80,mode)
+	--end
 	drawSprite("ContainerGrey",x,y+22)
 	drawSprite("Frame03_Ship",x,y)
 	--left

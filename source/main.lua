@@ -218,6 +218,7 @@ scenes = {
 		bdr = no_fn,
 		start = 36,
 		row = 0,
+		rowHandler = TwinkleRowHandler,
 	},{
 		init = Frame09_init,
 		frame = Frame09, -- xray luggage

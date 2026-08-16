@@ -200,5 +200,5 @@ function Frame02(t,beats, somaticState)
 		drawSprite(F02_shipSprites[id+1],80+sx,20+sy)
 	end
 
-	TwinkleTick(somaticState)
+	TwinkleTick(somaticState, "starz")
 end

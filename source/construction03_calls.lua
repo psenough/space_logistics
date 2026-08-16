@@ -25,8 +25,8 @@ C03_spriteTemplate = {
 C03_shipStripeThresholds = {}
 
 C03_stripes = {
-	{ speed = -0.05, width = 19, period = 52 },
-	{ speed = -0.15, width = 13, period = 37 },
+	{ speed = -0.07, width = 80, period = 160 },
+	{ speed = -0.14, width = 50, period = 100 },
 }
 
 function C03_UpdateShipStripeThresholds(t)
@@ -95,13 +95,6 @@ function C03_DrawBigShip(posx, posy, t)
 			end
 		end
 	end
-end
-
--- accepts an edge { x0,y0,width,height } and a t01 in [0,1] and returns a {x,y} point along the edge.
-function PointAlongLine(edge, t01)
-	local x = edge.x0 + t01 * edge.width
-	local y = edge.y0 + t01 * edge.height
-	return { x, y }
 end
 
 C03_emitter1TopEdge = {

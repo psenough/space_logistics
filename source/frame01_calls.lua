@@ -127,7 +127,7 @@ function Frame01(tt, demoBeats, somaticState, sceneTiming)
 	--end
 	drawSprite("F1_LogoBackdrop",0,4)
 
-	TwinkleTick(somaticState)
+	TwinkleTick(somaticState, "starz")
 
 	vbank(0)
 

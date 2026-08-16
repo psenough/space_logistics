@@ -164,6 +164,12 @@ function normalize2D(x,y)
     return x/len, y/len
 end
 
+function normalizeVec2(v)
+	local xn,yn = normalize2D(v[1],v[2])
+	return {xn,yn}
+end
+
+
 
 --------------------------------------------------------------------------------------------------------
 -- generic particle system
@@ -395,6 +401,15 @@ function vlineBayer(x, y1, y2, gradient, gradientCount, brightness)
 	end
 end
 
+function lineBayer(x1, y1, x2, y2, gradient, brightness)
+	VisitPixelsAlongLine(x1, y1, x2, y2, function(x, y)
+		local row = (y * TIC_WIDTH())
+		local bayer = BAYER_MINUS_5[(row + x)//1]
+		local col = gradient[max(1, min(#gradient, (brightness + bayer) * #gradient)) // 1]
+		pix(x, y, col)
+	end)
+end
+
 -- renders a circle with a shade function returning the 0..1 gradient position for the pixel.
 function ShadeCircleBayer(cx, cy, r, gradient, shadeFunc)
 	local r2 = r * r
@@ -478,8 +493,21 @@ function VisitPixelsAlongLine(x0, y0, x1, y1, callback)
 	local x = x0
 	local y = y0
 	for i=0,steps do
-		callback(math.floor(x), math.floor(y), i/steps)
+		local sx = x // 1
+		local sy = y // 1
+		if sx >= 0 and sx < TIC_WIDTH() and sy >= 0 and sy < TIC_HEIGHT() then
+			local t01 = i / steps
+			callback(sx, sy, t01)
+		end
 		x = x + xInc
 		y = y + yInc
 	end
+end
+
+
+-- accepts an edge { x0,y0,width,height } and a t01 in [0,1] and returns a {x,y} point along the edge.
+function PointAlongLine(edge, t01)
+	local x = edge.x0 + t01 * edge.width
+	local y = edge.y0 + t01 * edge.height
+	return { x, y }
 end

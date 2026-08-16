@@ -143,7 +143,7 @@ function Frame03(t, demoBeats, somaticState)
 	local shipPosY=30
 
 	drawFrame03_Ship(t,shipPosX,shipPosY)
-	TwinkleTick(somaticState)
+	TwinkleTick(somaticState, "lazerz")
 
 	drawSprite("Beam",Frame03_sprites[#Frame03_sprites][2],Frame03_sprites[#Frame03_sprites][3])
 

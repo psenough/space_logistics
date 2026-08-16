@@ -243,7 +243,7 @@ function Frame05(tt, demoBeats, somaticState)
 		end
 	end
 
-	TwinkleTick(somaticState)
+	TwinkleTick(somaticState, "starz")
 end
 
 function Frame05b(tt)

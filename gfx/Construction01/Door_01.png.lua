@@ -1,4 +1,4 @@
--- title:  /home/deck/.var/app/com.tic80.TIC_80/data/com.nesbox.tic/TIC-80/space_logistics/gfx/Construction01/Door_01.png
+-- title:  C:\Users\Utilizador\AppData\Roaming\com.nesbox.tic\TIC-80\space_logistics\gfx\Construction-01\\Door_01.png
 -- author: TicPanel
 -- script: lua
 

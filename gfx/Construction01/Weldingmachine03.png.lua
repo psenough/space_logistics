@@ -1,4 +1,4 @@
--- title:  /home/deck/.var/app/com.tic80.TIC_80/data/com.nesbox.tic/TIC-80/space_logistics/gfx/Construction01/Weldingmachine03.png
+-- title:  C:\Users\Utilizador\AppData\Roaming\com.nesbox.tic\TIC-80\space_logistics\gfx\Construction-01\\Weldingmachine03.png
 -- author: TicPanel
 -- script: lua
 

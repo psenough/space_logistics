@@ -132,6 +132,7 @@ F05_grayGradient = { 0,15,15, 15, 14, 13 } -- grayscale (+12 bright white)
 F05_redYellowGradient = { 0, 1, 2, 3, 4 } -- red-yellow
 F05_blueGradient = { 8, 8, 8, 8, 9,  9, 10 } -- blue (+11 bright cyan)
 F05_greenGradient = { 7,7, 7, 7, 6, 5 } -- green
+F05_greenGradientDarker = { 7,7, 7, 7, 6 } -- green
 
 F05_justDarkBlue = { 8 }
 
@@ -158,7 +159,7 @@ end
 
 function Frame05_init()
 	-- with trails, use more subtle gradient set. 
-	Frame05_initShared(true, { F05_justDarkBlue, F05_darkGrayGradient, F05_blueGradient, F05_greenGradient })
+	Frame05_initShared(true,{ F05_justDarkBlue, F05_justDarkBlue, F05_greenGradientDarker })
 end
 
 function Frame05_notraces() -- init
@@ -271,7 +272,7 @@ function Frame05b(tt)
 	drawSprite("F5_PlanetBG",planetX,planetY)
 	RenderParticleOrbitEffect(F05_orbits, planetX + planetOffsetX, planetY + planetOffsetY, true)
 
-	--drawSprite("F5_Ship02",62-t/8000,100)
+	drawSprite("F5_Ship02",62-t/8000,100)
 
 	if (F05_traces) then
 		local curves_b = {

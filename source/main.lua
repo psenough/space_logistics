@@ -60,7 +60,7 @@ scenes = {
 		bdr = no_fn,
 		start = 0,
 		row = 0,
-		rowHandler = TwinkleRowHandler,
+		rowHandler = TwinkleRowHandler, -- row handlers are called once every music row.
 	},{
 		init = Frame02_init,
 		frame = Frame02, -- planets with ships in orbit
@@ -68,6 +68,10 @@ scenes = {
 		bdr = no_fn,
 		start = 4,
 		row = 0,
+		--#ifdef DEBUG
+		hmr_get = F02_getHMRState,
+		hmr_set = F02_setHMRState,
+		--#endif
 		rowHandler = TwinkleRowHandler,
 	},{ -- missing credits on left maybe?
 		init = no_fn,
@@ -280,6 +284,11 @@ function MakeHMRState()
 		return nil
 	end
 	-- return current state
+	local currentScene = scenes[current_scene_id]
+	local sceneState = nil
+	if currentScene and currentScene.hmr_get then
+		sceneState = currentScene.hmr_get()
+	end
 	return {
 		yep_its_me = true,
 		scene_id = current_scene_id,
@@ -289,10 +298,12 @@ function MakeHMRState()
 		mouse_origin_x = mouse_origin and mouse_origin.x or nil,
 		mouse_origin_y = mouse_origin and mouse_origin.y or nil,
 		show_palette = show_palette,
+		scene_state = sceneState,
 	}
 end
 function HMR(state)
 	if state and state.yep_its_me
+	-- accept previous run's state.
 	and type(state.scene_id) == "number"
 	and type(state.show_hud) == "boolean"
 	and type(state.is_playing) == "boolean" and type(state.is_muted) == "boolean"
@@ -310,6 +321,7 @@ function HMR(state)
 			current_scene_id = state.scene_id,
 			is_playing = state.is_playing,
 			is_muted = state.is_muted,
+			scene_state = state.scene_state,
 		}
 	end
 	return MakeHMRState -- return callback
@@ -322,6 +334,12 @@ function HonorHMRState()
 			isMuted = hmr_request.is_muted,
 		})
 		SetScene(hmr_request.current_scene_id, true)
+		if hmr_request.scene_state then
+			local currentScene = scenes[current_scene_id]
+			if currentScene and currentScene.hmr_set then
+				currentScene.hmr_set(hmr_request.scene_state)
+			end
+		end
 		hmr_request = nil
 	end
 end

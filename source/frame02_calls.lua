@@ -33,6 +33,9 @@ function rotate(points, pitch, roll, yaw)
 end
 
 F02_orbits = nil
+F02_previousI = -1
+F02_idOverride = nil
+F02_showShip = true
 
 function Frame02_init()
 	cls()
@@ -40,23 +43,22 @@ function Frame02_init()
 	cls()
 	vbank(0)
 
-	local gradients = { { 0,15, 15, 15,  14, 14, 13 } } -- grayscale (+12 bright white)
-	local speed = 0.001-- 0.015
-	local speedVariance = 0.005
-	local orbitRadius = 50--40
-
-	F02_orbits = CreateParticleOrbitEffect({
-		particleCount = 250,
-		orbitRadiusMin = orbitRadius,
-		orbitRadiusMax = orbitRadius + 10,
-		speedMin = speed - speedVariance,
-		speedMax = speed + speedVariance,
-		gradients = gradients,
-		biasMix = 0.99,
-		biasInclination = 1.65,
-		biasAscendingNode = 0.13,
-	})
+	F02_previousI = -1
 end
+
+--#ifdef DEBUG
+function F02_getHMRState()
+	return {
+		idOverride = F02_idOverride,
+		showShip = F02_showShip,
+	}
+end
+
+function F02_setHMRState(state)
+	F02_idOverride = state.idOverride
+	F02_showShip = state.showShip
+end
+--#endif
 
 F02_planetSprites = {
 	"Planet_01",
@@ -71,12 +73,94 @@ F02_shipSprites = {
 	"Ship_04",
 }
 
+local F02_darkBlue = { 8 }
+local F02_grayscaleDarker = { 15, 14 }
+local F02_grayscale = { 15, 15, 15, 14, 14, 13 } -- grayscale (+12 bright white)
+local F02_greenDarker = { 7 } -- exclude the bright green. for inner orbits it creates better contrast with the planet.
+local F02_green = { 15,15,15,7,7,7,6,6,5 }
+
+F02_orbitEffectParams = {
+	{
+		particleCount = 500,
+		orbitRadiusMin = 50,
+		orbitRadiusMax = 65,
+		speedMin = -0.003,
+		speedMax = 0.003,
+		gradients =  { F02_grayscaleDarker, F02_grayscale },
+		biasMix = 0.99,
+		biasInclination = 1.65,
+		biasAscendingNode = 0.25,
+	},
+	{ -- green planet. dense and slow
+		particleCount = 1500,
+		orbitRadiusMin = 44,
+		orbitRadiusMax = 68,
+		speedMin = 0.000,
+		speedMax = 0.004,
+		gradients = { F02_greenDarker, F02_green },
+		biasMix = 0.98,
+		biasInclination = 1.65,
+		biasAscendingNode = -0.13,
+	},
+	{
+		-- charcoal planet that looks like a volleyball. maybe a thin sparse ring.
+		-- but the planet doesn't rotate so too much rotation feels off.
+		particleCount = 150,
+		orbitRadiusMin = 55,
+		orbitRadiusMax = 72,
+		speedMin = -0.001,
+		speedMax = 0.02,
+		gradients = { F02_grayscale },
+		biasMix = 0.99,
+		biasInclination = 1.4,
+		biasAscendingNode = 0,
+	},
+	{ -- green again. some middle ground.
+		particleCount = 500,
+		orbitRadiusMin = 50,
+		orbitRadiusMax = 60,
+		speedMin = 0.001,
+		speedMax = 0.002,
+		gradients = { F02_greenDarker, F02_green },
+		biasMix = 0.99,
+		biasInclination = 1.65,
+		biasAscendingNode = 0.1,
+	},
+}
+
+
 function Frame02(t,beats, somaticState)
 	cls()
 
+	local id= F02_idOverride or (beats//8%4)
+
+	--#ifdef DEBUG
+	if keyp(28) then -- 1
+		F02_idOverride = 0
+	elseif keyp(29) then -- 2
+		F02_idOverride = 1
+	elseif keyp(30) then -- 3
+		F02_idOverride = 2
+	elseif keyp(31) then -- 4
+		F02_idOverride = 3
+	elseif keyp(32) then -- 5
+		F02_showShip = not F02_showShip
+	end
+	--#endif
+
+	-- when id switches, create new orbit effect.
+	if F02_previousI ~= id then
+		F02_previousI = id
+		local param = F02_orbitEffectParams[id+1]
+		F02_orbits = CreateParticleOrbitEffect(param)
+	end
+
+	-- idea is to animate the orbit plane but it's maybe just too many slow things moving around, and messes with
+	-- the fact that the planet itself is stationary.
+	SetParticleOrbitEffectBias(F02_orbits, F02_orbits.biasInclination + somaticState.wallDeltaMillis / 1000 * 0.02, F02_orbits.biasAscendingNode, F02_orbits.biasMix)
+
 	UpdateParticleOrbitEffect(F02_orbits)
 
-	local id=beats//8%4
 	math.randomseed(id)
 	local r=500
 	for i=0,700 do
@@ -112,7 +196,9 @@ function Frame02(t,beats, somaticState)
 
 	RenderParticleOrbitEffect(F02_orbits, 35+86, 35+30, true)
 
-	drawSprite(F02_shipSprites[id+1],80+sx,20+sy)
+	if F02_showShip then
+		drawSprite(F02_shipSprites[id+1],80+sx,20+sy)
+	end
 
 	TwinkleTick(somaticState)
 end

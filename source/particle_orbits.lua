@@ -19,6 +19,10 @@ do
 	--   renderRadiusMax = 1.1,
 	-- }
 	function CreateParticleOrbitEffect(options)
+		local biasAmt = options.biasMix or 0.98
+		local biasInclination = options.biasInclination or 3.14159/2 -- edge-on
+		local biasAscendingNode = options.biasAscendingNode or -0.33 -- tilt
+
 		local fx = {
 			particleCount = options.particleCount or 100,
 			orbitRadiusMin = options.orbitRadiusMin or 10,
@@ -28,15 +32,15 @@ do
 			gradients = options.gradients or { { 8, 9, 10, 11 } }, -- blue
 			renderRadiusMin = options.renderRadiusMin or 0,
 			renderRadiusMax = options.renderRadiusMax or 1.1,
+			-- calculated params
+			biasAmt = biasAmt,
+			biasInclination = biasInclination,
+			biasAscendingNode = biasAscendingNode,
 			-- internal state
 			particles = {}, -- running particle list.
 			backParticles = {}, -- per-frame cache of back/front particles.
 			frontParticles = {},
 		}
-
-		local biasAmt = options.biasMix or 0.98
-		local biasInclination = options.biasInclination or 3.14159/2 -- edge-on
-		local biasAscendingNode = options.biasAscendingNode or -0.33 -- tilt
 
 		for i = 1, fx.particleCount do
 			local radiusRnd = math.random()
@@ -53,11 +57,6 @@ do
 			inclination = lerpAngular(inclination, biasInclination, biasAmt)
 			ascendingNode = lerpAngular(ascendingNode, biasAscendingNode, biasAmt)
 
-			local cosInclination = math.cos(inclination)
-			local sinInclination = math.sin(inclination)
-			local cosNode = math.cos(ascendingNode)
-			local sinNode = math.sin(ascendingNode)
-
 			local particle = {
 				radius = radius,
 				phase = phase,
@@ -65,24 +64,46 @@ do
 				gradient = fx.gradients[SelectNorm(fx.gradients, radiusRnd)], -- select a gradient based on the radius
 				renderRadiusMin = fx.renderRadiusMin,
 				renderRadiusMax = fx.renderRadiusMax,
-
-				-- the full transform (orthographic):
-				-- x = r * cos(phase) * cos(node) - r * sin(phase) * sin(node) * cos(incl)
-				-- y = r * cos(phase) * sin(node) + r * sin(phase) * cos(node) * cos(incl)
-				-- z = r * sin(phase) * sin(incl)
-				-- https://en.wikipedia.org/wiki/Perifocal_coordinate_system
-
-				-- precompute what we can
-				xCos = radius * cosNode,
-				xSin = -radius * sinNode * cosInclination,
-				yCos = radius * sinNode,
-				ySin = radius * cosNode * cosInclination,
-				zSin = radius * sinInclination,
 			}
 			table.insert(fx.particles, particle)
 		end
 
+		SetParticleOrbitEffectBias(fx, biasInclination, biasAscendingNode, biasAmt)
+
 		return fx
+	end
+
+	-- updates the particle positions based on new orbit bias param.
+	-- for high particle counts maybe don't do this.
+	function SetParticleOrbitEffectBias(fx, biasInclination, biasAscendingNode, biasMix)
+		fx.biasInclination = biasInclination
+		fx.biasAscendingNode = biasAscendingNode
+		fx.biasMix = biasMix
+		for _, particle in ipairs(fx.particles) do
+			local inclination = random() * 6.28 -- rotation around X (tilt away from screen)
+			local ascendingNode = random() * 6.28 -- rotation around Z (effectively screen 2D rotation)
+
+			inclination = lerpAngular(inclination, biasInclination, biasMix)
+			ascendingNode = lerpAngular(ascendingNode, biasAscendingNode, biasMix)
+
+			local cosInclination = cos(inclination)
+			local sinInclination = sin(inclination)
+			local cosNode = cos(ascendingNode)
+			local sinNode = sin(ascendingNode)
+
+			-- the full transform (orthographic):
+			-- x = r * cos(phase) * cos(node) - r * sin(phase) * sin(node) * cos(incl)
+			-- y = r * cos(phase) * sin(node) + r * sin(phase) * cos(node) * cos(incl)
+			-- z = r * sin(phase) * sin(incl)
+			-- https://en.wikipedia.org/wiki/Perifocal_coordinate_system
+
+			-- precompute what we can
+			particle.xCos = particle.radius * cosNode
+			particle.xSin = -particle.radius * sinNode * cosInclination
+			particle.yCos = particle.radius * sinNode
+			particle.ySin = particle.radius * cosNode * cosInclination
+			particle.zSin = particle.radius * sinInclination
+		end
 	end
 
 	function UpdateParticleOrbitEffect(fx)

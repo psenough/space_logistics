@@ -17,9 +17,8 @@ function SelectNorm(t, x)
 	return ((x * #t) // 1) + 1
 end
 
-local min, max = math.min, math.max
+local min, max, random = math.min, math.max, math.random
 local sin, cos, sqrt = math.sin, math.cos, math.sqrt
-
 
 function clamp01(x)
 	if x < 0 then return 0 end

@@ -51,8 +51,8 @@ last_somatic_state = nil
 hmr_request = nil -- for HMR, tells TIC() to init.
 mouse_origin = nil -- set explicit origin with 'o' for measuring distances
 hud_messages = {}
-
--- fixed branch
+is_booting = true
+boot_start_time = time()
 
 scenes = {
 	{ -- missing "Space" on logo
@@ -247,35 +247,12 @@ function BOOT()
 	tomem(unpac(pal))
 	vbank(0)
 
-	-- load sprites
-	loadFrame01Sprites() -- logo + ship docking
-	loadFrame02Sprites() -- planet with ship in orbit
-	loadFrame03Sprites() -- ship landing in slabs
-	loadFrame04Sprites() -- ships taking off to space
-	loadFrame05Sprites() -- leaving hub ship in curves
-	loadFrame06Sprites() -- leaving hub ship in straights
-	loadFrame07Sprites() -- leaving moving hub ship
-	loadFrame08Sprites() -- modules
-	loadFrame09Sprites() -- xray scanning
-	loadFrame11Sprites() -- ship next to particle vortex
-	loadC01Sprites() -- triangle welding
-	loadC02Sprites() -- ships departing
-	loadC03Sprites() -- ship flying over factory elements
-	loadTunnelSprites() -- ships for side tunnel scene
-	loadSSSprites() -- sphere scenes
-	loadTunnel2Sprites() -- tunnel 2
-	loadEndSceneSprites() -- end scene
-	loadHUDSprites() -- HUD
-
 	somatic_set_completion_callback(function ()
 		trace(" - SPACE LOGISTICS - ")
 		exit()
 	end)
 
 	somatic_set_row_callback(handleSomaticRow)
-
-	-- init scenes
-	SetScene(current_scene_id, true)
 end
 
 --#ifdef DEBUG
@@ -412,7 +389,7 @@ function RenderPalette()
 end
 --#endif -- DEBUG
 
-function TIC()
+function DemoTIC()
 	hud_messages = {}
 	local state = somatic_tick()
 	
@@ -512,6 +489,63 @@ function TIC()
 	--print(current_scene_id .. " " .. _pO .. " " .. _row, 0, 130,12)
 end
 
+function LoadingTIC()
+	cls(0)
+	print("LOADING...", 100, 68, 12)
+end
+
+current_boot_task_index = 1
+BootTasks = {
+	-- load sprites
+	loadFrame01Sprites,
+	loadFrame02Sprites,
+	loadFrame03Sprites,
+	loadFrame04Sprites,
+	loadFrame05Sprites,
+	loadFrame06Sprites,
+	loadFrame07Sprites,
+	loadFrame08Sprites,
+	loadFrame09Sprites,
+	loadFrame11Sprites,
+	loadC01Sprites,
+	loadC02Sprites,
+	loadC03Sprites,
+	loadTunnelSprites,
+	loadSSSprites,
+	loadTunnel2Sprites,
+	loadEndSceneSprites,
+	loadHUDSprites,
+}
+
+function TIC()
+	if is_booting then
+		-- do 1 boot task per frame (it will stall still but at least we can show stepped progress)
+		if current_boot_task_index <= #BootTasks then
+			BootTasks[current_boot_task_index]()
+			current_boot_task_index = current_boot_task_index + 1
+
+			-- draw a progress bar.
+			cls(0)
+			local progress01 = current_boot_task_index / #BootTasks
+			local barWidth = 199
+			local barHeight = 13
+			local barX = (TIC_WIDTH - barWidth) // 2
+			local barY = (TIC_HEIGHT - barHeight) // 2
+			rect(barX, barY, barWidth, barHeight, 8)
+			rect(barX, barY, barWidth * progress01, barHeight, 9)
+		else
+			is_booting = false
+			-- init scene
+			--trace(string.format("BOOT %.2f seconds", (time() - boot_start_time) / 1000))
+			SetScene(current_scene_id, true)
+		end
+	else
+		DemoTIC()
+	end
+end
+
 function BDR(l)
-	scenes[current_scene_id].bdr(l)
+	if not is_booting then
+		scenes[current_scene_id].bdr(l)
+	end
 end

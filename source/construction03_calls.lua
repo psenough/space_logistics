@@ -1,13 +1,15 @@
 
-C03_st=0
+
+C03_bg = nil
 
 function Construction03_init()
-	C03_st = time()
 	vbank(0)
 	cls()
 	vbank(1)
 	cls()
 	vbank(0)
+
+	C03_bg = createCachedSprite("C3_Bg_ditter", 0, 0)
 end
 
 
@@ -27,14 +29,13 @@ local C03_sprites = {
 }
 
 
-function Construction03(tt)
-
-	local t = (tt - C03_st)
+function Construction03(tt, beats, somaticState, sceneTime)
+	local t = sceneTime.wallMillis
 	math.randomseed(t)
 
 	cls()
 
-	drawSprite("C3_Bg_ditter",0,0)
+	drawCachedSprite(C03_bg)
 
 	local it = 1
 
@@ -54,8 +55,8 @@ function Construction03(tt)
 		drawSprite(C03_sprites[i][1],C03_sprites[i][2],C03_sprites[i][3])
 	end
 
-	local shipPosX=30+math.sin(time()/2000)*2
-	local shipPosY=20+math.sin(time()/1000)*2
+	local shipPosX=30+math.sin(t/2000)*2
+	local shipPosY=20+math.sin(t/1000)*2
 
 	drawSprite("C3_BigShip",shipPosX,shipPosY)
 

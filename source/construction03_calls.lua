@@ -259,4 +259,12 @@ function Construction03(tt, beats, somaticState, sceneTime)
 		RenderBoosterStreaks(s, shipPosX, shipPosY)
 	end
 
+	-- transition into scene: screen glitch.
+	local transitionLenBeats = 3
+	local transition01 = 1 - clamp01(sceneTime.demoBeats / transitionLenBeats)
+	local glitchAmt = transition01 ^ 2
+	if (glitchAmt > 0.05) then
+		screen_glitch(t, 13, glitchAmt)
+	end
+
 end

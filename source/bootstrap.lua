@@ -134,6 +134,9 @@ function lerpScalar(a,b,t)
   return a + (b-a)*t
 end
 
+-- careful: when this gets inlined, `a` gets evaluated twice. don't put expressions in there if the intent is performance.
+--#macro LERP(a,b,t) => (a + (b-a)*t)
+
 function lerpAngular(a,b,t)
   local diff = (b-a+math.pi)%(2*math.pi)-math.pi
   return a + diff*t
@@ -335,14 +338,16 @@ for sy = 0, TIC_HEIGHT() - 1 do
 	end
 end
 
-function pixBayer(x, y, gradient, gradientCount, brightness)
+function pixBayer(x, y, gradient, brightness)
+	local gradientCount = #gradient
 	local row = y * TIC_WIDTH()
 	local bayer = BAYER_MINUS_5[row + x]
 	local col = gradient[max(1, min(gradientCount, (brightness + bayer) * gradientCount)) // 1]
 	pix(x, y, col)
 end
 
-function hlineBayer(x1, x2, y, gradient, gradientCount, brightness)
+function hlineBayer(x1, x2, y, gradient, brightness)
+	local gradientCount = #gradient
 	-- screen clip.
 	if y < 0 or y >= TIC_HEIGHT() then
 		return
@@ -354,6 +359,32 @@ function hlineBayer(x1, x2, y, gradient, gradientCount, brightness)
 		local bayer = BAYER_MINUS_5[row + x]
 		local col = gradient[max(1, min(gradientCount, (brightness + bayer) * gradientCount)) // 1]
 		pix(x, y, col)
+	end
+end
+
+-- NB: gradient index 1 considered a background/transparent color and is not drawn.
+function hlineBayerGradient(x1, x2, y, gradient, brightness1, brightness2)
+	local gradientCount = #gradient
+	-- screen clip.
+	if y < 0 or y >= TIC_HEIGHT() then
+		return
+	end
+	x1 = max(0, x1) // 1
+	x2 = min(TIC_WIDTH() - 1, x2) // 1
+	if x2 <= x1 then
+		return
+	end
+	local row = (y * TIC_WIDTH()) // 1
+	local brightness = brightness1
+	-- amount to advance brightness per pixel such that brightness1 at x1 and brightness2 at x2
+	local brightnessAdvance = (brightness2 - brightness1) / (x2 - x1)
+	for x = x1, x2 do
+		local bayer = BAYER_MINUS_5[row + x]
+		local gradIndex = max(1, min(gradientCount, (brightness + bayer) * gradientCount)) // 1
+		if gradIndex ~= 1 then
+			pix(x, y, gradient[gradIndex])
+		end
+		brightness = brightness + brightnessAdvance
 	end
 end
 
@@ -378,7 +409,8 @@ function hlineBayerShadow(x1, x2, y, colorShadow, darkenAmt01)
 	end
 end
 
-function vlineBayer(x, y1, y2, gradient, gradientCount, brightness)
+function vlineBayer(x, y1, y2, gradient, brightness)
+	local gradientCount = #gradient
 	x = x // 1
 	y1 = y1 // 1
 	y2 = y2 // 1
@@ -510,4 +542,33 @@ function PointAlongLine(edge, t01)
 	local x = edge.x0 + t01 * edge.width
 	local y = edge.y0 + t01 * edge.height
 	return { x, y }
+end
+
+-- https://stackoverflow.com/a/68486276
+function ShuffleInPlace(t, rng)
+    for i = #t, 2, -1 do
+        local j = RngNext(rng, 1, i)
+        t[i], t[j] = t[j], t[i]
+    end
+end
+
+
+function screen_glitch(seed, maxShiftPx, amt01)
+	for y = 0, TIC_HEIGHT() - 1 do
+		-- shift  this scanline left/right by some amount,
+		local maxDblShift = maxShiftPx / 2
+		local shiftDblPx = (hash11(y + seed) - 0.5) * maxDblShift * amt01 -- double pixels to shift, bipolar.
+		-- because it will necessarily spill off screen, calculate safe x0 and x1.
+		-- x0 and x1 are double-pixel BYTE amounts, not pixel. so the max width is TIC_WIDTH/2, not TIC_WIDTH.
+		local x0 = 0
+		local x1 = TIC_WIDTH() / 2 - 1
+		if shiftDblPx > 0 then
+			x1 = x1 - shiftDblPx
+		else
+			x0 = x0 - shiftDblPx
+		end
+		
+		local pRow = y * TIC_WIDTH() / 2
+		memcpy(x0 + pRow, x0 + pRow + shiftDblPx, x1 - x0 + 1)
+	end
 end

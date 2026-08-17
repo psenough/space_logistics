@@ -230,8 +230,8 @@ do
 			else
 				-- starz type.
 				local size = 7 * life01 * p.strength
-				hlineBayer(p.x - size, p.x + 1 + size, p.y, p.gradient, #p.gradient, life01)
-				vlineBayer(p.x, p.y - size, p.y + 1 + size, p.gradient, #p.gradient, life01)
+				hlineBayer(p.x - size, p.x + 1 + size, p.y, p.gradient, life01)
+				vlineBayer(p.x, p.y - size, p.y + 1 + size, p.gradient, life01)
 			end
 
 		end

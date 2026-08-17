@@ -1,8 +1,4 @@
 
---------------------------------------------------------------------------------------------------------
-
-
-
 
 function RenderRock(x, y, seed, rid, aaRotationIndex)
 	drawSpriteWithAARotation(rid, x, y, aaRotationIndex)
@@ -11,6 +7,8 @@ end
 
 
 F11_st=0
+
+F11_shipX = 0
 
 -- rock sprites:
 -- 1 = small
@@ -23,6 +21,18 @@ F11_fgRockPool = { 2, 3, 4 }
 F11_fgParticles = nil
 
 F11_Starfield = nil
+F11_particleStreaks = nil -- particle system for high-energy particles.
+F11_particleStreakIntensity = 0 -- for a transition to next scene, ramp this up.
+F11_particleStreakIntensityOverride = nil -- for a transition to next scene, ramp this up.
+
+-- precalc the shuffled Y positions to emit particles.
+-- so very dense fields are evenly-distributed to cover the screen better, not overlap.
+F11_particleStreakYPositions = {}
+F11_particleStreakCounter = 0
+for i=0, TIC_HEIGHT() - 1 do
+	F11_particleStreakYPositions[i + 1] = i
+end
+ShuffleInPlace(F11_particleStreakYPositions, CreateRng(1234))
 
 function AddRock(first, particleSystem, rockPool, speedMod)
 	local biasAngleRight = DxDyToAngle(1, 0)
@@ -59,11 +69,69 @@ function AddRock(first, particleSystem, rockPool, speedMod)
 	AddParticleToPool(particleSystem,p)
 end
 
+-- each gradient's left color = transparent.
+--F11_chaosGradient = ShuffleInPlace({ 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 }, CreateRng(1234))
+F11_gradients = {
+	-- { 0, 15, 14, 13 }, -- dim grayscale
+	{ 0, 15, 14, 13, 12 }, -- grayscale
+	{ 0, 8, 9, 10, 11 }, -- blue
+	{ 0, 1,2,3,4 }, -- red-yellow
+	{ 0, 7,6,5 }, -- green
+	{ 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 }, -- chaos.
+}
+for g = 1, 5 do
+	local grad= ShuffleInPlace({ 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 }, CreateRng(1234 + g))
+	F11_gradients[#F11_gradients + 1] = grad
+end
+
+function F11_GetParticleStreakIntensity()
+	return F11_particleStreakIntensityOverride or F11_particleStreakIntensity
+end
+
+function F11_GetParticleStreakLength(len01)
+	return bilerpScalar(1, 5, 80, 250, len01, F11_GetParticleStreakIntensity())
+end
+
+function F11_AddParticleStreak()
+	F11_particleStreakCounter = F11_particleStreakCounter + 1
+	-- more intensity = more gradients to choose from
+	local gradientCount = (lerpScalar(1, #F11_gradients, F11_GetParticleStreakIntensity()) + 0.5) // 1
+	
+	local p = {
+		x = TIC_WIDTH(),
+		y = F11_particleStreakYPositions[F11_particleStreakCounter % #F11_particleStreakYPositions + 1],
+		dx = lerpScalar(-2, -5, math.random()),
+		dy = 0,
+		life = 99999, -- effectively infinite
+		--onDeath = F11_AddParticleStreak, -- don't accumulate; let tick() create as needed.
+		should86 = function(p)
+			if p.x < -F11_GetParticleStreakLength(p.length) then
+				return true
+			end
+			return false
+		end,
+		-- custom props
+		length = math.random(),
+		gradient = F11_gradients[math.random(1, gradientCount)],
+	}
+	AddParticleToPool(F11_particleStreaks,p)
+end
+
+function F11_RenderParticleStreak(p)
+	--pix(p.x, p.y, 12)
+	--line(p.x, p.y, p.x + p.length, p.y, 12)
+	--local length = lerpScalar(p.length)
+	local length = F11_GetParticleStreakLength(p.length)
+	hlineBayerGradient(p.x, p.x + length, p.y, p.gradient, 1.0, 0)
+end
+
 function Frame11_init()
 	poke(0x3FF8,0) -- border black
 	
 	F11_st = time()
 	math.randomseed(12)
+
+	F11_shipX = 30 -- initial ship X
 
 	F11_Starfield = CreateStarField({
 		numParallaxLayers = 3,
@@ -81,36 +149,15 @@ function Frame11_init()
 
 	F11_fgParticles = CreateParticlePool(3)
 	for i=1, 20 do
-		AddRock(true, F11_fgParticles, F11_fgRockPool, 5.5)
+		AddRock(true, F11_fgParticles, F11_fgRockPool, 15.5)
 	end
+
+	F11_particleStreaks = CreateParticlePool(136 * 3) -- 3 per row max.
+	F11_particleStreakCounter = 0
+	F11_particleStreakIntensityOverride = nil
 end
 
 F11_planetGradient = { 0,1,2,3,4,12 }
-
--- idea here was to use something other than sin() to make the planet feel like it has more ridges, less molten/smooth.
--- it ends up being a bit too subtle due to layering.
--- function MakeLUT(sampleCount, func)
--- 	local lut = {}
--- 	for i=0, sampleCount-1 do
--- 		local phase = ((i / sampleCount) - 0.5) * 6.28318530718 -- phase in -pi..pi
--- 		lut[i + 1] = func(phase)
--- 	end
--- 	return lut
--- end
-
--- local F11_WAVE = MakeLUT(256, function(phase)
--- 	local x = phase
--- 	return math.abs(sin(x))
--- end)
-
--- local F11_WAVE_N = #F11_WAVE
--- local F11_PHASE_TO_INDEX = F11_WAVE_N * 0.15915494309 -- 1/(2*pi)
-
--- local function F11_RidgeWave(phase)
--- 	-- no interpolation; cheap!
--- 	local index = ((phase * F11_PHASE_TO_INDEX) % F11_WAVE_N) // 1
--- 	return F11_WAVE[index + 1]
--- end
 
 function RenderPlanet(t)
 	--local cx, cy, r = 120, 68, 60
@@ -120,6 +167,13 @@ function RenderPlanet(t)
 	local phase = t * -0.0017
 	--local rotation = t * 0.0001
 	local scale = 6
+
+	-- don't put these in the shader for performance.
+	local phasev2 = phase * 1.6 
+	local phasev3 = phase * 0.61
+	local scalev1 = scale * 9
+	local scalev2 = scale * 12
+	local scalev3 = scale * 7
 	--local cr, sr = cos(rotation), sin(rotation)
 
 	circ(cx, cy, r + 3, 8)
@@ -130,16 +184,12 @@ function RenderPlanet(t)
 		local y = (cy - screenY) * invR
 		local z = sqrt(1 - x*x - y*y) -- unit sphere
 
-		if z < 0.08 then
-			-- sharper adge
-			--return 6 * z
-		end
-
 		local waves =
-			sin(scale*9*x + 5*y + phase) +
-			sin(scale*12*z - 7*y - phase*1.6) +
-			sin(scale*7*(x + z + y) + phase*0.61)
-		return z * (waves + 2) * 0.5
+			sin(scalev1*x + 5*y + phase) +
+			sin(scalev2*z - 7*y - phasev2) +
+			sin(scalev3*(x + z + y) + phasev3)
+		--return z * (waves + 2) * 0.5 * (3 * (F11_particleStreakIntensity + 1))
+		return z * (waves + 2) * LERP(0.5, 3, F11_GetParticleStreakIntensity())
 
 		-- interaction with rotated coords looks cool but is subtle and costs a lot of CPU
 		-- local px = cr*x - sr*z
@@ -147,16 +197,51 @@ function RenderPlanet(t)
 	end)
 end
 
-function Frame11(tt)
+
+
+function Frame11(tt, demoBeat, somaticState, sceneTiming)
 
 	local t = (tt - F11_st)
 	local dt = 16
 	
+
+	-- up/down controls intensity.
+	--#ifdef DEBUG
+	if keyp(58) or btnp(0) then -- up
+		F11_particleStreakIntensityOverride = min((F11_particleStreakIntensityOverride or F11_particleStreakIntensity) + 0.1, 1.0)
+	end
+	if keyp(59) or btnp(1) then -- down
+		F11_particleStreakIntensityOverride = max((F11_particleStreakIntensityOverride or F11_particleStreakIntensity) - 0.1, 0.0)
+	end
+	--#endif
+
+	-- ramp up intensity over time
+	-- scene starts @ 368
+	local targetBeat = 400--380 --400
+	local transitionDurationBeats = 8
+	local transitionStartBeat = targetBeat - transitionDurationBeats
+	local transition01 = clamp01((demoBeat - transitionStartBeat) / transitionDurationBeats)
+	F11_particleStreakIntensity = LERP(0.003, 1.0, transition01 * transition01* transition01)
+
 	cls()
+
+	-- adjust params to scene intensity.
 
 	UpdateStarField(F11_Starfield)
 	UpdateParticlePool(F11_bgParticles)
 	UpdateParticlePool(F11_fgParticles)
+	UpdateParticlePool(F11_particleStreaks)
+
+	-- create new particle streaks; we can create multiple per frame.
+	local effectiveIntensity = F11_GetParticleStreakIntensity()
+	for y = 0, 140 do
+		-- adding more than is supported will remove existing; let them fade out naturally.
+		if #F11_particleStreaks.particles < F11_particleStreaks.maxParticles then
+			if math.random() < effectiveIntensity * 0.1 then
+				F11_AddParticleStreak()
+			end
+		end
+	end
 
 	RenderStarField(F11_Starfield, t)
 
@@ -171,12 +256,30 @@ function Frame11(tt)
 		RenderRock(p.x,p.y,i,p.rockId,p.aaRotationIndex)
 	end
 
-	-- ship.
-	drawSprite("F11_Ship",30+t/1000, math.sin(t/2000) * 2)
+	-- ship
+	local shipDx = LERP(0.001, 0.08, effectiveIntensity)
+	F11_shipX = F11_shipX + shipDx * dt
+	drawSprite("F11_Ship", F11_shipX, math.sin(t/2000) * 2)
 
 	-- rocks in front
 	for i,p in ipairs(F11_fgParticles.particles) do
 		RenderRock(p.x,p.y,i,p.rockId,p.aaRotationIndex)
 	end
 
+	-- particle  streaks
+	for i,p in ipairs(F11_particleStreaks.particles) do
+		F11_RenderParticleStreak(p)
+	end
+
+	local glitchAmt = effectiveIntensity ^1.4
+	if (glitchAmt > 0.05) then
+		screen_glitch(t, 20, glitchAmt)
+	end
+
+	--#ifdef DEBUG
+	if show_hud then
+		print(string.format("F11 intensity: %.2f / trans:%.2f (up/down = manual)",
+			effectiveIntensity, transition01), 0, 16, 5)
+	end
+	--#endif
 end

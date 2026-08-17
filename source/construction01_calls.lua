@@ -126,26 +126,6 @@ function Construction01_init()
 	C01_flicker = false
 end
 
-function screen_glitch(seed, maxShiftPx, amt01)
-	for y = 0, TIC_HEIGHT() - 1 do
-		-- shift  this scanline left/right by some amount,
-		local maxDblShift = maxShiftPx / 2
-		local shiftDblPx = (hash11(y + seed) - 0.5) * maxDblShift * amt01 -- double pixels to shift, bipolar.
-		-- because it will necessarily spill off screen, calculate safe x0 and x1.
-		-- x0 and x1 are double-pixel BYTE amounts, not pixel. so the max width is TIC_WIDTH/2, not TIC_WIDTH.
-		local x0 = 0
-		local x1 = TIC_WIDTH() / 2 - 1
-		if shiftDblPx > 0 then
-			x1 = x1 - shiftDblPx
-		else
-			x0 = x0 - shiftDblPx
-		end
-		
-		local pRow = y * TIC_WIDTH() / 2
-		memcpy(x0 + pRow, x0 + pRow + shiftDblPx, x1 - x0 + 1)
-	end
-end
-
 function Construction01(tt, _, somaticState, sceneTime)
 
 	local t = (tt - C01_st)

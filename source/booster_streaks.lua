@@ -42,8 +42,8 @@ function CreateBoosterStreaks(options)
     options.maxLength = options.maxLength or 240
     options.minSpeed = options.minSpeed or 0.05
     options.maxSpeed = options.maxSpeed or 0.2
-    options.lifespanMSMin = options.lifespanMSMin or 50 -- min lifespan of streaks in milliseconds.
-    options.lifespanMSMax = options.lifespanMSMax or 500 -- max lifespan of streaks in milliseconds.
+    options.lifespanMSMin = options.lifespanMSMin or 80 -- min lifespan of streaks in milliseconds.
+    options.lifespanMSMax = options.lifespanMSMax or 700 -- max lifespan of streaks in milliseconds.
     --max/min energy interpolation along the emitter line.
     options.minEnergy0 = options.minEnergy0 or 0.4
     options.maxEnergy0 = options.maxEnergy0 or 0.4

@@ -117,7 +117,7 @@ C03_emitter1RightEdge = {
 	d0 = { -314, 146 },
 	d1 = { -314, 146 },
 }
-C03_emitter2 = {
+C03_emitter2 = { -- side thing on main ship
 	x0 = 43 + 51,
 	y0 = 74,
 	width = -10,
@@ -126,33 +126,28 @@ C03_emitter2 = {
 	d0 = { -314, 146 },
 	d1 = { -314, 146 },
 }
-C03_emitter3Ship01 = {
-	x0 = 140,
-	y0 = 94,
-	width = 41,
-	height = 21,
+C03_emitter3Ship01 = { -- small bottom ship.
+	x0 = 2,
+	y0 = 25,
+	width = 10,
+	height = 5,
 
-	d0 = { -336, 118 },
-	d1 = { -314, 146 },
+	d0 = { -50, 26 },
+	d1 = { -38, 19 },
 }
-C03_emitter4Ship02 = {
-	x0 = 16,
-	y0 = 22,
-	width = 7,
-	height = 7,
-
-	d0 = { -336, 146 },
-	d1 = { -314, 146 },
-}
-C03_emitter5Ship02 = {
+C03_emitter5Ship02 = { -- small top ship: big vertical booster
 	x0 = 2,
 	y0 = 6,
 	width = 3,
 	height = 74,
 
-	d0 = { -336, 146 },
-	d1 = { -314, 146 },
+	d0 = { -46, 10 },
+	d1 = { -50, 18 },
 }
+-- small top ship: tiny booster. to make the direction consistent with the big vertical booster, just copy it and shift right.
+C03_emitter4Ship02 = deepcopy(C03_emitter5Ship02) 
+C03_emitter4Ship02.x0 = C03_emitter4Ship02.x0 + 13
+C03_emitter4Ship02.width = 7
 
 function C03_CreateBoosterStreakSystem(edge, t0, t1)
 	-- define the emitter segment of the provided edge.
@@ -192,11 +187,11 @@ function Construction03_init()
 	}
 
 	C03_streaksShip01 = {
-		C03_CreateBoosterStreakSystem(C03_emitter3Ship01, 0.0, 0.33),
+		C03_CreateBoosterStreakSystem(C03_emitter3Ship01, 0.0, 1.0),
 	}
 
 	C03_streaksShip02 = {
-		C03_CreateBoosterStreakSystem(C03_emitter4Ship02, 0.0, 0.33),
+		C03_CreateBoosterStreakSystem(C03_emitter4Ship02, 0.22, 0.3),
 		C03_CreateBoosterStreakSystem(C03_emitter5Ship02, 0.0, 0.33),
 	}
 end

@@ -266,13 +266,8 @@ function Frame11(tt, demoBeat, somaticState, sceneTiming)
 		RenderRock(p.x,p.y,i,p.rockId,p.aaRotationIndex)
 	end
 
-	-- particle  streaks
-	for i,p in ipairs(F11_particleStreaks.particles) do
-		F11_RenderParticleStreak(p)
-	end
-
-	local glitchAmt = effectiveIntensity ^1.4
-	if (glitchAmt > 0.05) then
+	local glitchAmt = effectiveIntensity-- ^1.4
+	if (glitchAmt > 0.01) then
 		screen_glitch(t, 20, glitchAmt)
 	end
 
@@ -282,4 +277,29 @@ function Frame11(tt, demoBeat, somaticState, sceneTiming)
 			effectiveIntensity, transition01), 0, 16, 5)
 	end
 	--#endif
+
+	-- grid-o-squares for visualizing the block glitch effect
+	-- local rectSize = 25
+	-- local ir = 0
+	-- for x = 0, 240, rectSize do
+	-- 	for y = 0, 136, rectSize do
+	-- 		rect(x, y, rectSize, rectSize, ir % 16)
+	-- 		ir = ir + 1
+	-- 	end
+	-- end
+
+	-- screen_glitch_blocks(9, {
+	-- 	widthMin = 2,
+	-- 	widthMax = 12,
+	-- 	count = lerpScalar(0, 100, effectiveIntensity),
+	-- 	dxMin = lerpScalar(0, -12, effectiveIntensity),
+	-- 	dxMax = lerpScalar(0, 12, effectiveIntensity),
+	-- 	dyMin = lerpScalar(0, -4, effectiveIntensity),
+	-- 	dyMax = lerpScalar(0, 4, effectiveIntensity),
+	-- })
+
+	-- particle streaks
+	for i,p in ipairs(F11_particleStreaks.particles) do
+		F11_RenderParticleStreak(p)
+	end
 end

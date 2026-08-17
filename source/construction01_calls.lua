@@ -96,6 +96,23 @@ end
 
 C01_st=0
 
+C01_accentY = nil
+C01_accentIndex = 0
+C01_flicker = false -- 1 frame of flicker per accent.
+C01_kAccentPartitions = 4
+
+function C01_accent()
+	C01_accentIndex = C01_accentIndex + 1
+	C01_accentY = 1
+	C01_flicker = true
+end
+
+function C01_music_row(state)
+	if state.sideChannel == "accent2" then
+		C01_accent()
+	end
+end
+
 function Construction01_init()
 	C01_st = time()
 	vbank(0)
@@ -103,14 +120,48 @@ function Construction01_init()
 	vbank(1)
 	cls()
 	vbank(0)
+
+	C01_accentY = nil
+	C01_accentIndex = 0
+	C01_flicker = false
 end
 
-function Construction01(tt)
+function screen_glitch(seed, maxShiftPx, amt01)
+	for y = 0, TIC_HEIGHT() - 1 do
+		-- shift  this scanline left/right by some amount,
+		local maxDblShift = maxShiftPx / 2
+		local shiftDblPx = (hash11(y + seed) - 0.5) * maxDblShift * amt01 -- double pixels to shift, bipolar.
+		-- because it will necessarily spill off screen, calculate safe x0 and x1.
+		-- x0 and x1 are double-pixel BYTE amounts, not pixel. so the max width is TIC_WIDTH/2, not TIC_WIDTH.
+		local x0 = 0
+		local x1 = TIC_WIDTH() / 2 - 1
+		if shiftDblPx > 0 then
+			x1 = x1 - shiftDblPx
+		else
+			x0 = x0 - shiftDblPx
+		end
+		
+		local pRow = y * TIC_WIDTH() / 2
+		memcpy(x0 + pRow, x0 + pRow + shiftDblPx, x1 - x0 + 1)
+	end
+end
+
+function Construction01(tt, _, somaticState, sceneTime)
 
 	local t = (tt - C01_st)
 	math.randomseed(t)
 
 	cls()
+
+	if C01_accentY then
+		C01_accentY = C01_accentY * 0.9 -- decay
+	end
+	--#ifdef DEBUG
+	-- hit t to manually accent.
+	if keyp(20) then -- T
+		C01_accent()
+	end
+	--#endif
 
 	local wstart = 2000
 
@@ -135,11 +186,27 @@ function Construction01(tt)
 		drawSprite(spark_id,wx+50+math.random(8),72)
 		drawSprite(spark_id,wx+50+math.random(8),75)
 	end
-	
-	drawSprite("C1_Bg",0,0)
-		
-	drawSprite("C1_Machine_01",wx,75)
-	drawSprite("C1_Machine_02",0,65)
-	drawSprite("C1_Machine_03",-2,60)
 
+	if C01_flicker then
+		C01_flicker = false
+		cls(12)
+	else
+		drawSprite("C1_Bg",0,0)
+
+		drawSprite("C1_Machine_01",wx,75)
+		drawSprite("C1_Machine_02",0,65)
+		drawSprite("C1_Machine_03",-2,60)
+	end
+
+	if C01_accentY and C01_accentY > 0.01 then
+		screen_glitch(C01_accentIndex, 40, C01_accentY)
+	end
+
+	-- and glitch the screen as a transition
+	local transitionStartBeat = 460 - 448;
+	local transitionEndBeat = 464 - 448;
+	if sceneTime.demoBeats >= transitionStartBeat and sceneTime.demoBeats <= transitionEndBeat then
+		local transition01 = (sceneTime.demoBeats - transitionStartBeat) / (transitionEndBeat - transitionStartBeat)
+		screen_glitch(9, 150, transition01)
+	end
 end

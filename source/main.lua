@@ -191,6 +191,7 @@ scenes = {
 		bdr = no_fn,
 		start = 28,
 		row = 0,
+		rowHandler = C01_music_row,
 	},{
 		init = Tunnel2_init,
 		frame = Tunnel2,

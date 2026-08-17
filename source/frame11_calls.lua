@@ -60,6 +60,8 @@ function AddRock(first, particleSystem, rockPool, speedMod)
 end
 
 function Frame11_init()
+	poke(0x3FF8,0) -- border black
+	
 	F11_st = time()
 	math.randomseed(12)
 

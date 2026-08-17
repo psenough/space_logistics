@@ -44,13 +44,29 @@ function HUD_01_Scene(tt)
 		end
 	end
 	
-	
+	-- box header left
+	local bx = 16
+	local by = 48
+	local wid = 40
+	local hei = 8
+	if (t//120%2 >= 1) then
+		rect(bx,by,wid,hei,2)
+	end
+	rectb(bx,by,wid,hei,6)
 
-	local px = 178
-	local py = 118
-	rect(px,py,46,11,0)
-	rectb(px,py,46,11,6)
-	print(string.format("%.0f",(20000+t)//15),px+20,py+3,2)
+	rect(bx,by+hei+2,wid,hei*4,0)
+	rectb(bx,by+hei+2,wid,hei*4,6)
+	local prsd = string.sub("crit lvl 4\ninit dyson\ncontainer\nprotocol", 0, t//140)
+	print(prsd,bx+3,by+hei+5,6,false,1,true)
+	
+	-- box bottom right
+	if (t//120%2 >= 1) then
+		local px = 178
+		local py = 118
+		rect(px,py,46,11,0)
+		rectb(px,py,46,11,6)
+		print(string.format("%.0f",(20000+t)//15),px+20,py+3,2)
+	end
 
 	--drawSprite("HUD_01",0,0)
 	drawSprite("HUD_02",0,0)
@@ -58,6 +74,9 @@ function HUD_01_Scene(tt)
 
 	if (t//120%2 >= 1) then
 		print("Flare Alert!",80,8,2)
+		poke(0x3FF8,2)
+	else
+		poke(0x3FF8,0)
 	end
 
 end

@@ -16,6 +16,8 @@ TUNNEL_StructRng = nil
 TUNNEL_pulseY = nil
 
 function tunnel_init()
+	poke(0x3FF8,0) -- border black
+	
 	tunnel_st = time()
 	math.randomseed(766)
 

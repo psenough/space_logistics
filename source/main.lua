@@ -163,10 +163,10 @@ scenes = {
 		start = 19,
 		row = 0,
 		rowHandler = tunnel_music_row,
-	},{ -- hud red alert
-		init = HUD_01_init,
-		frame = HUD_01_Scene,
-		name = "HUD_01_Scene",
+	},{ -- hud greets
+		init = HUD_02_init,
+		frame = HUD_02_Scene,
+		name = "HUD_02_Scene",
 		bdr = no_fn,
 		start = 21,
 		row = 0,

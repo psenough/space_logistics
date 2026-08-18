@@ -80,3 +80,59 @@ function HUD_01_Scene(tt)
 	end
 
 end
+
+
+function HUD_02_init()
+	HUD_02_st = time()
+	
+	vbank(0)
+	cls()
+	vbank(1)
+	cls()
+	vbank(0)
+end
+
+function HUD_02_Scene(tt)
+
+	local t = (tt - HUD_02_st)
+	
+	cls()
+	drawSprite("HUD2_Background",0,0)
+
+	local greets = {
+		{"Spectrox","Agenda","Otomata Labs","TBL","Spectrals","Accession","konsumer"},
+		{"TTE","Slipstream","SIMurai","Damage","Forsaken","Marquee Design","Joker"},
+		{"Altair","AbCr","Oftenhide","Dreamweb","Rift","BionFX","Elude"},
+		{"Rabenauge","Abyss C","Haujobb","K2","Akronyme A", "Stargaze"},
+		{"Desire","Nah Kolor","TPOLM","RBBS","Poo-brain","Hornet"}
+	}
+
+	local idx = t//2000%#greets+1
+
+	local grt = greets[idx]
+
+	for i=1,#grt do
+		local width = print(grt[i],240,0,1)
+		local posX = 87 + math.sin(t/2000+(i*6.28)/#grt+idx*10)*40
+		local posY = 70 + math.cos(t/2000+(i*6.28)/#grt+idx)*18
+		circb(posX-6,posY+4,2,6)
+		line(posX-6,posY+6,87,120,6)
+		print(grt[i],posX-width*.5,posY-4,6*((t+i*100)//200%2+1))
+	end
+
+	-- screen on side
+	drawSprite("HUD2_Consoleoverlay",195,60)
+	-- todo some techy animation of the dyson
+
+	-- bar on bottom
+	barY = 2
+	drawSprite("HUD2_Infobar",0,barY)
+	--[[if t//200%4 > 1 then
+		print("sectors",50,114,6,false,2)
+	else
+		print("called",50,114,6,false,2) 
+	end--]]
+	if t//100%4 > 1 then print("coordinating with\nneighbour sectors",50,barY+12,6,false) end
+
+
+end

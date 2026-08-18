@@ -49,12 +49,54 @@ function drawWelders(welders,frameRefX,frameRefY,t)
 	end
 end
 
+SS_sunGradient = { 12,4,3,2,1,3,4 }
+
+function RenderSun(t)
+	--local cx, cy, r = 120, 68, 60
+	local cx, cy, r = 120, 68, 120
+
+	local invR = 1 / r
+	local phase = t * -0.00017
+	--local rotation = t * 0.0001
+	local scale = 3+math.sin(t/20000)*2
+
+	-- don't put these in the shader for performance.
+	local phasev2 = phase * 1.6 
+	local phasev3 = phase * 0.61
+	local scalev1 = scale * 9
+	local scalev2 = scale * 12
+	local scalev3 = scale * 7
+	--local cr, sr = cos(rotation), sin(rotation)
+
+	--circ(cx, cy, r + 3, 8)
+	--circ(cx, cy, r + 1, 9)
+
+	ShadeCircleBayer(cx, cy, r, SS_sunGradient, function(screenX, screenY)
+		local x = (screenX - cx) * invR -- normalize
+		local y = (cy - screenY) * invR
+		local z = sqrt(1 - x*x - y*y) -- unit sphere
+
+		local waves =
+			sin(scalev1*x + 5*y + phase) +
+			sin(scalev2*z - 7*y - phasev2) +
+			sin(scalev3*(x + z + y) + phasev3)
+		--return z * (waves + 2) * 0.5 * (3 * (F11_particleStreakIntensity + 1))
+		return z * (waves + 2) * LERP(0.5, 3, F11_GetParticleStreakIntensity())
+
+		-- interaction with rotated coords looks cool but is subtle and costs a lot of CPU
+		-- local px = cr*x - sr*z
+		-- local pz = sr*x + cr*z
+	end)
+end
+
 function SphereScenes_1(tt)
 
 	local t = (tt - SS_st)
 	math.randomseed(t)
 
 	cls()
+	RenderSun(t)
+
 	local frameRefX = -120+t//120
 	local frameRefY = -t//120
 	drawSprite("SS_Stage1_Frame03",frameRefX-185,frameRefY)
@@ -77,7 +119,6 @@ function SphereScenes_1(tt)
 	}
 
 	drawWelders(welders,frameRefX,frameRefY,t)
-
 end
 
 
@@ -87,8 +128,10 @@ function SphereScenes_2(tt)
 	math.randomseed(t)
 
 	cls()
-	local frameRefX = -120+t//120
-	local frameRefY = -140+t//120 
+	RenderSun(t)
+
+	local frameRefX = -120+t//120 -- -65+120-t//120
+	local frameRefY = -t//120 -- -56+t//120 
 	drawSprite("SS_Stage2_Frame01",frameRefX-185,frameRefY)
 	drawSprite("SS_Stage2_Frame01",frameRefX,frameRefY)
 	drawSprite("SS_Stage2_Frame02",frameRefX+185,frameRefY)
@@ -111,7 +154,6 @@ function SphereScenes_2(tt)
 	drawWelders(welders,frameRefX,frameRefY,t)
 
 	drawSprite("SS_Ship_up",frameRefX+20+t//45,frameRefY+300-t//30)
-
 end
 
 
@@ -121,8 +163,10 @@ function SphereScenes_3(tt)
 	math.randomseed(t)
 
 	cls()
-	local frameRefX = 0---120+t//120
-	local frameRefY = 0---140+t//120 
+	RenderSun(t)
+
+	local frameRefX = -120+t//120
+	local frameRefY = -t//120 
 	drawSprite("SS_Stage2_Frame01",frameRefX-185,frameRefY)
 	drawSprite("SS_Stage2_Frame01",frameRefX,frameRefY)
 	drawSprite("SS_Stage2_Frame02",frameRefX+185,frameRefY)
@@ -133,16 +177,20 @@ function SphereScenes_3(tt)
 	drawSprite("SS_Stage2_Frame01",frameRefX+104,frameRefY+210)
 	drawSprite("SS_Stage2_Frame02",frameRefX+104+185,frameRefY+210)
 	-- todo: match these one by one
-	drawSprite("SS_Stage3_02",frameRefX-185,frameRefY)
-	drawSprite("SS_Stage3_01",frameRefX,frameRefY)
-	drawSprite("SS_Stage3_04",frameRefX+185,frameRefY)
-	drawSprite("SS_Stage3_03",frameRefX+52,frameRefY+105)
-	drawSprite("SS_Stage3_06",frameRefX+52-185,frameRefY+105)
-	drawSprite("SS_Stage3_04",frameRefX+52+185,frameRefY+105)
-	drawSprite("SS_Stage3_05",frameRefX+104-185,frameRefY+210)
-	drawSprite("SS_Stage3_05",frameRefX+104,frameRefY+210)
-	drawSprite("SS_Stage3_02",frameRefX+104+185,frameRefY+210)
-
+	drawSprite("SS_Stage3_03",frameRefX+76,frameRefY+25)
+	drawSprite("SS_Stage3_03",frameRefX+82,frameRefY+13)
+	drawSprite("SS_Stage3_01",frameRefX+53,frameRefY+13)
+	drawSprite("SS_Stage3_04",frameRefX+135,frameRefY+12)
+	drawSprite("SS_Stage3_03",frameRefX+134,frameRefY+118)
+	drawSprite("SS_Stage3_04",frameRefX+171,frameRefY+153)
+	drawSprite("SS_Stage3_03",frameRefX+186,frameRefY+181)
+	drawSprite("SS_Stage3_04",frameRefX+266,frameRefY+13)
+	drawSprite("SS_Stage3_02",frameRefX+250,frameRefY+118)
+	drawSprite("SS_Stage3_03",frameRefX+258,frameRefY+118)
+	drawSprite("SS_Stage3_02",frameRefX+257,frameRefY+132)
+	drawSprite("SS_Stage3_03",frameRefX-51,frameRefY+118)
+	drawSprite("SS_Stage3_01",frameRefX-80,frameRefY+118)
+	drawSprite("SS_Stage3_01",frameRefX+1,frameRefY+117)
 
 	-- start, end, id, posx, posy, dx, dy
 	local welders = {
@@ -156,6 +204,7 @@ function SphereScenes_3(tt)
 	drawWelders(welders,frameRefX,frameRefY,t)
 
 	drawSprite("SS_Ship_up",20+t//45,136-t//30)
+	drawSprite("SS_Ship_up",-60+t//45,236-t//30)
 
 end
 

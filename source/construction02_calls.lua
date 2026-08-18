@@ -46,7 +46,7 @@ C02_doors = {
 		{50000,50000,"C2_ShipCon_01",0},
 		{1400,2000,"C2_ShipCon_01",5000},
 		{50000,50000,"C2_ShipCon_01",0},
-		{10400,11000,"C2_ShipCon_02",14000},
+		{10400,11000,"C2_ShipCon_01",14000},
 		{50000,50000,"C2_ShipCon_01",0},
 		{50000,50000,"C2_ShipCon_01",0}
 	}
@@ -66,7 +66,7 @@ function Construction02(tt)
 		if (t > C02_doors[i][1]) then
 			C2_DoorOpenAnim(t,C02_doors[i][1],C02_doors[i][2],(doorx+12)//1,54) 
 		else
-			drawSprite("C2_Door_01",doorx+15,61)
+			drawSprite("C2_Door_02",doorx+15,61)
 		end
 		
 		-- draw rest of the bay
@@ -91,7 +91,11 @@ function Construction02(tt)
 				stpos = stpos + (t - C02_doors[i][4])/20
 				circ(stpos,ypos+7,math.random(2),math.random(3)+1)
 			end
-			drawSpriteClipLeft(C02_doors[i][3],stpos,ypos,clip)
+			if (t > C02_doors[i][1]+3600) then
+				drawSpriteClipLeft("C2_ShipCon_01",stpos,ypos,clip)
+			else
+				drawSpriteClipLeft("C2_ShipCon_02",stpos,ypos,clip)
+			end
 			--print(doorx//1,doorx,0,12)
 		end
 

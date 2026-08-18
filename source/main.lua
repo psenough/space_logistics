@@ -71,7 +71,7 @@ scenes = {
 		start = 0,
 		row = 0,
 		rowHandler = TwinkleRowHandler, -- row handlers are called once every music row.
-	},{
+	--[[},{
 		init = Frame02_init,
 		frame = Frame02, -- planets with ships in orbit
 		name = "Frame02",
@@ -205,13 +205,27 @@ scenes = {
 		name = "Construction02",
 		bdr = no_fn,
 		start = 31,
+		row = 0,--]]
+	},{
+		init = SphereScenes_init,
+		frame = SphereScenes_1,
+		name = "SphereScenes_1",
+		bdr = no_fn,
+		start = 33,
 		row = 0,
 	},{
 		init = SphereScenes_init,
-		frame = SphereScenes,
-		name = "SphereScenes",
+		frame = SphereScenes_2,
+		name = "SphereScenes_2",
 		bdr = no_fn,
-		start = 33,
+		start = 34,
+		row = 0,
+	},{
+		init = SphereScenes_init,
+		frame = SphereScenes_3,
+		name = "SphereScenes_3",
+		bdr = no_fn,
+		start = 35,
 		row = 0,
 	},{
 		init = EndScene_init,

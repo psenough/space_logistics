@@ -480,6 +480,43 @@ function ShadeCircleBayer(cx, cy, r, gradient, shadeFunc)
 	end
 end
 
+-- hack to skip some cycles per frame
+function ShadeCircleBayerHack(cx, cy, r, gradient, shadeFunc, t)
+	local r2 = r * r
+	local gradientCount = #gradient
+	local bayer = BAYER_MINUS_5
+
+	local sp = t//1%2
+	local sp2 = (t//1)%3
+
+	-- screen space clipping
+	local yFrom = max(-r, -cy)+sp -- yfrom/to/y are relative to center.
+	local yTo = min(r, TIC_HEIGHT() - 1 - cy)
+	for y = yFrom, yTo,2 do
+		local screenY = cy + y
+		-- y is offset from center, screenY is actual pixel coordinate
+		local y2 = y * y
+		local span = sqrt(r2 - y2) // 1
+		local xFrom = max(-span, -cx)+sp2 -- clipping
+		local xTo = min(span, TIC_WIDTH() - 1 - cx)
+		local screenY240 = screenY * TIC_WIDTH()
+		for x = xFrom, xTo,2 do
+			local screenX = cx + x
+			-- x is offset from center, screenX is actual pixel coordinate
+			if x * x + y2 <= r2 then -- inside circle
+				-- x and y are offsets from center;
+				local tone01 = shadeFunc(cx + x, screenY)
+				if tone01 ~= nil then
+					--pix(screenX, screenY, col)
+					--pixBayer(screenX, screenY, gradient, gradientCount, tone01)
+					local b = bayer[screenY240 + screenX]
+					pix(screenX, screenY, gradient[max(1, min(gradientCount, (tone01 + b) * gradientCount)) // 1])
+				end
+			end
+		end
+	end
+end
+
 --------------------------------------------------------------------------------------------------------
 -- 1 input value, 1 output value, 0..1
 

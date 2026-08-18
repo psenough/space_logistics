@@ -69,9 +69,9 @@ function RenderSun(t)
 	--local cr, sr = cos(rotation), sin(rotation)
 
 	--circ(cx, cy, r + 3, 8)
-	--circ(cx, cy, r + 1, 9)
+	--circ(cx, cy, r + 1, 9) 
 
-	ShadeCircleBayer(cx, cy, r, SS_sunGradient, function(screenX, screenY)
+	ShadeCircleBayerHack(cx, cy, r, SS_sunGradient, function(screenX, screenY)
 		local x = (screenX - cx) * invR -- normalize
 		local y = (cy - screenY) * invR
 		local z = sqrt(1 - x*x - y*y) -- unit sphere
@@ -86,7 +86,7 @@ function RenderSun(t)
 		-- interaction with rotated coords looks cool but is subtle and costs a lot of CPU
 		-- local px = cr*x - sr*z
 		-- local pz = sr*x + cr*z
-	end)
+	end,t)
 end
 
 function SphereScenes_1(tt)
@@ -94,9 +94,13 @@ function SphereScenes_1(tt)
 	local t = (tt - SS_st)
 	math.randomseed(t)
 
-	cls()
+	--cls()
+	vbank(0)
 	RenderSun(t)
 
+
+	vbank(1)
+	cls()
 	local frameRefX = -120+t//120
 	local frameRefY = -t//120
 	drawSprite("SS_Stage1_Frame03",frameRefX-185,frameRefY)
@@ -119,6 +123,8 @@ function SphereScenes_1(tt)
 	}
 
 	drawWelders(welders,frameRefX,frameRefY,t)
+	vbank(0)
+
 end
 
 
@@ -127,9 +133,12 @@ function SphereScenes_2(tt)
 	local t = (tt - SS_st)
 	math.randomseed(t)
 
-	cls()
+	--cls()
+	vbank(0)
 	RenderSun(t)
 
+	vbank(1)
+	cls()
 	local frameRefX = -120+t//120 -- -65+120-t//120
 	local frameRefY = -t//120 -- -56+t//120 
 	drawSprite("SS_Stage2_Frame01",frameRefX-185,frameRefY)
@@ -154,6 +163,8 @@ function SphereScenes_2(tt)
 	drawWelders(welders,frameRefX,frameRefY,t)
 
 	drawSprite("SS_Ship_up",frameRefX+20+t//45,frameRefY+300-t//30)
+	vbank(0)
+
 end
 
 
@@ -162,8 +173,13 @@ function SphereScenes_3(tt)
 	local t = (tt - SS_st)
 	math.randomseed(t)
 
-	cls()
+	--cls()
+	vbank(0)
+
 	RenderSun(t)
+
+	vbank(1)
+	cls()
 
 	local frameRefX = -120+t//120
 	local frameRefY = -t//120 
@@ -205,6 +221,7 @@ function SphereScenes_3(tt)
 
 	drawSprite("SS_Ship_up",20+t//45,136-t//30)
 	drawSprite("SS_Ship_up",-60+t//45,236-t//30)
+	vbank(0)
 
 end
 

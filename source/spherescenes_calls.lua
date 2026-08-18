@@ -51,9 +51,9 @@ end
 
 SS_sunGradient = { 12,4,3,2,1,3,4 }
 
-function RenderSun(t)
+function RenderSun(cx,cy,r,grad,t)
 	--local cx, cy, r = 120, 68, 60
-	local cx, cy, r = 120, 68, 120
+	--local cx, cy, r = 120, 68, 120
 
 	local invR = 1 / r
 	local phase = t * -0.00017
@@ -71,7 +71,7 @@ function RenderSun(t)
 	--circ(cx, cy, r + 3, 8)
 	--circ(cx, cy, r + 1, 9) 
 
-	ShadeCircleBayerHack(cx, cy, r, SS_sunGradient, function(screenX, screenY)
+	ShadeCircleBayerHack(cx, cy, r, grad, function(screenX, screenY)
 		local x = (screenX - cx) * invR -- normalize
 		local y = (cy - screenY) * invR
 		local z = sqrt(1 - x*x - y*y) -- unit sphere
@@ -96,7 +96,7 @@ function SphereScenes_1(tt)
 
 	--cls()
 	vbank(0)
-	RenderSun(t)
+	RenderSun(120, 68, 120, SS_sunGradient, t)
 
 
 	vbank(1)
@@ -135,7 +135,7 @@ function SphereScenes_2(tt)
 
 	--cls()
 	vbank(0)
-	RenderSun(t)
+	RenderSun(120, 68, 120, SS_sunGradient, t)
 
 	vbank(1)
 	cls()
@@ -176,7 +176,7 @@ function SphereScenes_3(tt)
 	--cls()
 	vbank(0)
 
-	RenderSun(t)
+	RenderSun(120, 68, 120, SS_sunGradient, t)
 
 	vbank(1)
 	cls()

@@ -20,8 +20,29 @@ end
 function EndScene(tt, _, somaticState, sceneTime)
 
 	local t = (tt - EndScene_st)
-	math.randomseed(t)
 
+	vbank(0)
+	-- cant use cls() on vbank0 because of optimization
+	-- gradually hide the sun
+	if t < 1000 then
+		RenderSun(65,61, 8, { 12,4,3,2,1,3,4 }, t)
+	elseif t < 2000 then
+		RenderSun(65,61, 8, { 12,4,3,0,0,0,4 }, t)
+	elseif t < 3000 then
+		RenderSun(65,61, 8, { 12,4,0,0,3 }, t)
+	elseif t < 4000 then
+		RenderSun(65,61, 8, { 3,4,0,0,1 }, t)
+	elseif t < 5000 then
+		RenderSun(65,61, 8, { 3,2,0,0,1 }, t)
+	elseif t < 6000 then
+		RenderSun(65,61, 8, { 1,2,0,0,1 }, t)
+	elseif t < 7000 then
+		RenderSun(65,61, 8, { 0,1,0,1 }, t)
+	else
+		cls()
+	end
+
+	vbank(1)
 	cls()
 	math.randomseed(123)
 	stars_side(10000+t,0,0)
@@ -30,12 +51,12 @@ function EndScene(tt, _, somaticState, sceneTime)
 	local moonX = 10
 	local moonY = 10
 	drawSprite("End_Moon",moonX,moonY)
-	drawSprite("End_Moon_Lights",moonX+7,moonY+8)
+	if t > 7000 then drawSprite("End_Moon_Lights",moonX+7,moonY+8) end
 
 	local planetX = 68
 	local planetY = 34
 	drawSprite("End_Planet",planetX,planetY)
-	drawSprite("End_Planet_Lights",planetX+1,planetY+6)
+	if t > 7000 then drawSprite("End_Planet_Lights",planetX+1,planetY+6) end
 
 	local sat1X = 44
 	local sat1Y = 80
@@ -50,11 +71,14 @@ function EndScene(tt, _, somaticState, sceneTime)
 	drawSprite("End_Sat_02",sat3X,sat3Y)
 
 
---	drawSprite("End_LogoLines",0,0)
---	drawSprite("End_ORing2",41,38)
---	drawSprite("End_Title",37,44)
-	circb(65,61,10,12)
-	pix(65,61,12)
-	
+	if t > 10000 then	
+		drawSprite("End_LogoLines",0,0)
+		drawSprite("End_ORing2",41,38)
+		drawSprite("End_Title",37,44)
+		circb(65,61,10,12)
+		pix(65,61,12)
+	end
+
 	TwinkleTick(somaticState, "starz")
+	vbank(0)
 end

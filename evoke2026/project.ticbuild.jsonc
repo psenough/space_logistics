@@ -1,0 +1,75 @@
+{
+    "$schema": "./.ticbuild/ticbuild.schema.json",
+    "project": {
+        "name": "space_logistics",
+        "importDirs": [
+            "assets"
+        ],
+        "includeDirs": [
+            "src"
+        ],
+        "binDir": "./build/$(buildConfiguration)-bin",
+        "objDir": "./build/$(buildConfiguration)-obj",
+        "outputCartName": "$(project.name).tic",
+        "metadata": {
+            "title": "$(project.name)",
+            "author": "TPOLM",
+            "desc": "demo released at Evoke 2026",
+            "script": "Lua",
+            "version": "1.0.0"
+        }
+    },
+    "preprocessor": {
+        "defines": {
+            // default config = debug.
+            "DEBUG": true
+        }
+    },
+    "imports": [
+        {
+            "name": "song",
+            "path": "music/evoke-onescener.tic"
+        },
+        {
+            "name": "maincode",
+            "path": "source/main.lua"
+        }
+    ],
+    "assembly": {
+        "blocks": [
+            {
+                "asset": "song",
+                "chunks": [
+                    "MUSIC_PATTERNS",
+                    "MUSIC_TRACKS",
+                    "WAVEFORMS",
+                    "SFX"
+                ]
+            },
+            {
+                "asset": "maincode",
+                //"chunks": ["CODE_COMPRESSED"]
+                "chunks": [
+                    "CODE"
+                ]
+            }
+        ],
+        "lua": {
+            "minify": false
+        }
+    },
+    "buildConfigurations": {
+        "release": {
+            "preprocessor": {
+                "defines": {
+                    "RELEASE": true
+                }
+            },
+            "assembly": {
+                "lua": {
+                    "minify": true
+                }
+            }
+        }
+    }
+}

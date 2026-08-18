@@ -65,6 +65,12 @@ function stars_side(t,x,y)
 	end
 end
 
+local F01_flickerSlewRate = 0.16
+
+local F01_flickers = {
+	1,1,1
+}
+
 function Frame01(tt, demoBeats, somaticState, sceneTiming)
 	
 	local dooropen=20000
@@ -124,8 +130,18 @@ function Frame01(tt, demoBeats, somaticState, sceneTiming)
 	
 	local pat = somaticState.demoPatternIndex
 	local row = somaticState.demoPatternRow
-	
-	if t > 1200 then
+
+	if t < 1200 then
+		-- fade in the logos.
+		local transitionStart = 500
+		local transitionEnd = 1200
+		local t01 = (t-transitionStart)/(transitionEnd-transitionStart) -- rev lerp
+		t01 = clamp01(t01)
+		t01 = t01 * t01* t01
+		drawSpriteWithFadeIn("F1_Logo02", 12, 74, t01)
+		drawSpriteWithFadeIn("F1_Logo",12,104, t01)
+		drawSpriteWithFadeIn("F1_LogoBackdrop",0,4, t01)
+	else
 		local drawlogo2 = true
 		local drawlogo = true
 		local drawback = true
@@ -139,9 +155,24 @@ function Frame01(tt, demoBeats, somaticState, sceneTiming)
 				break
 			end
 		end
-		if drawlogo2 then C03_DrawSpriteStripped("F1_Logo02", 12, 74, t) end --drawSprite("F1_Logo02",12,74) end
-		if drawlogo then C03_DrawSpriteStripped("F1_Logo",12,104,t+2000) end
-		if drawback then drawSprite("F1_LogoBackdrop",0,4) end
+
+		F01_flickers[1] = UpdateSlewedScalar(F01_flickers[1], drawlogo2 and 1 or 0.8, F01_flickerSlewRate)
+		F01_flickers[2] = UpdateSlewedScalar(F01_flickers[2], drawlogo and 1 or 0.6, F01_flickerSlewRate)
+		F01_flickers[3] = UpdateSlewedScalar(F01_flickers[3], drawback and 1 or 0.7, F01_flickerSlewRate)
+
+		if F01_flickers[1] > 0.9 then
+			C03_DrawSpriteStripped("F1_Logo02", 12, 74, t)
+		else
+			drawSpriteWithFadeIn("F1_Logo02", 12, 74, F01_flickers[1])
+		end
+
+		if F01_flickers[2] > 0.9 then
+			C03_DrawSpriteStripped("F1_Logo",12,104,t+2000)
+		else
+			drawSpriteWithFadeIn("F1_Logo",12,104, F01_flickers[2])
+		end
+
+		drawSpriteWithFadeIn("F1_LogoBackdrop",0,4, F01_flickers[3])
 	end
 
 	TwinkleTick(somaticState, "starz")

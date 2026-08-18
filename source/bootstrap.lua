@@ -656,3 +656,18 @@ function screen_glitch_blocks(seed, options)
 		-- rect(x + dx, y + dy, w, h, 3)
 	end
 end
+
+function UpdateSlewedScalar(scalar, target, slewRate)
+	if scalar < target then
+		scalar = scalar + slewRate
+		if scalar > target then
+			scalar = target
+		end
+	elseif scalar > target then
+		scalar = scalar - slewRate
+		if scalar < target then
+			scalar = target
+		end
+	end
+	return scalar
+end

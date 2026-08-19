@@ -1,13 +1,12 @@
-F09_st = 0
+--F09_st = 0
 
-function Frame09_init()
-	F09_st = time()
-end
+F09_conveyorState = nil
+F09_conveyorSequencer = nil
 
 function F09_goodLed(t)
 	local blinkPeriodMs = 700
 	local blink = (t % blinkPeriodMs) / blinkPeriodMs
-	local ledX = 157
+	local ledX = 155
 	local ledY = 20
 	if blink < 0.9 then
 		--rect(ledX,ledY,9,9,5)
@@ -32,10 +31,24 @@ function F09_goodLed(t)
 	pix(ledX + 7, ledY + 2 + 1, 15)
 end
 
+function F09_questionLed(t)
+	local blinkPeriodMs = 300
+	local blink = (t % blinkPeriodMs) / blinkPeriodMs
+	if blink < 0.5 then
+		--rect(ledX,ledY,9,9,5)
+		rect(138, 22, 41, 7, 4)
+	end
+	-- draw a checkmark
+	local ledX = 150
+	local ledY = 22
+	print("???", ledX + 2, ledY + 2, 15)
+	print("???", ledX + 2, ledY + 1, 3)
+end
+
 function F09_badLed(t)
 	local blinkPeriodMs = 300
 	local blink = (t % blinkPeriodMs) / blinkPeriodMs
-	local ledX = 157
+	local ledX = 155
 	local ledY = 20
 	if blink < 0.5 then
 		--rect(ledX,ledY,9,9,5)
@@ -46,17 +59,10 @@ function F09_badLed(t)
 	rect(ledX + 4, ledY + 8, 3, 2, 4)
 end
 
-function Frame09(tt)
-	local t = (tt - F09_st)
-
-	vbank(0)
-
-	cls()
-	drawSprite("F9_BG", 0, 0)
-
-	local sx = -t / 20
-
+function F09_conveyor(sx)
 	local px = sx + 200
+	-- sx = scanner x
+	-- px = conveyor x
 
 	drawSprite("F9_Suitcase_01", px, 52)
 	print("TPOLM", px + 10, 76, 1, false, 1, true)
@@ -158,6 +164,54 @@ function Frame09(tt)
 	sx = sx + 200
 	drawSprite("F9_Suitcase_Scan_02", sx, 52)
 	print("... and you!", sx + 48, 88, 6, false, 1, true)
+end
+
+TriggerNever = function()
+	return false
+end
+
+function SeqItem_SetConveyorStateAtBeat(beat, xSpeed, led)
+	return {
+		trigger = beat and TriggerOnSceneBeat(beat) or nil,
+		tick = function(seqItem, somaticState, seqTiming)
+			F09_conveyorState.xSpeed = xSpeed
+			F09_conveyorState.led = led
+		end
+	}
+end
+
+F09_conveyorSequenceDef = {
+	SeqItem_SetConveyorStateAtBeat(nil, -0.05, "ok"),
+	-- SeqItem_SetConveyorStateAtBeat(100, 0, "question"),
+	-- SeqItem_SetConveyorStateAtBeat(110, 0, "ok"),
+}
+
+function Frame09_init()
+	--F09_st = time()
+	F09_conveyorSequencer = CreateSequencer(F09_conveyorSequenceDef)
+
+	F09_conveyorState = {
+		x = 0,
+		xSpeed = -0.05, -- doesn't matter; to be overwritten by animation sequence.
+		led = "ok",
+	}
+end
+
+function Frame09(_, demoBeat, somaticState, sceneTiming)
+	local t = sceneTiming.demoMillis-- (tt - F09_st)
+	AddHudMessage(string.format("sceneBeat: %.2f", sceneTiming.demoBeats))
+
+	vbank(0)
+
+	cls()
+	drawSprite("F9_BG", 0, 0)
+
+	-- animate the conveyor.
+	UpdateSequencer(F09_conveyorSequencer, somaticState, sceneTiming)
+	F09_conveyorState.x = F09_conveyorState.x + somaticState.demoDeltaMillis * F09_conveyorState.xSpeed
+	--local sx = -t / 20
+	AddHudMessage(string.format("conveyor.x: %d", F09_conveyorState.x // 1))
+	F09_conveyor(F09_conveyorState.x)
 
 	-- clip around
 	rect(0, 0, 240, 19, 0)
@@ -165,9 +219,14 @@ function Frame09(tt)
 	rect(184, 19, 56, 117, 0)
 
 	drawSprite("F9_Frame", 0, 51)
-	drawSprite("F9_Scannerframe", 73, 19)
 
+	drawSprite("F9_Scannerframe", 73, 19)
 	-- blinky light
-	--F09_badLed(t)
-	F09_goodLed(t)
+	if F09_conveyorState.led == "ok" then
+		F09_goodLed(t)
+	elseif F09_conveyorState.led == "question" then
+		F09_questionLed(t)
+	else
+		F09_badLed(t)
+	end
 end

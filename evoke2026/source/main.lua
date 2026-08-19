@@ -62,14 +62,14 @@ scenes = {
 		start = 9,
 		row = 0,
 	},
-	{-- (just so i can seek easily)
-		init = Evoke_HUD_init,
-		frame = Evoke_HUD, -- evoke HUD
-		name = "Evoke HUD",
-		bdr = no_fn,
-		start = 10,
-		row = 0,
-	},
+	-- {-- (just so i can seek easily)
+	-- 	init = Evoke_HUD_init,
+	-- 	frame = Evoke_HUD, -- evoke HUD
+	-- 	name = "Evoke HUD",
+	-- 	bdr = no_fn,
+	-- 	start = 10,
+	-- 	row = 0,
+	-- },
 	{ -- 11
 		init = function() TEvoke_init("melody") end,
 		frame = TEvoke,
@@ -86,7 +86,7 @@ scenes = {
 		start = 12,
 		row = 0,
 	},
-	{ -- B section: title again
+	{ -- B section: title again ** NOT SURE ABOUT THIS ONE.... **
 		init = function() TEvoke_init("melody") end,
 		frame = TEvoke,
 		name = "TEvoke",

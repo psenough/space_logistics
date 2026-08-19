@@ -239,8 +239,25 @@ function SeqTriggerOnSideChannel(part, occurrenceIndex)
 			demoBeats = sceneTiming.demoBeats - marker.sinceBeats,
 			wallMillis = sceneTiming.wallMillis,
 		}
+		-- scene init happens on the first rendered frame at or after the
+		-- scope boundary, so a marker ON that boundary can be slightly earlier
+		-- than the new seq item.
+		local markerAbsoluteRow = SideChannelDatabase_GetAbsoluteRow(
+			marker.hitPatternIndex,
+			marker.hitPatternRow
+		)
+		local currentAbsoluteRow = SideChannelDatabase_GetAbsoluteRow(
+			somaticState.demoPatternIndex,
+			somaticState.demoPatternRow
+		)
+		local isInitialScopeRowMarker = sequencer.currentIndex == 1
+			and markerAbsoluteRow == gSideChannelDatabase.scopeStartRow
+			and currentAbsoluteRow == gSideChannelDatabase.scopeStartRow
+
 		-- prevent spillage from previous scene
-		if markerTiming.demoMillis < sequencer.seqItemStartTiming.demoMillis then
+		if markerTiming.demoMillis < sequencer.seqItemStartTiming.demoMillis
+			and not isInitialScopeRowMarker
+		then
 			return false
 		end
 

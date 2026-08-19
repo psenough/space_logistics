@@ -21,8 +21,16 @@ Solo_shapes = nil
 Solo_sequenceDef = {
     {
         tick = function(seqItem, somaticState, seqTiming)
-            -- nop
-        end
+        -- blinking logo state update.
+        local logoFlash = QuerySideChannelPart(somaticState, "introAccent")
+        if logoFlash.hasHit then
+            local timeSinceAccent = logoFlash.sinceMillis
+            -- fade out over 1/4 second.
+            local fadeT = clamp01(timeSinceAccent / 250)
+            fadeT = fadeT ^4
+            drawSpriteWithFadeIn("EHUD_Logo",40,40, 1 - fadeT)
+            end
+         end
     },
     {
         trigger = SeqTriggerOnSideChannel("melody"), -- when melody starts, fade in orbit particle system
@@ -82,20 +90,9 @@ function SoloTick(_, _, somaticState, sceneTime)
 	local spr_id1 = "EHUD_TicA_"..string.format("%02d", id)
 	drawSprite(spr_id1,191,24)
 
-    -- brinking logo state update.
-    local logoFlash = QuerySideChannelPart(somaticState, "introAccent")
-    local timeSinceAccent = logoFlash.sinceMillis
-    -- fade out over 1/4 second.
-    local fadeT = clamp01(timeSinceAccent / 250)
-    fadeT = fadeT ^4
-    drawSpriteWithFadeIn("EHUD_Logo",40,40, 1 - fadeT)
-
 
     -- melody line
-    local logoFlash = QuerySideChannelPart(somaticState, "melody")
-
-    -- marching ants around the hud screen area.
-    DrawMarchingAntsRect(8, 9, 156, 113, 4, sceneTime.demoMillis * 0.01, 7, 0)
+    --local logoFlash = QuerySideChannelPart(somaticState, "melody")
 
     UpdateSequencer(Solo_sequencer, somaticState, sceneTime)
 
@@ -106,13 +103,14 @@ function SoloTick(_, _, somaticState, sceneTime)
     RenderParticleOrbitEffect(Solo_orbitFx, 87,64+25, true)
 
     -- render shapes.
-    for i, shapeFunc in ipairs(Solo_shapes) do
-        shapeFunc()
-    end
+    -- for i, shapeFunc in ipairs(Solo_shapes) do
+    --     shapeFunc()
+    -- end
 
-	-- local id = sceneTime.demoMillis//60%10+1 -- math.random(2)+1
-	-- local spr_id1 = "EHUD_TicA_"..string.format("%02d", id)
-	-- drawSprite(spr_id1,191,24)
+    -- // todo dancing spaceships
+    drawSpriteWithRotationAsMask(TEvoke_ships[1][4], 50, 50, sceneTime.demoMillis * 0.001, 3)
+
+    DrawMarchingAntsRect(8, 9, 156, 113, 4, sceneTime.demoMillis * 0.01, 7, 0)
 
 end
 

@@ -197,4 +197,13 @@ function TEvoke(tt, _, somaticState, sceneTime)
 	UpdateSequencer(TEvoke_titleLogoSequencer, somaticState, sceneTime)
 
 	UpdateSequencer(TEvoke_logoSequencer, somaticState, sceneTime)
+
+	--local melodyEvent = QuerySideChannelPart(somaticState, "melody")
+	local melodyEvent = QueryAnySideChannelPart(somaticState)
+	--local melodyBEvent = QuerySideChannelPart(somaticState, "melBrhythm")
+	if melodyEvent.justHit then
+		AddTwinkle()
+	end
+
+	TwinkleTick(somaticState, "starz")
 end

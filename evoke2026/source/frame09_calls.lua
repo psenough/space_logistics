@@ -225,4 +225,14 @@ function Frame09(_, demoBeat, somaticState, sceneTiming)
 	else
 		F09_badLed(t)
 	end
+
+	-- twinkles are too distracting from the luggage.
+
+	-- local melodyEvent = QuerySideChannelPart(somaticState, "melody")
+	-- local melodyBEvent = QuerySideChannelPart(somaticState, "melBrhythm")
+	-- if melodyEvent.justHit or melodyBEvent.justHit then
+	-- 	AddTwinkle()
+	-- end
+	-- TwinkleTick(somaticState, "starz")
+
 end

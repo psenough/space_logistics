@@ -3,7 +3,7 @@
   "somaticBuild": {
     "gitCommit": "298dc36",
     "versionString": "Somatic v1.0.20",
-    "utcDate": "2026-08-19T13:00:31.814Z",
+    "utcDate": "2026-08-19T21:04:50.771Z",
     "url": "https://somatic.tenfourmusic.net/"
   },
   "subsystemType": "TIC80",
@@ -17874,6 +17874,14 @@
       "channels": [
         {
           "rows": [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
             {
               "midiNote": 43,
               "instrumentIndex": 0
@@ -17974,19 +17982,19 @@
             {},
             {},
             {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
             {}
           ]
         },
         {
           "rows": [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
             {
               "midiNote": 59,
               "instrumentIndex": 19
@@ -18026,14 +18034,6 @@
               "midiNote": 59,
               "instrumentIndex": 19
             },
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
             {},
             {},
             {},
@@ -18079,6 +18079,14 @@
         },
         {
           "rows": [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
             {
               "midiNote": 65,
               "instrumentIndex": 19
@@ -18162,19 +18170,19 @@
             {},
             {},
             {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
             {}
           ]
         },
         {
           "rows": [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
             {
               "midiNote": 96,
               "instrumentIndex": 39,
@@ -18287,20 +18295,20 @@
             {},
             {},
             {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
             {}
           ]
         }
       ],
       "privateSideChannelData": {
         "rows": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
           "introAccent",
           "",
           "",
@@ -27197,144 +27205,73 @@
       }
     },
     {
-      "name": "M1 Cmaj7",
+      "name": "---",
       "channels": [
         {
           "rows": [
-            {
-              "midiNote": 36,
-              "instrumentIndex": 0,
-              "tic80Effect": "S"
-            },
             {},
             {},
             {},
-            {
-              "midiNote": 60,
-              "instrumentIndex": 3
-            },
             {},
-            {
-              "midiNote": 43,
-              "instrumentIndex": 0
-            },
             {},
-            {
-              "midiNote": 43,
-              "instrumentIndex": 0
-            },
             {},
-            {
-              "midiNote": 60,
-              "instrumentIndex": 3
-            },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
             {},
             {},
             {},
             {
-              "midiNote": 36,
-              "instrumentIndex": 0
+              "somaticEffect": "PatternEnd"
             },
             {},
             {},
             {},
-            {
-              "midiNote": 36,
-              "instrumentIndex": 0
-            },
-            {},
-            {
-              "midiNote": 60,
-              "instrumentIndex": 5
-            },
-            {},
-            {
-              "midiNote": 43,
-              "instrumentIndex": 0
-            },
-            {},
-            {
-              "midiNote": 43,
-              "instrumentIndex": 0
-            },
-            {},
-            {
-              "midiNote": 60,
-              "instrumentIndex": 5
-            },
-            {},
-            {
-              "midiNote": 31,
-              "instrumentIndex": 0
-            },
             {},
             {},
             {},
-            {
-              "midiNote": 36,
-              "instrumentIndex": 0
-            },
             {},
             {},
             {},
-            {
-              "midiNote": 60,
-              "instrumentIndex": 3
-            },
-            {},
-            {
-              "midiNote": 43,
-              "instrumentIndex": 0
-            },
-            {},
-            {
-              "midiNote": 43,
-              "instrumentIndex": 0
-            },
-            {},
-            {
-              "midiNote": 60,
-              "instrumentIndex": 3
-            },
             {},
             {},
             {},
-            {
-              "midiNote": 36,
-              "instrumentIndex": 0
-            },
             {},
             {},
             {},
-            {
-              "midiNote": 36,
-              "instrumentIndex": 0
-            },
             {},
-            {
-              "midiNote": 60,
-              "instrumentIndex": 5
-            },
             {},
-            {
-              "midiNote": 43,
-              "instrumentIndex": 0
-            },
             {},
-            {
-              "midiNote": 43,
-              "instrumentIndex": 0
-            },
             {},
-            {
-              "midiNote": 61,
-              "instrumentIndex": 4
-            },
             {},
-            {
-              "midiNote": 37,
-              "instrumentIndex": 0
-            },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
             {},
             {},
             {}
@@ -27346,19 +27283,6 @@
             {},
             {},
             {},
-            {
-              "midiNote": 64,
-              "instrumentIndex": 4
-            },
-            {},
-            {},
-            {},
-            {},
-            {},
-            {
-              "midiNote": 64,
-              "instrumentIndex": 4
-            },
             {},
             {},
             {},
@@ -27368,195 +27292,61 @@
             {},
             {},
             {},
-            {
-              "midiNote": 64,
-              "instrumentIndex": 4
-            },
             {},
             {},
             {},
             {},
             {},
-            {
-              "midiNote": 64,
-              "instrumentIndex": 4
-            },
             {},
             {},
             {},
-            {
-              "midiNote": 57,
-              "instrumentIndex": 11,
-              "volumeU8": 51
-            },
-            {},
-            {
-              "midiNote": 59,
-              "instrumentIndex": 11,
-              "volumeU8": 51
-            },
             {},
             {},
             {},
-            {
-              "midiNote": 84,
-              "instrumentIndex": 25
-            },
-            {},
-            {
-              "midiNote": 83,
-              "instrumentIndex": 26,
-              "tic80Effect": "S",
-              "tic80EffectX": 0,
-              "tic80EffectY": 1
-            },
             {},
             {},
             {},
-            {
-              "midiNote": 79,
-              "instrumentIndex": 26,
-              "tic80Effect": "S"
-            },
             {},
             {},
             {},
-            {
-              "midiNote": 74,
-              "instrumentIndex": 26
-            },
             {},
             {},
             {},
-            {
-              "midiNote": 72,
-              "instrumentIndex": 25
-            },
-            {
-              "volumeU8": 85
-            },
-            {
-              "midiNote": 71,
-              "instrumentIndex": 25,
-              "tic80Effect": "S",
-              "tic80EffectX": 0,
-              "tic80EffectY": 1
-            },
             {},
-            {
-              "midiNote": 72,
-              "instrumentIndex": 25
-            },
             {},
-            {
-              "midiNote": 71,
-              "instrumentIndex": 26
-            },
-            {
-              "tic80Effect": "S"
-            },
-            {
-              "midiNote": 67,
-              "instrumentIndex": 26
-            },
             {},
-            {
-              "midiNote": 70,
-              "instrumentIndex": 26
-            },
             {},
-            {
-              "midiNote": 73,
-              "instrumentIndex": 26
-            },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
             {}
           ]
         },
         {
           "rows": [
-            {
-              "midiNote": 71,
-              "instrumentIndex": 11,
-              "tic80Effect": "S",
-              "tic80EffectX": 0,
-              "tic80EffectY": 5
-            },
-            {
-              "tic80Effect": "V",
-              "tic80EffectX": 0,
-              "tic80EffectY": 0
-            },
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {
-              "tic80Effect": "V",
-              "tic80EffectX": 4,
-              "tic80EffectY": 7
-            },
-            {},
-            {},
-            {},
-            {
-              "midiNote": 69,
-              "noteOff": true
-            },
-            {
-              "tic80Effect": "V"
-            },
-            {
-              "midiNote": 67,
-              "instrumentIndex": 14,
-              "tic80Effect": "S"
-            },
-            {},
-            {
-              "midiNote": 69,
-              "noteOff": true
-            },
-            {},
-            {
-              "midiNote": 64,
-              "instrumentIndex": 14
-            },
-            {},
-            {
-              "midiNote": 69,
-              "noteOff": true
-            },
-            {},
-            {
-              "midiNote": 62,
-              "instrumentIndex": 11
-            },
-            {},
-            {},
-            {
-              "tic80Effect": "V",
-              "tic80EffectX": 4,
-              "tic80EffectY": 7
-            },
-            {},
-            {},
-            {
-              "midiNote": 69,
-              "noteOff": true
-            },
-            {},
-            {
-              "midiNote": 60,
-              "instrumentIndex": 11,
-              "tic80Effect": "V",
-              "volumeU8": 136
-            },
-            {},
-            {
-              "midiNote": 62,
-              "instrumentIndex": 11
-            },
             {},
             {},
             {},
@@ -27564,11 +27354,6 @@
             {},
             {},
             {},
-            {
-              "tic80Effect": "V",
-              "tic80EffectX": 4,
-              "tic80EffectY": 7
-            },
             {},
             {},
             {},
@@ -27576,240 +27361,124 @@
             {},
             {},
             {},
-            {
-              "midiNote": 69,
-              "noteOff": true
-            },
             {},
             {},
             {},
             {},
             {},
-            {
-              "tic80Effect": "V"
-            },
             {},
             {},
             {},
-            {
-              "midiNote": 61,
-              "instrumentIndex": 17
-            },
             {},
-            {
-              "midiNote": 64,
-              "instrumentIndex": 17
-            },
             {},
-            {
-              "midiNote": 67,
-              "instrumentIndex": 17
-            },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
             {}
           ]
         },
         {
           "rows": [
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            },
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            },
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 40
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 40
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 40
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 40
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            },
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            },
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 40
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 40
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 40
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 102
-            },
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 102
-            },
-            {
-              "midiNote": 96,
-              "instrumentIndex": 40
-            },
             {},
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            },
-            {
-              "midiNote": 96,
-              "instrumentIndex": 39,
-              "volumeU8": 51
-            }
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
           ]
         }
       ],
@@ -48339,8 +48008,8 @@
     },
     {
       "patternIndex": 29,
-      "markerVariant": "default",
-      "enabled": false
+      "markerVariant": "fermata",
+      "enabled": true
     }
   ],
   "tempo": 150,

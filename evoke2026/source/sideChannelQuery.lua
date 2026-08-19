@@ -215,6 +215,11 @@ function QuerySideChannelPart(somaticState, part, occurrenceIndex)
 	return SideChannelDatabase_FillResult({}, somaticState, events, occurrenceIndex)
 end
 
+function QueryAnySideChannelPart(somaticState)
+	-- matches ANY event.
+	return SideChannelDatabase_FillResult({}, somaticState, gSideChannelDatabase.events, nil)
+end
+
 -- sequencer transition helper:
 -- trigger condition on given sidechannel part & occurrence (within current scope)
 -- occurrence is optional; nil = "any".

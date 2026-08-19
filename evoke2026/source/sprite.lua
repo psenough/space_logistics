@@ -240,3 +240,58 @@ function drawSpriteDitheredWithBackground(spr_id, posx, posy, t01)
 		return col
 	end)
 end
+
+-- posx/posy place the unrotated top-left; rotation pivots around the sprite center.
+-- fn gets (x,y,col); returns nil to skip, or a color to draw.
+-- background is always transparent; does not call fn.
+function visitSpritePixelsWithRotation(spr_id, posx, posy, a, fn)
+	local w = sprites[spr_id].w
+	local h = sprites[spr_id].h
+	local c = sprites[spr_id].data
+	local bkg = sprites[spr_id].bg
+
+	local cx = w/2
+	local cy = h/2
+	local s = 1
+	local cas = math.cos(a)*s
+	local sis = math.sin(a)*s
+	local halfBoundsW = (math.abs(cas)*w + math.abs(sis)*h)/2
+	local halfBoundsH = (math.abs(sis)*w + math.abs(cas)*h)/2
+	local x0 = max(ceil(cx-halfBoundsW-0.5), ceil(-posx))
+	local x1 = min(ceil(cx+halfBoundsW-0.5), ceil(TIC_WIDTH()-posx))
+	local y0 = max(ceil(cy-halfBoundsH-0.5), ceil(-posy))
+	local y1 = min(ceil(cy+halfBoundsH-0.5), ceil(TIC_HEIGHT()-posy))
+
+	for x=x0,x1-1 do
+		local dx=x+0.5-cx
+		local cdx = cx+cas*dx
+		local sdy = cy-sis*dx
+		for y=y0,y1-1 do
+			local dy=y+0.5-cy
+			local u = (cdx+sis*dy)//1
+			local v = (sdy+cas*dy)//1
+			if (u >= 0) and (u < w) and (v >= 0) and (v < h) then
+				local col = c[u+v*w]
+				if col ~= bkg then
+					local result = fn(x, y, col)
+					if result ~= nil then
+						pix(posx+x, posy+y, result)
+					end
+					--pix(posx+x,posy+y,col)
+				end
+			end
+		end
+	end
+end
+
+function drawSpriteWithRotation(spr_id, posx, posy, a)
+	visitSpritePixelsWithRotation(spr_id, posx, posy, a, function(x, y, col)
+		return col
+	end)
+end
+
+function drawSpriteWithRotationAsMask(spr_id, posx, posy, a, color)
+	visitSpritePixelsWithRotation(spr_id, posx, posy, a, function(x, y, col)
+		return color
+	end)
+end

@@ -43,12 +43,25 @@ do
 		TWINKLE_explicitStarPositions = positions
 	end
 
-	local gTwinkleGradient1 = { 15, 14, 13, 12 } -- white
-	local gTwinkleGradient2 = { 1, 2, 3, 4 } -- red-yellow
+	-- local gTwinkleGradient1 = { 15, 14, 13, 12 } -- white
+	-- local gTwinkleGradient2 = { 1, 2, 3, 4 } -- red-yellow
 
-	-- sub-twinkles get different, darker color.
-	local gSubTwinkleGradient1 = { 15, 15, 14, 13 } -- white
-	local gSubTwinkleGradient2 = { 1, 1, 2, 3 } -- red-yellow
+	-- -- sub-twinkles get different, darker color.
+	-- local gSubTwinkleGradient1 = { 15, 15, 14, 13 } -- white
+	-- local gSubTwinkleGradient2 = { 1, 1, 2, 3 } -- red-yellow
+
+	gTwinkleGradient1 = {  9, 10, 11, 12 }
+	gTwinkleGradient2 = {  9, 10, 11, 12 }
+	gSubTwinkleGradient1 = {  9, 10, 11, 12 }
+	gSubTwinkleGradient2 = {  9, 10, 11, 12 }
+
+	-- you either set grad1 to all, or set all.
+	function TwinkleSetGradients(grad1, grad2, subGrad1, subGrad2)
+		gTwinkleGradient1 = grad1
+		gTwinkleGradient2 = grad2 or grad1
+		gSubTwinkleGradient1 = subGrad1 or grad1
+		gSubTwinkleGradient2 = subGrad2 or grad1
+	end
 
 	-- generates x,y screen coords whose distribution is biased away from the center of the screen
 	function GetRandomCoordInSpanBiasedAwayFromCenter(min, max)

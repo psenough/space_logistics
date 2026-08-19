@@ -3,7 +3,7 @@
   "somaticBuild": {
     "gitCommit": "298dc36",
     "versionString": "Somatic v1.0.20",
-    "utcDate": "2026-08-18T22:14:19.566Z",
+    "utcDate": "2026-08-19T13:00:31.814Z",
     "url": "https://somatic.tenfourmusic.net/"
   },
   "subsystemType": "TIC80",
@@ -12918,7 +12918,37 @@
         }
       ],
       "privateSideChannelData": {
-        "rows": []
+        "rows": [
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "",
+          "",
+          "melody:long"
+        ]
       }
     },
     {
@@ -13515,7 +13545,55 @@
         }
       ],
       "privateSideChannelData": {
-        "rows": []
+        "rows": [
+          "B:accent",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "B:accent"
+        ]
       }
     },
     {
@@ -15747,21 +15825,36 @@
             {},
             {},
             {},
-            {},
-            {},
-            {},
-            {},
-            {},
+            {
+              "midiNote": 57,
+              "instrumentIndex": 11,
+              "tic80Effect": "V",
+              "volumeU8": 51
+            },
             {},
             {
-              "midiNote": 64,
-              "instrumentIndex": 3
+              "midiNote": 59,
+              "instrumentIndex": 11,
+              "volumeU8": 51
             },
             {},
             {},
             {},
+            {
+              "tic80Effect": "V",
+              "tic80EffectX": 4,
+              "tic80EffectY": 8
+            },
             {},
             {},
+            {},
+            {
+              "midiNote": 69,
+              "noteOff": true
+            },
+            {
+              "tic80Effect": "V"
+            },
             {
               "midiNote": 64,
               "instrumentIndex": 3
@@ -16144,7 +16237,71 @@
         }
       ],
       "privateSideChannelData": {
-        "rows": []
+        "rows": [
+          "melody:long",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melody:short",
+          "",
+          "",
+          "",
+          "melody:short",
+          "",
+          "",
+          "",
+          "melody:short",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melody:long",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm"
+        ]
       }
     },
     {
@@ -16761,7 +16918,37 @@
         }
       ],
       "privateSideChannelData": {
-        "rows": []
+        "rows": [
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melody:long"
+        ]
       }
     },
     {
@@ -18113,7 +18300,23 @@
         }
       ],
       "privateSideChannelData": {
-        "rows": []
+        "rows": [
+          "introAccent",
+          "",
+          "",
+          "",
+          "introAccent",
+          "",
+          "introAccent",
+          "",
+          "",
+          "",
+          "introAccent",
+          "",
+          "",
+          "",
+          "introAccent"
+        ]
       }
     },
     {
@@ -18730,7 +18933,71 @@
         }
       ],
       "privateSideChannelData": {
-        "rows": []
+        "rows": [
+          "melody:long",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melody:short",
+          "",
+          "",
+          "",
+          "melody:short",
+          "",
+          "",
+          "",
+          "melody:short",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melody:long",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm"
+        ]
       }
     },
     {
@@ -19330,7 +19597,37 @@
         }
       ],
       "privateSideChannelData": {
-        "rows": []
+        "rows": [
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melody:long"
+        ]
       }
     },
     {
@@ -20178,7 +20475,23 @@
         }
       ],
       "privateSideChannelData": {
-        "rows": []
+        "rows": [
+          "introAccent",
+          "",
+          "",
+          "",
+          "introAccent",
+          "",
+          "introAccent",
+          "",
+          "",
+          "",
+          "introAccent",
+          "",
+          "",
+          "",
+          "introAccent"
+        ]
       }
     },
     {
@@ -21581,7 +21894,7 @@
       }
     },
     {
-      "name": "M1 Cmaj7",
+      "name": "-----",
       "channels": [
         {
           "rows": [
@@ -28665,7 +28978,55 @@
         }
       ],
       "privateSideChannelData": {
-        "rows": []
+        "rows": [
+          "B:accent",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "B:accent"
+        ]
       }
     },
     {
@@ -29289,7 +29650,37 @@
         }
       ],
       "privateSideChannelData": {
-        "rows": []
+        "rows": [
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melody:long"
+        ]
       }
     },
     {
@@ -29734,7 +30125,40 @@
         }
       ],
       "privateSideChannelData": {
-        "rows": []
+        "rows": [
+          "introAccent",
+          "",
+          "",
+          "",
+          "introAccent",
+          "",
+          "introAccent",
+          "",
+          "",
+          "",
+          "introAccent",
+          "",
+          "",
+          "",
+          "introAccent",
+          "",
+          "melody",
+          "",
+          "melody",
+          "",
+          "melody",
+          "",
+          "",
+          "",
+          "melody",
+          "",
+          "melody",
+          "",
+          "",
+          "",
+          "melody:short",
+          "melody:short"
+        ]
       }
     },
     {
@@ -36850,7 +37274,72 @@
         }
       ],
       "privateSideChannelData": {
-        "rows": []
+        "rows": [
+          "melody:long",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melody",
+          "",
+          "melody",
+          "",
+          "melody",
+          "",
+          "melody",
+          "",
+          "melody",
+          "",
+          "melody",
+          "",
+          "melody",
+          "",
+          "melody",
+          "",
+          "melody",
+          "",
+          "melody:long",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melody",
+          "",
+          "melody:long",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody:short"
+        ]
       }
     },
     {
@@ -37481,7 +37970,69 @@
         }
       ],
       "privateSideChannelData": {
-        "rows": []
+        "rows": [
+          "melody",
+          "",
+          "",
+          "melody",
+          "",
+          "",
+          "melody",
+          "",
+          "melody",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melody",
+          "",
+          "melody",
+          "",
+          "melody",
+          "",
+          "melody",
+          "",
+          "melody:stacc",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melody:stacc",
+          "",
+          "melody:stacc",
+          "",
+          "",
+          "",
+          "melody:stacc",
+          "",
+          "melody:stacc",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melody:long"
+        ]
       }
     },
     {
@@ -38128,7 +38679,71 @@
         }
       ],
       "privateSideChannelData": {
-        "rows": []
+        "rows": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melody",
+          "",
+          "melody",
+          "",
+          "melody",
+          "",
+          "melody",
+          "",
+          "melody",
+          "",
+          "melody",
+          "",
+          "melody",
+          "",
+          "melody",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melody",
+          "",
+          "melody:stacc",
+          "",
+          "",
+          "",
+          "melody:stacc",
+          "",
+          "melody:stacc",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melody:stacc",
+          "",
+          "",
+          "",
+          "melody:stacc",
+          "",
+          "melody:stacc",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melody:stacc",
+          "",
+          "",
+          "",
+          "melody:stacc",
+          "",
+          "melody:stacc"
+        ]
       }
     },
     {
@@ -38812,7 +39427,56 @@
         }
       ],
       "privateSideChannelData": {
-        "rows": []
+        "rows": [
+          "",
+          "",
+          "melody:stacc",
+          "",
+          "melody:stacc",
+          "",
+          "melody:stacc",
+          "",
+          "",
+          "",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melody:short",
+          "melody:short",
+          "melody:short",
+          "melody"
+        ]
       }
     },
     {
@@ -39428,7 +40092,55 @@
         }
       ],
       "privateSideChannelData": {
-        "rows": []
+        "rows": [
+          "B:accent",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "B:accent",
+          "",
+          "",
+          "",
+          "B:accent"
+        ]
       }
     },
     {
@@ -40059,7 +40771,63 @@
         }
       ],
       "privateSideChannelData": {
-        "rows": []
+        "rows": [
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "",
+          "",
+          "accent",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "accent"
+        ]
       }
     },
     {
@@ -40592,17 +41360,12 @@
             },
             {},
             {
-              "midiNote": 44,
-              "instrumentIndex": 0
-            },
-            {},
-            {
-              "midiNote": 45,
-              "instrumentIndex": 0
-            },
-            {},
-            {
               "midiNote": 48,
+              "instrumentIndex": 0
+            },
+            {},
+            {
+              "midiNote": 50,
               "instrumentIndex": 0
             },
             {},
@@ -40622,7 +41385,12 @@
             },
             {},
             {
-              "midiNote": 48,
+              "midiNote": 59,
+              "instrumentIndex": 0
+            },
+            {},
+            {
+              "midiNote": 60,
               "instrumentIndex": 0
             },
             {},
@@ -40763,12 +41531,33 @@
             {},
             {},
             {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
+            {
+              "midiNote": 60,
+              "instrumentIndex": 26,
+              "panU8": 34
+            },
+            {
+              "midiNote": 69,
+              "noteOff": true
+            },
+            {
+              "midiNote": 60,
+              "instrumentIndex": 26,
+              "panU8": 34
+            },
+            {
+              "midiNote": 69,
+              "noteOff": true
+            },
+            {
+              "midiNote": 60,
+              "instrumentIndex": 26,
+              "panU8": 34
+            },
+            {
+              "midiNote": 69,
+              "noteOff": true
+            },
             {},
             {},
             {},
@@ -40852,17 +41641,12 @@
             },
             {},
             {
-              "midiNote": 56,
-              "instrumentIndex": 14
-            },
-            {},
-            {
-              "midiNote": 57,
-              "instrumentIndex": 14
-            },
-            {},
-            {
               "midiNote": 60,
+              "instrumentIndex": 14
+            },
+            {},
+            {
+              "midiNote": 62,
               "instrumentIndex": 14
             },
             {},
@@ -40878,6 +41662,11 @@
             {},
             {
               "midiNote": 67,
+              "instrumentIndex": 14
+            },
+            {},
+            {
+              "midiNote": 71,
               "instrumentIndex": 14
             },
             {},
@@ -41093,7 +41882,65 @@
         }
       ],
       "privateSideChannelData": {
-        "rows": []
+        "rows": [
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "",
+          "",
+          "trill",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "endAccent",
+          "",
+          "endAccent",
+          "",
+          "endAccent",
+          "",
+          "endAccent",
+          "",
+          "endAccent",
+          "",
+          "endAccent",
+          "",
+          "endAccent",
+          "",
+          "endAccent",
+          "",
+          "",
+          "",
+          "cha",
+          "",
+          "cha",
+          "",
+          "cha"
+        ]
       }
     },
     {
@@ -41287,13 +42134,13 @@
             {
               "midiNote": 57,
               "instrumentIndex": 11,
-              "volumeU8": 51
+              "volumeU8": 102
             },
             {},
             {
               "midiNote": 59,
               "instrumentIndex": 11,
-              "volumeU8": 51
+              "volumeU8": 102
             },
             {},
             {},
@@ -41414,18 +42261,23 @@
             },
             {},
             {
-              "midiNote": 69,
-              "noteOff": true
+              "midiNote": 55,
+              "instrumentIndex": 11,
+              "volumeU8": 32
             },
             {},
             {
               "midiNote": 64,
-              "instrumentIndex": 14
+              "instrumentIndex": 11,
+              "volumeU8": 136
             },
             {},
             {
-              "midiNote": 69,
-              "noteOff": true
+              "midiNote": 67,
+              "instrumentIndex": 11,
+              "tic80Effect": "S",
+              "tic80EffectX": 0,
+              "tic80EffectY": 1
             },
             {},
             {
@@ -41445,7 +42297,9 @@
               "midiNote": 69,
               "noteOff": true
             },
-            {},
+            {
+              "tic80Effect": "S"
+            },
             {
               "midiNote": 60,
               "instrumentIndex": 11,
@@ -41460,25 +42314,46 @@
             {},
             {},
             {},
-            {},
-            {},
-            {},
-            {},
             {
               "tic80Effect": "V",
               "tic80EffectX": 4,
-              "tic80EffectY": 7
+              "tic80EffectY": 8
             },
             {},
             {},
             {},
             {},
+            {
+              "midiNote": 60,
+              "instrumentIndex": 11,
+              "tic80Effect": "S",
+              "volumeU8": 136,
+              "tic80EffectX": 0,
+              "tic80EffectY": 1
+            },
+            {
+              "midiNote": 59,
+              "instrumentIndex": 11,
+              "volumeU8": 136,
+              "tic80Effect": "V"
+            },
+            {
+              "midiNote": 60,
+              "instrumentIndex": 11,
+              "volumeU8": 136
+            },
+            {
+              "midiNote": 62,
+              "instrumentIndex": 11,
+              "volumeU8": 136
+            },
             {},
             {},
             {},
             {
               "midiNote": 69,
-              "noteOff": true
+              "noteOff": true,
+              "tic80Effect": "S"
             },
             {},
             {},
@@ -41490,7 +42365,9 @@
             },
             {},
             {},
-            {},
+            {
+              "tic80Effect": "S"
+            },
             {
               "midiNote": 61,
               "instrumentIndex": 17
@@ -41714,7 +42591,71 @@
         }
       ],
       "privateSideChannelData": {
-        "rows": []
+        "rows": [
+          "melody:long",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melody:short",
+          "",
+          "",
+          "",
+          "melody:short",
+          "",
+          "",
+          "",
+          "melody:short",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melody:long",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm"
+        ]
       }
     },
     {
@@ -42326,7 +43267,37 @@
         }
       ],
       "privateSideChannelData": {
-        "rows": []
+        "rows": [
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melody:long"
+        ]
       }
     },
     {
@@ -43005,7 +43976,71 @@
         }
       ],
       "privateSideChannelData": {
-        "rows": []
+        "rows": [
+          "melody:long",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melody:short",
+          "",
+          "",
+          "",
+          "melody:short",
+          "",
+          "",
+          "",
+          "melody:short",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melody:long",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm"
+        ]
       }
     },
     {
@@ -43726,7 +44761,37 @@
         }
       ],
       "privateSideChannelData": {
-        "rows": []
+        "rows": [
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "melBrhythm",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "melody:long"
+        ]
       }
     },
     {
@@ -47163,19 +48228,9 @@
       "enabled": false
     },
     {
-      "patternIndex": 20,
-      "markerVariant": "blank",
-      "enabled": false
-    },
-    {
       "patternIndex": 18,
       "markerVariant": "blank",
       "enabled": true
-    },
-    {
-      "patternIndex": 17,
-      "markerVariant": "blank",
-      "enabled": false
     },
     {
       "patternIndex": 12,
@@ -47286,151 +48341,6 @@
       "patternIndex": 29,
       "markerVariant": "default",
       "enabled": false
-    },
-    {
-      "patternIndex": 30,
-      "markerVariant": "blank",
-      "enabled": false
-    },
-    {
-      "patternIndex": 34,
-      "markerVariant": "default",
-      "enabled": false
-    },
-    {
-      "patternIndex": 35,
-      "markerVariant": "blank",
-      "enabled": false
-    },
-    {
-      "patternIndex": 52,
-      "markerVariant": "blank",
-      "enabled": false
-    },
-    {
-      "patternIndex": 37,
-      "markerVariant": "default",
-      "enabled": false
-    },
-    {
-      "patternIndex": 38,
-      "markerVariant": "default",
-      "enabled": false
-    },
-    {
-      "patternIndex": 39,
-      "markerVariant": "blank",
-      "enabled": false
-    },
-    {
-      "patternIndex": 40,
-      "markerVariant": "default",
-      "enabled": false
-    },
-    {
-      "patternIndex": 41,
-      "markerVariant": "blank",
-      "enabled": false
-    },
-    {
-      "patternIndex": 42,
-      "markerVariant": "blank",
-      "enabled": false
-    },
-    {
-      "patternIndex": 43,
-      "markerVariant": "blank",
-      "enabled": false
-    },
-    {
-      "patternIndex": 44,
-      "markerVariant": "blank",
-      "enabled": false
-    },
-    {
-      "patternIndex": 36,
-      "markerVariant": "default",
-      "enabled": false
-    },
-    {
-      "patternIndex": 27,
-      "markerVariant": "default",
-      "enabled": false
-    },
-    {
-      "patternIndex": 28,
-      "markerVariant": "blank",
-      "enabled": false
-    },
-    {
-      "patternIndex": 21,
-      "markerVariant": "default",
-      "enabled": false
-    },
-    {
-      "patternIndex": 22,
-      "markerVariant": "blank",
-      "enabled": false
-    },
-    {
-      "patternIndex": 23,
-      "markerVariant": "blank",
-      "enabled": false
-    },
-    {
-      "patternIndex": 24,
-      "markerVariant": "blank",
-      "enabled": false
-    },
-    {
-      "patternIndex": 25,
-      "markerVariant": "blank",
-      "enabled": false
-    },
-    {
-      "patternIndex": 26,
-      "markerVariant": "default",
-      "enabled": false
-    },
-    {
-      "patternIndex": 10,
-      "markerVariant": "blank",
-      "enabled": false
-    },
-    {
-      "patternIndex": 14,
-      "markerVariant": "blank",
-      "enabled": false
-    },
-    {
-      "patternIndex": 6,
-      "markerVariant": "blank",
-      "enabled": false
-    },
-    {
-      "patternIndex": 0,
-      "markerVariant": "blank",
-      "enabled": false
-    },
-    {
-      "patternIndex": 5,
-      "markerVariant": "blank",
-      "enabled": false
-    },
-    {
-      "patternIndex": 4,
-      "markerVariant": "blank",
-      "enabled": false
-    },
-    {
-      "patternIndex": 3,
-      "markerVariant": "blank",
-      "enabled": false
-    },
-    {
-      "patternIndex": 9,
-      "markerVariant": "blank",
-      "enabled": false
     }
   ],
   "tempo": 150,
@@ -47461,7 +48371,7 @@
       },
       "useCustomEntrypointLua": false,
       "customEntrypointLua": "-- (empty somatic entrypoint)",
-      "exportCueSheet": false,
+      "exportCueSheet": true,
       "cueSheetFields": [
         "pi",
         "beat",
@@ -47520,7 +48430,7 @@
       },
       "useCustomEntrypointLua": false,
       "customEntrypointLua": "",
-      "exportCueSheet": false,
+      "exportCueSheet": true,
       "cueSheetFields": [
         "pi",
         "beat",

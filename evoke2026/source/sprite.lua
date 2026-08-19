@@ -192,6 +192,7 @@ G_DarkeningGradients = {
 -- 	end)
 -- end
 
+-- fades from black.
 function drawSpriteWithFadeIn(spr_id, posx, posy, t)
 	t = clamp01(t)
 	drawSpriteWithShadeFn(spr_id, posx, posy, function(x, y, col)
@@ -209,5 +210,26 @@ function drawSpriteWithFadeIn(spr_id, posx, posy, t)
 			return gradient[gradientIndex + 1]
 		end
 		return color
+	end)
+end
+
+-- draw a sprite as solid color.
+function drawSpriteAsMask(spr_id, posx, posy, color)
+	drawSpriteWithShadeFn(spr_id, posx, posy, function(x, y, col)
+		return color
+	end)
+end
+
+-- draw a sprite dithering between existing screen color and foreground color.
+-- when t01 = 0, uses existing screen color.
+-- when t01 = 1, uses foreground color.
+-- in between, bayer dithering
+function drawSpriteDitheredWithBackground(spr_id, posx, posy, t01)
+	drawSpriteWithShadeFn(spr_id, posx, posy, function(x, y, col)
+		local bayer = BAYER_MINUS_5[(posy+y) * TIC_WIDTH() + (posx+x)]
+		if t01 + bayer < 0.5 then
+			return nil
+		end
+		return col
 	end)
 end

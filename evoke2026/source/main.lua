@@ -8,6 +8,9 @@
 
 --#include "source/bootstrap.lua"
 
+--#include "source/sequencer.lua"
+--#include "source/sideChannelQuery.lua"
+
 --#include "source/twinkles.lua"
 --#include "source/particle_orbits.lua"
 
@@ -41,29 +44,57 @@ scenes = {
 		name = "TEvoke",
 		bdr = no_fn,
 		start = 0,
-		row = 0
-	},{
+		row = 0,
+	},
+	{
 		init = Frame09_init,
 		frame = Frame09, -- xray luggage
 		name = "Frame09",
 		bdr = no_fn,
 		start = 2,
 		row = 0,
-	},{
+	},
+	{
 		init = Evoke_HUD_init,
 		frame = Evoke_HUD, -- evoke HUD
 		name = "Evoke HUD",
 		bdr = no_fn,
 		start = 9,
 		row = 0,
-	},{
+	},
+	{
 		init = TEvoke_init,
 		frame = TEvoke,
 		name = "TEvoke",
 		bdr = no_fn,
 		start = 12,
 		row = 0
-	}
+	},
+	{-- SOLO
+		init = Evoke_HUD_init,
+		frame = Evoke_HUD, -- evoke HUD
+		name = "Evoke HUD",
+		bdr = no_fn,
+		start = 16,
+		row = 0,
+	},
+	{-- B section melody: baggage variation
+		init = Frame09_init,
+		frame = Frame09, -- xray luggage
+		name = "Frame09",
+		bdr = no_fn,
+		start = 20,
+		row = 0,
+	},
+	-- end card
+	{
+		init = TEvoke_init,
+		frame = TEvoke,
+		name = "TEvoke",
+		bdr = no_fn,
+		start = 22,
+		row = 0
+	},
 }
 
 function ResetSceneTiming()
@@ -92,15 +123,18 @@ function SetScene(scene_id, do_seek)
 		current_scene_id = scene_id
 		scene_frame = 0
 		ResetSceneTiming()
+		local scene = scenes[current_scene_id]
+		BeginSideChannelScope(scene.start, scene.row)
 		TwinkleNewScene(current_scene_id)
-		scenes[current_scene_id].init()
+		scene.init()
 		if do_seek then
-			somatic_seek(scenes[current_scene_id].start * 16)
+			somatic_seek_position(scene.start, scene.row)
 		end
 	end
 end
 
 function handleSomaticRow(state)
+	SideChannelDatabase_SomaticRowHandler(state)
 	local sceneRowHandler = scenes[current_scene_id].rowHandler
 	if sceneRowHandler then
 		sceneRowHandler(state)
@@ -114,6 +148,7 @@ function BOOT()
 	vbank(1)
 	tomem(unpac(pal))
 	vbank(0)
+	InitSideChannelDatabase()
 
 	somatic_set_completion_callback(function()
 		trace(" - CALL 1-800-FLIGHT TO REBOOK - ")
@@ -339,7 +374,9 @@ function DemoTIC()
 		current_scene_id = current_scene_id + 1
 		scene_frame = 0
 		ResetSceneTiming()
-		scenes[current_scene_id].init()
+		local scene = scenes[current_scene_id]
+		BeginSideChannelScope(scene.start, scene.row)
+		scene.init()
 	end
 	UpdateSceneTiming(state)
 	scenes[current_scene_id].frame(time(), state.demoBeats, state, scene_timing)

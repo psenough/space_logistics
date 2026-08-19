@@ -679,3 +679,28 @@ function UpdateSlewedScalar(scalar, target, slewRate)
 	end
 	return scalar
 end
+
+
+function DrawMarchingAntsRect(x, y, w, h, antSize, phase, col1, col2)
+    -- draws a rectangle with a marching ants effect.
+    local antSize = antSize or 4
+    local phase = phase or 0
+    local col1 = col1 or 12
+    local col2 = col2 or 0
+    for i = 0, w-1 do
+        local antPhase = (i + phase) // antSize % 2
+        local col = (antPhase == 0) and col1 or col2
+        -- top.
+        pix(x+i, y, col)
+        -- bottom.
+        pix(x+w-1-i, y+h-1, col)
+    end
+    for i = 0, h-1 do
+        local antPhase = (i + phase) // antSize % 2
+        local col = (antPhase == 0) and col1 or col2
+        -- left.
+        pix(x, y+h-1-i, col)
+        -- right.
+        pix(x+w-1, y+i, col)
+    end
+end

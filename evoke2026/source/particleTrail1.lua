@@ -1,7 +1,9 @@
 --#pragma once
 --#include "bootstrap.lua"
 
--- for each particle, track its history.
+-- this does not keep particle history, so it can't tolerate certain typees of animation.
+-- but it's smooth motion always because the sampling follows current position.
+
 function CreateParticleTrail(options)
 	-- parameters
 	options.areaX = options.areaX or 0

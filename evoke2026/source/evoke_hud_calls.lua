@@ -33,11 +33,12 @@ Evoke_HUD_logoSequenceDef = {
 	}
 } 
 
-function Evoke_HUD_drawFaces(offset1, offset2, offset3)
+function Evoke_HUD_drawFaces(offset1, offset2, offset3, sceneTime)
 	local posy = 40
 	drawSprite("EHUD_Oni",30+offset1[1],posy+offset1[2])
 	drawSprite("EHUD_ps",75+offset2[1],posy+5+offset2[2])
 	drawSprite("EHUD_tenfour",110+offset3[1],posy+offset3[2])
+	DrawMarchingAntsRect(8, 9, 156, 113, 4, sceneTime.demoMillis * 0.01, 7, 0)
 end
 
 Evoke_HUD_faceSequenceDef = {
@@ -50,7 +51,7 @@ Evoke_HUD_faceSequenceDef = {
 			local accent = QuerySideChannelPart(somaticState, "melBrhythm")
 			local bonk = accent.count % 2
 			local abonk = 1-bonk
-			Evoke_HUD_drawFaces({0,bonk*20},{0,abonk*20},{0,bonk*20})
+			Evoke_HUD_drawFaces({0,bonk*20},{0,abonk*20},{0,bonk*20}, seqTiming)
 		end
 	},
 	{
@@ -61,7 +62,7 @@ Evoke_HUD_faceSequenceDef = {
 			local offset1 = {sin(t*0.003)*4,sin(t*0.005)*4}
 			local offset2 = {sin(t*0.004)*4,sin(t*0.003)*4}
 			local offset3 = {sin(t*0.005)*4,sin(t*0.002)*4}
-			Evoke_HUD_drawFaces(offset1,offset2,offset3)
+			Evoke_HUD_drawFaces(offset1,offset2,offset3, seqTiming)
 		end
 	}
 }

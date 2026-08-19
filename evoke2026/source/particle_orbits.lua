@@ -4,6 +4,27 @@
 -- not going to reuse the existing particle emitter because it's pretty 2D-focused.
 
 do
+
+	function AddParticleToOrbitEffect(fx, particle)
+		local radiusRnd = math.random()
+		local radius = lerpScalar(fx.orbitRadiusMin, fx.orbitRadiusMax, radiusRnd)
+		local speed = lerpScalar(fx.speedMin, fx.speedMax, radiusRnd) -- also base on radius; outer particles = faster.
+		local phase = math.random() * 6.28
+
+		local particle = {
+			radius = radius,
+			phase = phase,
+			speed = speed,
+			-- orbit is defined by 2 angles; make it easy to make uniform distributions.
+			inclinationOffset = (math.random() * 2 - 1) * 3.14159,
+			ascendingNodeOffset = (math.random() * 2 - 1) * 3.14159,
+			gradient = fx.gradients[SelectNorm(fx.gradients, radiusRnd)], -- select a gradient based on the radius
+			renderRadiusMin = fx.renderRadiusMin,
+			renderRadiusMax = fx.renderRadiusMax,
+		}
+		table.insert(fx.particles, particle)
+	end
+
 	-- options:
 	-- {
 	--   particleCount = 100, -- number of particles in the orbit effect
@@ -33,7 +54,6 @@ do
 			renderRadiusMin = options.renderRadiusMin or 0,
 			renderRadiusMax = options.renderRadiusMax or 1.1,
 			-- calculated params
-			biasAmt = biasAmt,
 			biasInclination = biasInclination,
 			biasAscendingNode = biasAscendingNode,
 			-- internal state
@@ -43,53 +63,61 @@ do
 		}
 
 		for i = 1, fx.particleCount do
-			local radiusRnd = math.random()
-			local radius = lerpScalar(fx.orbitRadiusMin, fx.orbitRadiusMax, radiusRnd)
-			local speed = lerpScalar(fx.speedMin, fx.speedMax, radiusRnd) -- also base on radius; outer particles = faster.
-			local phase = math.random() * 6.28
+			-- local radiusRnd = math.random()
+			-- local radius = lerpScalar(fx.orbitRadiusMin, fx.orbitRadiusMax, radiusRnd)
+			-- local speed = lerpScalar(fx.speedMin, fx.speedMax, radiusRnd) -- also base on radius; outer particles = faster.
+			-- local phase = math.random() * 6.28
 
-			-- orbit is defined by 2 angles; make it easy to make uniform distributions.
-			-- another way to do this would be to
-			local inclination = math.random() * 6.28 -- rotation around X (tilt away from screen)
-			local ascendingNode = math.random() * 6.28 -- rotation around Z (effectively screen 2D rotation)
-			--ascendingNode = lerpAngular(ascendingNode, biasAscendingNode, biasAmt)
-
-			inclination = lerpAngular(inclination, biasInclination, biasAmt)
-			ascendingNode = lerpAngular(ascendingNode, biasAscendingNode, biasAmt)
-
-			local particle = {
-				radius = radius,
-				phase = phase,
-				speed = speed,
-				gradient = fx.gradients[SelectNorm(fx.gradients, radiusRnd)], -- select a gradient based on the radius
-				renderRadiusMin = fx.renderRadiusMin,
-				renderRadiusMax = fx.renderRadiusMax,
-			}
-			table.insert(fx.particles, particle)
+			-- local particle = {
+			-- 	radius = radius,
+			-- 	phase = phase,
+			-- 	speed = speed,
+			-- 	-- orbit is defined by 2 angles; make it easy to make uniform distributions.
+			-- 	inclinationOffset = (math.random() * 2 - 1) * math.pi,
+			-- 	ascendingNodeOffset = (math.random() * 2 - 1) * math.pi,
+			-- 	gradient = fx.gradients[SelectNorm(fx.gradients, radiusRnd)], -- select a gradient based on the radius
+			-- 	renderRadiusMin = fx.renderRadiusMin,
+			-- 	renderRadiusMax = fx.renderRadiusMax,
+			-- }
+			-- table.insert(fx.particles, particle)
+			AddParticleToOrbitEffect(fx)
 		end
 
+		-- compute particle stuff.
 		SetParticleOrbitEffectBias(fx, biasInclination, biasAscendingNode, biasAmt)
 
 		return fx
 	end
 
 	-- updates the particle positions based on new orbit bias param.
-	-- for high particle counts maybe don't do this.
+	-- for high particle counts maybe don't do this for performance reasons.
 	function SetParticleOrbitEffectBias(fx, biasInclination, biasAscendingNode, biasMix)
+		local biasMixChanged = fx.cachedBiasMix ~= biasMix
+		local offsetScale = 1 - biasMix
+		local cosBiasInclination = cos(biasInclination)
+		local sinBiasInclination = sin(biasInclination)
+		local cosBiasNode = cos(biasAscendingNode)
+		local sinBiasNode = sin(biasAscendingNode)
+
 		fx.biasInclination = biasInclination
 		fx.biasAscendingNode = biasAscendingNode
 		fx.biasMix = biasMix
+		fx.cachedBiasMix = biasMix
+
 		for _, particle in ipairs(fx.particles) do
-			local inclination = random() * 6.28 -- rotation around X (tilt away from screen)
-			local ascendingNode = random() * 6.28 -- rotation around Z (effectively screen 2D rotation)
+			if biasMixChanged or particle.cosInclinationOffset == nil then -- new particles may need calc.
+				local inclinationOffset = particle.inclinationOffset * offsetScale
+				local nodeOffset = particle.ascendingNodeOffset * offsetScale
+				particle.cosInclinationOffset = cos(inclinationOffset)
+				particle.sinInclinationOffset = sin(inclinationOffset)
+				particle.cosNodeOffset = cos(nodeOffset)
+				particle.sinNodeOffset = sin(nodeOffset)
+			end
 
-			inclination = lerpAngular(inclination, biasInclination, biasMix)
-			ascendingNode = lerpAngular(ascendingNode, biasAscendingNode, biasMix)
-
-			local cosInclination = cos(inclination)
-			local sinInclination = sin(inclination)
-			local cosNode = cos(ascendingNode)
-			local sinNode = sin(ascendingNode)
+			local cosInclination = cosBiasInclination * particle.cosInclinationOffset - sinBiasInclination * particle.sinInclinationOffset
+			local sinInclination = sinBiasInclination * particle.cosInclinationOffset + cosBiasInclination * particle.sinInclinationOffset
+			local cosNode = cosBiasNode * particle.cosNodeOffset - sinBiasNode * particle.sinNodeOffset
+			local sinNode = sinBiasNode * particle.cosNodeOffset + cosBiasNode * particle.sinNodeOffset
 
 			-- the full transform (orthographic):
 			-- x = r * cos(phase) * cos(node) - r * sin(phase) * sin(node) * cos(incl)

@@ -98,10 +98,9 @@ scenes = {
 	},
 
 	{-- SOLO
-		init = function() Evoke_HUD_init() end,
-		frame = Evoke_HUD, -- evoke HUD
-		name = "Evoke HUD",
-		bdr = no_fn,
+		init = SoloInit,
+		frame = SoloTick, -- evoke HUD
+		name = "Solo",
 		start = 15,
 		row = 0,
 	},
@@ -322,19 +321,37 @@ function RenderPalette()
 end
 --#endif -- DEBUG
 
+-- https://skyelynwaddell.github.io/tic80-manual-cheatsheet/#_buttons
+--#macro KEY_CTRL() => 63
+--#macro KEY_SHIFT() => 64
+
+function FramesToMillis(frames)
+	return frames * 1000 / 60
+end
+
 function DemoTIC()
 	hud_messages = {}
-	local state = somatic_tick()
+	local state = somatic_tick(nil, FramesToMillis(-10)) -- less = animation lag; higher = audio lag.
 
 	--#ifdef DEBUG
 	HonorHMRState()
 	--#endif
 
-	if keyp(55) or btnp(3) then
-		SetScene(current_scene_id + 1, true)
+	if keyp(55) or btnp(3) then -- right
+		if key(KEY_CTRL()) then -- ctrl
+			-- within scene seek beats.
+			somatic_seek(state.demoBeats + 8) -- beats
+		else
+			SetScene(current_scene_id + 1, true)
+		end
 	end
-	if keyp(54) or btnp(2) then
-		SetScene(current_scene_id - 1, true)
+	if keyp(54) or btnp(2) then -- left
+		if key(KEY_CTRL()) then -- ctrl
+			-- within scene seek beats.
+			somatic_seek(state.demoBeats - 8) -- beats
+		else
+			SetScene(current_scene_id - 1, true)
+		end
 	end
 	--#ifdef DEBUG
 	if keyp(56) then -- HOME
@@ -358,7 +375,7 @@ function DemoTIC()
 	if keyp(16) then -- P
 		show_hud = not show_hud
 	end
-	if keyp(12) then -- L https://skyelynwaddell.github.io/tic80-manual-cheatsheet/#_buttons
+	if keyp(12) then -- L
 		show_palette = not show_palette
 	end
 	if keyp(15) then -- O
@@ -463,6 +480,8 @@ end
 
 function BDR(l)
 	if not is_booting then
-		scenes[current_scene_id].bdr(l)
+		if scenes[current_scene_id].bdr then
+			scenes[current_scene_id].bdr(l)
+		end
 	end
 end

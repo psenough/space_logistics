@@ -200,9 +200,16 @@ function TEvoke(tt, _, somaticState, sceneTime)
 
 	--local melodyEvent = QuerySideChannelPart(somaticState, "melody")
 	local melodyEvent = QueryAnySideChannelPart(somaticState)
+	local accent = QuerySideChannelPart(somaticState, "introAccent")
 	--local melodyBEvent = QuerySideChannelPart(somaticState, "melBrhythm")
-	if melodyEvent.justHit then
-		AddTwinkle()
+	if melodyEvent.justHit and accent.count > 4 then
+		local twinkleCount = 1
+		if accent.count == 5 and accent.justHit then
+			twinkleCount = 15
+		end
+		for i = 1, twinkleCount do
+			AddTwinkle()
+		end
 	end
 
 	TwinkleTick(somaticState, "starz")

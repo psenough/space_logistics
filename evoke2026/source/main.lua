@@ -344,7 +344,7 @@ end
 
 function DemoTIC()
 	hud_messages = {}
-	local state = somatic_tick(nil, FramesToMillis(-9)) -- less = animation lag; higher = audio lag.
+	local state = somatic_tick(nil, FramesToMillis(-7)) -- less = animation lag; higher = audio lag.
 	SideChannelDatabase_UpdateProjectedState(state)
 
 	--#ifdef DEBUG

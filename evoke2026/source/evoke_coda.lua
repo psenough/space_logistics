@@ -12,15 +12,14 @@ function EvokeCodaTick(_, _, somaticState, sceneTiming)
 
     local event = QuerySideChannelPart(somaticState, "endAccent")
 
-    if event.count >= 0 then
-        drawSprite("SPRITE_TICKETBG", 0, 9)
-        drawSprite("SPRITE_LOGO", 3, 15)
-        drawSprite("SPRITE_TEXTFIELD", 4, 67)
-    end
-    if event.count >= 2 then
+    drawSprite("SPRITE_TICKETBG", 0, 9)
+    drawSprite("SPRITE_LOGO", 3, 15)
+    drawSprite("SPRITE_TEXTFIELD", 4, 67)
+
+    if sceneTiming.demoBeats > 2 then
         drawSprite("SPRITE_DESTINATION", 6, 70)
     end
-    if event.count >= 4 then
+    if sceneTiming.demoBeats > 4 then
         drawSprite("SPRITE_BOARDINGTIME", 6, 88)
     end
 

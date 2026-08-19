@@ -1,6 +1,5 @@
 --#pragma once
 
---#include "../gfx/bg.png.lua"
 --#include "../gfx/boardingtime.png.lua"
 --#include "../gfx/bomb.png.lua"
 --#include "../gfx/bomb_overlay.png.lua"

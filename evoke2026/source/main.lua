@@ -64,14 +64,6 @@ scenes = {
 		start = 9,
 		row = 0,
 	},
-	-- {-- (just so i can seek easily)
-	-- 	init = Evoke_HUD_init,
-	-- 	frame = Evoke_HUD, -- evoke HUD
-	-- 	name = "Evoke HUD",
-	-- 	bdr = no_fn,
-	-- 	start = 10,
-	-- 	row = 0,
-	-- },
 	{ -- 11
 		init = function() TEvoke_init("melody") end,
 		frame = TEvoke,
@@ -160,7 +152,6 @@ function SetScene(scene_id, do_seek)
 end
 
 function handleSomaticRow(state)
-	SideChannelDatabase_SomaticRowHandler(state)
 	local sceneRowHandler = scenes[current_scene_id].rowHandler
 	if sceneRowHandler then
 		sceneRowHandler(state)
@@ -332,6 +323,7 @@ end
 function DemoTIC()
 	hud_messages = {}
 	local state = somatic_tick(nil, FramesToMillis(-10)) -- less = animation lag; higher = audio lag.
+	SideChannelDatabase_UpdateProjectedState(state)
 
 	--#ifdef DEBUG
 	HonorHMRState()

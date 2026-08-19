@@ -57,8 +57,9 @@ function InitSideChannelDatabase()
 		eventsByPart = {}, -- ordered list of occurrences, by part
 		orderStartRows = {}, -- maps patternIndex to absolute songRow of first row of that pattern.
 		scopeStartRow = 0, -- state: absolute songRow of the start of the current query scope.
-		lastCallbackRow = nil,
-		lastCallbackWallFrame = nil, -- don't use demoframe; this is intended for a single frame in any case. also demoFrame doesn't exist LUL.
+		observedProjectedRow = nil,
+		lastProjectedRowChange = nil,
+		lastProjectedRowChangeWallFrame = nil,
 	}
 
 	local songRow = 0
@@ -117,11 +118,17 @@ function BeginSideChannelScope(patternIndex, patternRow)
 	gSideChannelDatabase.scopeStartRow = absoluteRow
 end
 
--- called by main. we use SOMATIC_MUSIC_DATA for timing calc; this just ensures correct exact trigger frame.
-function SideChannelDatabase_SomaticRowHandler(somaticState)
-	gSideChannelDatabase.lastCallbackRow =
+-- call this after somatic_tick because it will return a correctly projected state,
+-- which is required to determine the actual exact frame that the row was presented on.
+-- row handler is not sufficient.
+function SideChannelDatabase_UpdateProjectedState(somaticState)
+	local currentRow =
 		SideChannelDatabase_GetAbsoluteRow(somaticState.demoPatternIndex, somaticState.demoPatternRow)
-	gSideChannelDatabase.lastCallbackWallFrame = somaticState.wallFrame
+	if currentRow ~= gSideChannelDatabase.observedProjectedRow then
+		gSideChannelDatabase.observedProjectedRow = currentRow
+		gSideChannelDatabase.lastProjectedRowChange = currentRow
+		gSideChannelDatabase.lastProjectedRowChangeWallFrame = somaticState.wallFrame
+	end
 end
 
 -- init a new result struct. this is the shape.
@@ -190,8 +197,8 @@ local function SideChannelDatabase_FillResult(result, somaticState, events, occu
 		result.hitPatternRow = occurrenceEvent.patternRow
 		result.justHit = result.hasHit
 			and occurrenceEvent.absoluteRow == currentRow
-			and occurrenceEvent.absoluteRow == gSideChannelDatabase.lastCallbackRow
-			and somaticState.wallFrame == gSideChannelDatabase.lastCallbackWallFrame
+			and occurrenceEvent.absoluteRow == gSideChannelDatabase.lastProjectedRowChange
+			and somaticState.wallFrame == gSideChannelDatabase.lastProjectedRowChangeWallFrame
 	end
 
 	return result

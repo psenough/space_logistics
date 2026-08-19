@@ -18,8 +18,8 @@
 --#include "source/frame09_calls.lua"
 --#include "source/title_evoke_calls.lua"
 --#include "source/evoke_hud_calls.lua"
-
 --#include "source/evoke_solo_hud.lua"
+--#include "source/evoke_coda.lua"
 
 scene_frame = 0
 -- the scene orchestrator tracks scene-based timing, so scenes have a stable timing
@@ -107,9 +107,9 @@ scenes = {
 	},
 	-- end card
 	{
-		init = function() TEvoke_init("end") end,
-		frame = TEvoke,
-		name = "TEvoke",
+		init = EvokeCodaInit,
+		frame = EvokeCodaTick,
+		name = "Coda",
 		bdr = no_fn,
 		start = 22,
 		row = 0
@@ -253,8 +253,29 @@ function AddHudMessage(msg)
 	table.insert(hud_messages, msg)
 end
 
+-- wrapper around print() which prints a shadow for readibility on light backgrounds.
+function printForHud(msg, x, y, fixedWidth, smallFont)
+	x = (x or 0) // 1
+	y = (y or 0) // 1
+	fixedWidth = fixedWidth or true
+	smallFont = smallFont or true
+	local scale = 1
+	-- bg color 15 is safer than 0.
+	print(msg, x + 1, y + 1, 15, fixedWidth, scale, smallFont)
+	print(msg, x - 1, y - 1, 15, fixedWidth, scale, smallFont)
+	print(msg, x - 1, y + 1, 15, fixedWidth, scale, smallFont)
+	print(msg, x + 1, y - 1, 15, fixedWidth, scale, smallFont)
+
+	print(msg, x, y + 1, 15, fixedWidth, scale, smallFont)
+	print(msg, x, y - 1, 15, fixedWidth, scale, smallFont)
+	print(msg, x - 1, y, 15, fixedWidth, scale, smallFont)
+	print(msg, x + 1, y, 15, fixedWidth, scale, smallFont)
+
+	print(msg, x, y, 12, fixedWidth, scale, smallFont)
+end
+
 function RenderHud(state)
-	rect(0, 0, 240, 8, 0)
+	--rect(0, 0, 240, 8, 0)
 
 	-- convert millis to 00:00.000
 	local millis = state.demoMillis
@@ -266,7 +287,7 @@ function RenderHud(state)
 	local blinkParity = time() // 500 % 2
 	local current_scene = scenes[current_scene_id] or {}
 
-	print(
+	printForHud(
 		string.format(
 			"%s scn:%d frm:%d beat:%.1f p%d r%d %s %s",
 			time_str,
@@ -279,26 +300,26 @@ function RenderHud(state)
 			state.isPlaying and "" or (blinkParity == 0 and "PAUSED" or "")
 		),
 		0,
-		0,
-		12, -- color
-		true, -- fixed width
-		1, -- scale
-		true -- small font
+		0
+		-- 12, -- color
+		-- true, -- fixed width
+		-- 1, -- scale
+		-- true -- small font
 	)
 	-- show mouse cursor coords
 	local mx, my = mouse()
 	if mouse_origin then
 		local dx = mx - mouse_origin.x
 		local dy = my - mouse_origin.y
-		print(string.format("(%d,%d) DXY=(%d,%d)", mx, my, dx, dy), 0, 6, 12)
+		printForHud(string.format("(%d,%d) DXY=(%d,%d)", mx, my, dx, dy), 0, 6)
 		line(mouse_origin.x, mouse_origin.y, mx, my, 12)
 	else
-		print(string.format("(%d,%d)", mx, my), 0, 6, 12)
+		printForHud(string.format("(%d,%d)", mx, my), 0, 6)
 	end
 
 	-- render hud messages line by line.
 	for i, msg in ipairs(hud_messages) do
-		print(msg, 0, 6 + i * 6, 12)
+		printForHud(msg, 0, 6 + i * 6)
 	end
 
 	--print(string.format("(%d,%d)", mx, my), 0, 6, 12)

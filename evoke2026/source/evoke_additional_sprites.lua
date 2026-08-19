@@ -33,7 +33,6 @@ function LoadNewSprite(sprite, bgColor)
 end
 
 function loadAdditionalEvokeSprites()
-	LoadNewSprite(SPRITE_BG, 0)
 	LoadNewSprite(SPRITE_BOARDINGTIME, 0)
 	LoadNewSprite(SPRITE_BOMB, 0)
 	LoadNewSprite(SPRITE_BOMB_OVERLAY, 0)

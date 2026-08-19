@@ -1,6 +1,31 @@
 --#pragma once
 --#include "bootstrap.lua"
 
+
+G_ClipRectStack = {
+	{ x = 0, y = 0, w = TIC_WIDTH(), h = TIC_HEIGHT() }
+}
+
+function PushClipRect(x, y, w, h)
+	local top = G_ClipRectStack[#G_ClipRectStack]
+	assert(top ~= nil, "clip rect stack is empty")
+	local newX = max(x, top.x)
+	local newY = max(y, top.y)
+	local newW = min(x+w, top.x+top.w) - newX
+	local newH = min(y+h, top.y+top.h) - newY
+	table.insert(G_ClipRectStack, { x = newX, y = newY, w = newW, h = newH })
+end
+
+function PopClipRect()
+	assert(#G_ClipRectStack > 1, "you popped too many clip rects :(")
+	table.remove(G_ClipRectStack)
+end
+
+function GetCurrentClipRect()
+	return G_ClipRectStack[#G_ClipRectStack]
+end
+
+
 -- convert a sprite into a map from color to list of pixel locations.
 -- useful for largely transparent, fixed-on-screen sprites like HUDs or backgrounds.
 function createCachedSprite(spr_id, posx, posy)
@@ -44,6 +69,7 @@ function drawCachedSprite(cache)
 end
 
 function drawSprite(spr_id,posx,posy)
+	local clipRect = GetCurrentClipRect()
 	local w = sprites[spr_id].w
 	local h = sprites[spr_id].h
 	local c = sprites[spr_id].data
@@ -51,9 +77,9 @@ function drawSprite(spr_id,posx,posy)
 	for y=0,h-1 do
 		local srcRow = y*w
 		local screenY = posy+y
-		if screenY >= 0 and screenY < TIC_HEIGHT() then-- clip to screen
-			local x0 = max(0, ceil(-posx))
-			local x1 = min(w, ceil(TIC_WIDTH()-posx))
+		if screenY >= clipRect.y and screenY < clipRect.y + clipRect.h then-- clip to current clip rect.
+			local x0 = max(0, ceil(clipRect.x - posx))
+			local x1 = min(w, ceil(clipRect.x + clipRect.w - posx))
 			for x=x0,x1-1 do
 				local col = c[x+srcRow]
 				if (col ~= bkg) then

@@ -704,3 +704,64 @@ function DrawMarchingAntsRect(x, y, w, h, antSize, phase, col1, col2)
         pix(x+w-1, y+i, col)
     end
 end
+
+-- callback is (sx, sy, col, row, x01, y01) where
+-- sx, sy are screen pixel coordinates
+-- col, row are the column and row index within the rectangle (0..w-1, 0..h-1)
+-- x01 and y01 are normalized 0..1 across the rectangle.
+function VisitFilledRect(x, y, w, h, callback)
+	-- visit every pixel in a filled rectangle, calling callback(x,y) for each pixel.
+	-- with screen clipping.
+	-- start by just clipping the input coords.
+	x = x // 1
+	y = y // 1
+	w = w // 1
+	h = h // 1
+	if x < 0 then
+		w = w + x
+		x = 0
+	end
+	if y < 0 then
+		h = h + y
+		y = 0
+	end
+	if x + w > TIC_WIDTH() then
+		w = TIC_WIDTH() - x
+	end
+	if y + h > TIC_HEIGHT() then
+		h = TIC_HEIGHT() - y
+	end
+	if w <= 0 or h <= 0 then
+		return
+	end
+	local x01, y01 = 0,0
+	local x01Inc = 1 / w
+	local y01Inc = 1 / h
+	for sy = y, y + h - 1 do
+		local row = sy - y
+		y01 = row * y01Inc
+		for sx = x, x + w - 1 do
+			local col = sx - x
+			x01 = col * x01Inc
+			callback(sx, sy, col, row, x01, y01)
+		end
+	end
+end
+
+-- columnFillAmt01Func is a function that takes:
+-- - column index (0..w-1)
+-- - normalized column index (0..1)
+-- and returns a fill amount 0..1 for that column.
+-- where 0 = no fill
+-- 1 = full fill
+function FillRectDitheredTransparencyPerColumn(x,y,w,h, fgColor, columnFillAmt01Func)
+	VisitFilledRect(x,y,w,h, function(sx,sy,col,row,x01,y01)
+		local colFillAmt01 = columnFillAmt01Func(col, x01)
+		if colFillAmt01 > 0 then
+			local bayer = BAYER_MINUS_5[sy * TIC_WIDTH() + sx]
+			if colFillAmt01 > bayer then
+				pix(sx, sy, fgColor)
+			end
+		end
+	end)
+end

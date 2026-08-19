@@ -1,47 +1,17 @@
 --#include "import:song:CODE" -- include somatic music playroutine
 
--- #include "source/frame01_sprites.lua"
--- #include "source/frame02_sprites.lua"
--- #include "source/frame03_sprites.lua"
--- #include "source/frame04_sprites.lua"
--- #include "source/frame05_sprites.lua"
--- #include "source/frame06_sprites.lua"
+--#include "source/sprite.lua"
 --#include "source/frame09_sprites.lua"
----#include "source/frame07_sprites.lua"
----#include "source/frame08_sprites.lua"
----#include "source/frame11_sprites.lua"
----#include "source/tunnel_sprites.lua"
----#include "source/construction01_sprites.lua"
----#include "source/construction02_sprites.lua"
----#include "source/construction03_sprites.lua"
----#include "source/spherescenes_sprites.lua"
----#include "source/tunnel2_sprites.lua"
----#include "source/endscene_sprites.lua"
----#include "source/hud_sprites.lua"
+--#include "source/hud_sprites.lua"
+--#include "source/title_evoke_sprites.lua"
 
 --#include "source/bootstrap.lua"
 
 --#include "source/twinkles.lua"
 --#include "source/particle_orbits.lua"
 
---#include "source/frame01_calls.lua"
---#include "source/frame02_calls.lua"
---#include "source/frame03_calls.lua"
---#include "source/frame04_calls.lua"
---#include "source/frame05_calls.lua"
---#include "source/frame06_calls.lua"
---#include "source/frame07_calls.lua"
---#include "source/frame08_calls.lua"
 --#include "source/frame09_calls.lua"
---#include "source/frame11_calls.lua"
---#include "source/tunnel.lua"
---#include "source/construction01_calls.lua"
---#include "source/construction02_calls.lua"
---#include "source/construction03_calls.lua"
---#include "source/spherescenes_calls.lua"
---#include "source/tunnel2_calls.lua"
---#include "source/endscene_calls.lua"
---#include "source/hud_calls.lua"
+--#include "source/title_evoke_calls.lua"
 
 scene_frame = 0
 -- the scene orchestrator tracks scene-based timing, so scenes have a stable timing
@@ -63,185 +33,19 @@ is_booting = true
 boot_start_time = time()
 
 scenes = {
-	-- { -- missing "Space" on logo
-	-- 	init = no_fn,
-	-- 	frame = Frame01, -- ship docking
-	-- 	name = "Frame01",
-	-- 	bdr = no_fn,
-	-- 	start = 0,
-	-- 	row = 0,
-	-- 	rowHandler = TwinkleRowHandler, -- row handlers are called once every music row.
-	-- },{
-	-- 	init = Frame02_init,
-	-- 	frame = Frame02, -- planets with ships in orbit
-	-- 	name = "Frame02",
-	-- 	bdr = no_fn,
-	-- 	start = 4,
-	-- 	row = 0,
-	-- 	--#ifdef DEBUG
-	-- 	hmr_get = F02_getHMRState,
-	-- 	hmr_set = F02_setHMRState,
-	-- 	--#endif
-	-- 	rowHandler = TwinkleRowHandler,
-	-- },{ -- missing credits on left maybe?
-	-- 	init = no_fn,
-	-- 	frame = Frame03, -- cargo ship flying over slabs
-	-- 	name = "Frame03",
-	-- 	bdr = no_fn,
-	-- 	start = 6,
-	-- 	row = 0,
-	-- 	rowHandler = TwinkleRowHandler,
-	-- },{
-	-- 	init = Frame05_notraces,
-	-- 	frame = Frame05, -- stationary orbit 5a
-	-- 	name = "Frame05",
-	-- 	bdr = no_fn,
-	-- 	start = 8,
-	-- 	row = 0,
-	-- 	rowHandler = TwinkleRowHandler,
-	-- },{
-	-- 	init = Frame05b_notraces,
-	-- 	frame = Frame05b, -- stationary orbit 5b
-	-- 	name = "Frame05b",
-	-- 	bdr = no_fn,
-	-- 	start = 9,
-	-- 	row = 0,
-	-- },{ -- maybe needs a hud surrounding of some sort?
-	-- 	init = HUD_01_init,
-	-- 	frame = HUD_01_Scene,
-	-- 	name = "HUD_01_Scene",
-	-- 	bdr = no_fn,
-	-- 	start = 10,
-	-- 	row = 0,
-	-- },{
-	-- 	init = Frame05_init,
-	-- 	frame = Frame05, -- 5a ships leaving
-	-- 	name = "Frame05",
-	-- 	bdr = no_fn,
-	-- 	start = 11,
-	-- 	row = 0,
-	-- },{
-	-- 	init = Frame05b_init,
-	-- 	frame = Frame05b, -- 5b ships leaving
-	-- 	name = "Frame05b",
-	-- 	bdr = no_fn,
-	-- 	start = 12,
-	-- 	row = 0,
-	-- },{ -- not synced to music, does it matter?
-	-- 	init = Frame06_init,
-	-- 	frame = Frame06, -- dune ships leaving
-	-- 	name = "Frame06",
-	-- 	bdr = no_fn,
-	-- 	start = 13,
-	-- 	row = 0,
-	-- },{ -- needs sharper turns on bezier, better thruster anim and syncs
-	-- 	init = Frame07_init,
-	-- 	frame = Frame07, -- big ship, ships leaving
-	-- 	name = "Frame07",
-	-- 	bdr = no_fn,
-	-- 	start = 14,
-	-- 	row = 0,
-	-- },{
-	-- 	init = Frame04_init,
-	-- 	frame = Frame04, -- take off
-	-- 	name = "Frame04",
-	-- 	bdr = no_fn,
-	-- 	start = 15,
-	-- 	row = 0,
-	-- },{
-	-- 	init = Frame08_init,
-	-- 	frame = Frame08, -- modules undocking
-	-- 	name = "Frame08",
-	-- 	bdr = no_fn,
-	-- 	start = 16,
-	-- 	row = 32,
-	-- },{
-	-- 	init = tunnel_init,
-	-- 	frame = tunnel,
-	-- 	name = "tunnel",
-	-- 	bdr = no_fn,
-	-- 	start = 19,
-	-- 	row = 0,
-	-- 	rowHandler = tunnel_music_row,
-	-- },{ -- hud greets
-	-- 	init = HUD_02_init,
-	-- 	frame = HUD_02_Scene,
-	-- 	name = "HUD_02_Scene",
-	-- 	bdr = no_fn,
-	-- 	start = 21,
-	-- 	row = 0,
-	-- },{
-	-- 	init = Frame11_init,
-	-- 	frame = Frame11, -- plasma orbit
-	-- 	name = "Frame11",
-	-- 	bdr = no_fn,
-	-- 	start = 23,
-	-- 	row = 0,
-	-- },{
-	-- 	init = Construction03_init,
-	-- 	frame = Construction03, -- industrial planet elements
-	-- 	name = "Construction03",
-	-- 	bdr = no_fn,
-	-- 	start = 25,
-	-- 	row = 0,
-	-- },{ -- sync to music, right order of sequence?
-	-- 	init = Construction01_init,
-	-- 	frame = Construction01, -- welding
-	-- 	name = "Construction01",
-	-- 	bdr = no_fn,
-	-- 	start = 28,
-	-- 	row = 0,
-	-- 	rowHandler = C01_music_row,
-	-- },{
-	-- 	init = Tunnel2_init,
-	-- 	frame = Tunnel2,
-	-- 	name = "Tunnel2",
-	-- 	bdr = no_fn,
-	-- 	start = 29,
-	-- 	row = 0,
-	-- },{
-	-- 	init = Construction02_init,
-	-- 	frame = Construction02, -- ships departing big dock with parts
-	-- 	name = "Construction02",
-	-- 	bdr = no_fn,
-	-- 	start = 31,
-	-- 	row = 0,
-	-- },{
-	-- 	init = SphereScenes_init,
-	-- 	frame = SphereScenes_1,
-	-- 	name = "SphereScenes_1",
-	-- 	bdr = no_fn,
-	-- 	start = 33,
-	-- 	row = 0,
-	-- },{
-	-- 	init = SphereScenes_init,
-	-- 	frame = SphereScenes_2,
-	-- 	name = "SphereScenes_2",
-	-- 	bdr = no_fn,
-	-- 	start = 34,
-	-- 	row = 0,
-	-- },{
-	-- 	init = SphereScenes_init,
-	-- 	frame = SphereScenes_3,
-	-- 	name = "SphereScenes_3",
-	-- 	bdr = no_fn,
-	-- 	start = 35,
-	-- 	row = 0,
-	-- },{
-	-- 	init = EndScene_init,
-	-- 	frame = EndScene,
-	-- 	name = "EndScene",
-	-- 	bdr = no_fn,
-	-- 	start = 36,
-	-- 	row = 0,
-	-- 	rowHandler = TwinkleRowHandler,
-	-- },
 	{
+		init = TEvoke_init,
+		frame = TEvoke,
+		name = "TEvoke",
+		bdr = no_fn,
+		start = 0,
+		row = 0
+	},{
 		init = Frame09_init,
 		frame = Frame09, -- xray luggage
 		name = "Frame09",
 		bdr = no_fn,
-		start = 0,
+		start = 2,
 		row = 0,
 	},
 }
@@ -544,24 +348,9 @@ end
 current_boot_task_index = 1
 BootTasks = {
 	-- load sprites
-	-- loadFrame01Sprites,
-	-- loadFrame02Sprites,
-	-- loadFrame03Sprites,
-	-- loadFrame04Sprites,
-	-- loadFrame05Sprites,
-	-- loadFrame06Sprites,
-	-- loadFrame07Sprites,
-	-- loadFrame08Sprites,
 	loadFrame09Sprites,
-	-- loadFrame11Sprites,
-	-- loadC01Sprites,
-	-- loadC02Sprites,
-	-- loadC03Sprites,
-	-- loadTunnelSprites,
-	-- loadSSSprites,
-	-- loadTunnel2Sprites,
-	-- loadEndSceneSprites,
-	-- loadHUDSprites,
+	loadHUDSprites,
+	loadTEvokeSprites
 }
 
 function TIC()

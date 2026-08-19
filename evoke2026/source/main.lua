@@ -5,6 +5,7 @@
 --#include "source/hud_sprites.lua"
 --#include "source/title_evoke_sprites.lua"
 --#include "source/evoke_hud_sprites.lua"
+--#include "source/evoke_additional_sprites.lua"
 
 --#include "source/bootstrap.lua"
 
@@ -440,7 +441,8 @@ BootTasks = {
 	loadFrame09Sprites,
 	loadHUDSprites,
 	loadTEvokeSprites,
-	loadEvokeHUDSprites
+	loadEvokeHUDSprites,
+	loadAdditionalEvokeSprites,
 }
 
 function TIC()

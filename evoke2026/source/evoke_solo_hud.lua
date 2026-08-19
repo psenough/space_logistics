@@ -107,7 +107,7 @@ function SoloTick(_, _, somaticState, sceneTime)
     --     shapeFunc()
     -- end
 
-    -- // todo dancing spaceships
+    -- // todo dancing spaceships along top 80 px of hud area
     drawSpriteWithRotationAsMask(TEvoke_ships[1][4], 50, 50, sceneTime.demoMillis * 0.001, 3)
 
     DrawMarchingAntsRect(8, 9, 156, 113, 4, sceneTime.demoMillis * 0.01, 7, 0)

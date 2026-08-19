@@ -103,6 +103,16 @@ def encode_rle(data):
         enc = enc + "0"
     return enc
 
+def make_lua_symbol_name(fileLeaf):
+    # remove file extension
+    fileLeaf = os.path.splitext(fileLeaf)[0]
+    # replace invalid characters with underscore
+    fileLeaf = ''.join(c if c.isalnum() else '_' for c in fileLeaf)
+    # ensure it doesn't start with a digit
+    if fileLeaf and fileLeaf[0].isdigit():
+        fileLeaf = '_' + fileLeaf
+    return fileLeaf
+
 # write data as RLE-encoded to output file
 def write_rle():
     encPalette = encode_rle(Palette)
@@ -128,18 +138,18 @@ def write_rle():
     return
 	
 # prep image output decoder
-outputHexdata = '\nlocal st = "' + encode_rle(Data) + '"\n'
-outputHexdata = outputHexdata + "local sx = " + str(orgSizeX) + "\n"
-outputHexdata = outputHexdata + "local sy = " + str(orgSizeY) + "\n"
-hexdataFile = os.path.join(os.path.curdir, "decoders", "hexdata.lua")
-if os.path.isfile(hexdataFile):
-	with open(hexdataFile, "r") as file:
-		fileLines = [line.strip('\n') for line in file.readlines()]
-		codeStart = next((index for index, tag in enumerate(fileLines) if tag == '-- CODEBLOCK'), -1)
-		outputHexdata = outputHexdata + "\n".join(fileLines[codeStart+1:]) + "\n"
-else:
-	outputHexdata = outputHexdata + "\n -- No hexdata-routine found!\n"
-	print("No hexdata-routine found!\n")
+# outputHexdata = '\nlocal st = "' + encode_rle(Data) + '"\n'
+# outputHexdata = outputHexdata + "local sx = " + str(orgSizeX) + "\n"
+# outputHexdata = outputHexdata + "local sy = " + str(orgSizeY) + "\n"
+# hexdataFile = os.path.join(os.path.curdir, "decoders", "hexdata.lua")
+# if os.path.isfile(hexdataFile):
+# 	with open(hexdataFile, "r") as file:
+# 		fileLines = [line.strip('\n') for line in file.readlines()]
+# 		codeStart = next((index for index, tag in enumerate(fileLines) if tag == '-- CODEBLOCK'), -1)
+# 		outputHexdata = outputHexdata + "\n".join(fileLines[codeStart+1:]) + "\n"
+# else:
+# 	outputHexdata = outputHexdata + "\n -- No hexdata-routine found!\n"
+# 	print("No hexdata-routine found!\n")
 
 
 #hexByte = '%0*x' % ((len(pixelByte) + 3) // 4, int(pixelByte, 2))  # convert byte to hex
@@ -150,14 +160,23 @@ else:
 #codeStart = next((index for index, tag in enumerate(fileLines) if tag == outputCmnt + 'CODEBLOCK'), -1)
 #outputViewer = "\n".join(fileLines[codeStart+1:]) + "\n"
 
+# generate lua that looks more like,
+# SPRITE_LEAF_NAME = { width=240, height=136, id="SPRITE_LEAF_NAME", data="...rle data..." }
+symbolName = make_lua_symbol_name(("SPRITE_" + os.path.basename(imageFile)).upper())
+outputVar = symbolName + " = {\n    width=" + str(orgSizeX)
+outputVar = outputVar + ",\n    height=" + str(orgSizeY)
+outputVar = outputVar + ",\n    id=\"" + symbolName + "\",\n    data=\""
+outputVar = outputVar + encode_rle(Data) + "\"\n}\n"
+
 
 try:
 	with open(outputFile, 'w') as file:
-		file.write("-- title:  " + str(imageFile) + "\n")  # write header
+		file.write("-- title:  " + os.path.basename(str(imageFile)) + "\n")  # write header
 		file.write("-- author: TicPanel\n")
 		file.write("-- script: lua\n")
-		file.write(outputPalette)
-		file.write(outputHexdata)
+		file.write(outputVar)
+		# file.write(outputPalette)
+		# file.write(outputHexdata)
 except Exception as error:
 	print("ERROR: " + str(error), file=sys.stderr)
 	exit(1)

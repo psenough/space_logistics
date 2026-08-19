@@ -96,19 +96,23 @@ TEvoke_ships = {
 	},
 }
 
+function RenderShips(somaticState, t)
+	for _, ship in ipairs(TEvoke_ships) do
+		local x, y, speed, sprite = ship[1], ship[2], ship[3], ship[4]
+		local newY = y - t // speed
+		drawSprite(sprite, x, newY)
+		for _, streak in ipairs(ship[5]) do
+			rect(x + streak[1], newY + streak[2], streak[3], 170 - newY, 10)
+		end
+	end
+end
+
 TEvoke_shipSequenceDef_intro = {
 	{
-		tick = function(_, somaticState)
+		tick = function(_, somaticState, seqTime)
 			local result = QuerySideChannelPart(somaticState, "melody", 1)
 			if result.hasHit then
-				for _, ship in ipairs(TEvoke_ships) do
-					local x, y, speed, sprite = ship[1], ship[2], ship[3], ship[4]
-					local newY = y - result.sinceMillis // speed
-					drawSprite(sprite, x, newY)
-					for _, streak in ipairs(ship[5]) do
-						rect(x + streak[1], newY + streak[2], streak[3], 170 - newY, 10)
-					end
-				end
+				RenderShips(somaticState, result.sinceMillis)
 			end
 		end,
 	}
@@ -117,14 +121,7 @@ TEvoke_shipSequenceDef_intro = {
 TEvoke_shipSequenceDef_alwaysOn = {
 	{
 		tick = function(_, somaticState, seqTiming)
-				for _, ship in ipairs(TEvoke_ships) do
-					local x, y, speed, sprite = ship[1], ship[2], ship[3], ship[4]
-					local newY = y - seqTiming.demoMillis // speed
-					drawSprite(sprite, x, newY)
-					for _, streak in ipairs(ship[5]) do
-						rect(x + streak[1], newY + streak[2], streak[3], 170 - newY, 10)
-					end
-				end
+			RenderShips(somaticState, seqTiming.demoMillis)
 		end,
 	}
 }

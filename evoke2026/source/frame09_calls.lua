@@ -14,7 +14,7 @@ function Frame09(tt)
 	cls()
 	drawSprite("F9_BG",0,0)
 	
-	local sx = -t/30
+	local sx = -t/20
 
 	local px = sx+200
 
@@ -30,16 +30,16 @@ function Frame09(tt)
 	print("RBBS",px+56,96,1,false,1,true)
 
 	px = px+200
-	drawSprite("F9_Alien_01",px,52)
+	drawSprite("F9_Alien_01",px,40)
 	
-	px = px+200
+	px = px+100
 	drawSprite("F9_Suitcase_02",px,52)
 	print("Evoke 2026",px+66,74,8,false,1,true)
 	
 	px = px+200
-	drawSprite("F9_Duck_02",px,52)
+	drawSprite("F9_Duck_02",px,56)
 	
-	px = px+200
+	px = px+100
 	drawSprite("F9_Suitcase_01",px,52)
 	print("TPOLM",px+10,76,1,false,1,true)
 
@@ -70,15 +70,15 @@ function Frame09(tt)
 	drawSprite("F9_ESuitcase_01",sx,52)
 
 	sx = sx + 200
-	drawSprite("F9_Alien_02",sx,52)
+	drawSprite("F9_Alien_02",sx,40)
 
-	sx = sx + 200
+	sx = sx + 100
 	drawSprite("F9_ESuitcase_04",sx,52)
 
 	sx = sx + 200
-	drawSprite("F9_Duck_01",sx,52)
+	drawSprite("F9_Duck_01",sx,56)
 
-	sx = sx + 200
+	sx = sx + 100
 	drawSprite("F9_Suitcase_Scan_01",sx,52)
 	print("Spectrox",sx+8,76,6,false,1,true)
 	print("Agenda",sx+88,76,6,false,1,true)

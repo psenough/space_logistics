@@ -4,6 +4,7 @@
 --#include "source/frame09_sprites.lua"
 --#include "source/hud_sprites.lua"
 --#include "source/title_evoke_sprites.lua"
+--#include "source/evoke_hud_sprites.lua"
 
 --#include "source/bootstrap.lua"
 
@@ -12,6 +13,7 @@
 
 --#include "source/frame09_calls.lua"
 --#include "source/title_evoke_calls.lua"
+--#include "source/evoke_hud_calls.lua"
 
 scene_frame = 0
 -- the scene orchestrator tracks scene-based timing, so scenes have a stable timing
@@ -47,7 +49,21 @@ scenes = {
 		bdr = no_fn,
 		start = 2,
 		row = 0,
-	},
+	},{
+		init = Evoke_HUD_init,
+		frame = Evoke_HUD, -- evoke HUD
+		name = "Evoke HUD",
+		bdr = no_fn,
+		start = 9,
+		row = 0,
+	},{
+		init = TEvoke_init,
+		frame = TEvoke,
+		name = "TEvoke",
+		bdr = no_fn,
+		start = 12,
+		row = 0
+	}
 }
 
 function ResetSceneTiming()
@@ -100,7 +116,7 @@ function BOOT()
 	vbank(0)
 
 	somatic_set_completion_callback(function()
-		trace(" - SPACE LOGISTICS - ")
+		trace(" - CALL 1-800-FLIGHT TO REBOOK - ")
 		exit()
 	end)
 
@@ -350,7 +366,8 @@ BootTasks = {
 	-- load sprites
 	loadFrame09Sprites,
 	loadHUDSprites,
-	loadTEvokeSprites
+	loadTEvokeSprites,
+	loadEvokeHUDSprites
 }
 
 function TIC()

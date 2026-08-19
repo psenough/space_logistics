@@ -202,6 +202,9 @@ end
 function QuerySideChannelPart(somaticState, part, occurrenceIndex)
 	local key = part:lower()
 	local events = gSideChannelDatabase.eventsByPart[key]
+	if events == nil then
+		assert(false, "QuerySideChannelPart part not found: " .. part)
+	end
 	return SideChannelDatabase_FillResult({}, somaticState, events, occurrenceIndex)
 end
 
@@ -213,17 +216,22 @@ end
 -- where itemStartTiming is the sceneTiming at the moment of the trigger.
 function SeqTriggerOnSideChannel(part, occurrenceIndex)
 	--assert(occurrenceIndex >= 1, "SeqTriggerOnSideChannel occurrenceIndex invalid")
-	return function(_, somaticState, sceneTiming)
+	return function(_, somaticState, sceneTiming, sequencer)
 		local marker = QuerySideChannelPart(somaticState, part, occurrenceIndex)
 		if not marker.hasHit then
 			return false
 		end
 
-		return true,
-			{
-				demoMillis = sceneTiming.demoMillis - marker.sinceMillis,
-				demoBeats = sceneTiming.demoBeats - marker.sinceBeats,
-				wallMillis = sceneTiming.wallMillis,
-			}
+		local markerTiming = {
+			demoMillis = sceneTiming.demoMillis - marker.sinceMillis,
+			demoBeats = sceneTiming.demoBeats - marker.sinceBeats,
+			wallMillis = sceneTiming.wallMillis,
+		}
+		-- prevent spillage from previous scene
+		if markerTiming.demoMillis < sequencer.seqItemStartTiming.demoMillis then
+			return false
+		end
+
+		return true, markerTiming
 	end
 end

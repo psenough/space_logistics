@@ -225,6 +225,13 @@ end
 -- when t01 = 1, uses foreground color.
 -- in between, bayer dithering
 function drawSpriteDitheredWithBackground(spr_id, posx, posy, t01)
+	if t01 <= 0.01 then
+		return
+	end
+	if t01 >= 0.99 then
+		drawSprite(spr_id, posx, posy)
+		return
+	end
 	drawSpriteWithShadeFn(spr_id, posx, posy, function(x, y, col)
 		local bayer = BAYER_MINUS_5[(posy+y) * TIC_WIDTH() + (posx+x)]
 		if t01 + bayer < 0.5 then

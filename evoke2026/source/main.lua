@@ -39,7 +39,7 @@ boot_start_time = time()
 
 scenes = {
 	{
-		init = TEvoke_init,
+		init = function() TEvoke_init("intro") end,
 		frame = TEvoke,
 		name = "TEvoke",
 		bdr = no_fn,
@@ -54,7 +54,7 @@ scenes = {
 		start = 2,
 		row = 0,
 	},
-	{
+	{-- FACES
 		init = Evoke_HUD_init,
 		frame = Evoke_HUD, -- evoke HUD
 		name = "Evoke HUD",
@@ -62,20 +62,45 @@ scenes = {
 		start = 9,
 		row = 0,
 	},
-	{
-		init = TEvoke_init,
+	{-- (just so i can seek easily)
+		init = Evoke_HUD_init,
+		frame = Evoke_HUD, -- evoke HUD
+		name = "Evoke HUD",
+		bdr = no_fn,
+		start = 10,
+		row = 0,
+	},
+	{ -- 11
+		init = function() TEvoke_init("melody") end,
 		frame = TEvoke,
 		name = "TEvoke",
 		bdr = no_fn,
-		start = 12,
+		start = 11,
 		row = 0
 	},
+	{-- FACES
+		init = Evoke_HUD_init,
+		frame = Evoke_HUD, -- evoke HUD
+		name = "Evoke HUD",
+		bdr = no_fn,
+		start = 12,
+		row = 0,
+	},
+	{ -- B section: title again
+		init = function() TEvoke_init("melody") end,
+		frame = TEvoke,
+		name = "TEvoke",
+		bdr = no_fn,
+		start = 13,
+		row = 0
+	},
+
 	{-- SOLO
 		init = Evoke_HUD_init,
 		frame = Evoke_HUD, -- evoke HUD
 		name = "Evoke HUD",
 		bdr = no_fn,
-		start = 16,
+		start = 15,
 		row = 0,
 	},
 	{-- B section melody: baggage variation
@@ -88,7 +113,7 @@ scenes = {
 	},
 	-- end card
 	{
-		init = TEvoke_init,
+		init = function() TEvoke_init("end") end,
 		frame = TEvoke,
 		name = "TEvoke",
 		bdr = no_fn,

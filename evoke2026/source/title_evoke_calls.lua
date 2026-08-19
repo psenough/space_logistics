@@ -2,6 +2,7 @@
 TEvoke_logoSequencer = nil
 TEvoke_shipSequencer = nil
 TEvoke_titleLogoSequencer = nil
+TEvoke_variation = nil
 
 function TEvoke_drawLogo(y, asMask)
 	local x = 10
@@ -16,7 +17,7 @@ function TEvoke_drawLogo(y, asMask)
 	end
 end
 
-TEvoke_logoSequenceDef = {
+TEvoke_logoSequenceDef_intro = {
 	{
 		tick = function(_, somaticState)
 			local accent = QuerySideChannelPart(somaticState, "introAccent")
@@ -37,6 +38,15 @@ TEvoke_logoSequenceDef = {
 	},
 	{
 		trigger = SeqTriggerOnSideChannel("melody", 1),
+		tick = function(_, _, sequenceTime)
+			local y = 60 + math.sin(sequenceTime.demoMillis / 300) * 8
+			TEvoke_drawLogo(y, false)
+		end,
+	},
+}
+
+TEvoke_logoSequenceDef_alwaysOn = {
+	{
 		tick = function(_, _, sequenceTime)
 			local y = 60 + math.sin(sequenceTime.demoMillis / 300) * 8
 			TEvoke_drawLogo(y, false)
@@ -86,7 +96,7 @@ TEvoke_ships = {
 	},
 }
 
-TEvoke_shipSequenceDef = {
+TEvoke_shipSequenceDef_intro = {
 	{
 		tick = function(_, somaticState)
 			local result = QuerySideChannelPart(somaticState, "melody", 1)
@@ -104,11 +114,33 @@ TEvoke_shipSequenceDef = {
 	}
 }
 
-TEvoke_titleLogoSequenceDef = {
+TEvoke_shipSequenceDef_alwaysOn = {
+	{
+		tick = function(_, somaticState, seqTiming)
+				for _, ship in ipairs(TEvoke_ships) do
+					local x, y, speed, sprite = ship[1], ship[2], ship[3], ship[4]
+					local newY = y - seqTiming.demoMillis // speed
+					drawSprite(sprite, x, newY)
+					for _, streak in ipairs(ship[5]) do
+						rect(x + streak[1], newY + streak[2], streak[3], 170 - newY, 10)
+					end
+				end
+		end,
+	}
+}
+
+function RenderTitle(seqItem, fadeIn01)
+	local logX = 5
+	local logY = 10
+	drawSpriteDitheredWithBackground("TEvoke_SpaceAirline_02",logX+189,logY-4, fadeIn01)
+	drawSpriteDitheredWithBackground("TEvoke_SpaceAirline_03",logX+168,logY+27, fadeIn01)
+	drawSpriteDitheredWithBackground("TEvoke_SpaceAirline_04",logX+0,logY+10, fadeIn01)
+	drawSpriteDitheredWithBackground("TEvoke_SpaceAirline_01",logX+30,logY+20, fadeIn01)
+end
+
+TEvoke_titleLogoSequenceDef_intro = {
 	{
 		tick = function(_, somaticState)
-			local logX = 5
-			local logY = 10
 			-- fade in title. fade linear for 2 beats before "melody" first occurrence.
 			local fadeBeats = 1
 			local melEvent = QuerySideChannelPart(somaticState, "melody", 1)
@@ -116,35 +148,40 @@ TEvoke_titleLogoSequenceDef = {
 			if melEvent.sinceBeats then
 				t01 = clamp01(1 + melEvent.sinceBeats / fadeBeats)
 			end
-			drawSpriteDitheredWithBackground("TEvoke_SpaceAirline_02",logX+189,logY-4, t01)
-			drawSpriteDitheredWithBackground("TEvoke_SpaceAirline_03",logX+168,logY+27, t01)
-			drawSpriteDitheredWithBackground("TEvoke_SpaceAirline_04",logX+0,logY+10, t01)
-			drawSpriteDitheredWithBackground("TEvoke_SpaceAirline_01",logX+30,logY+20, t01)
+			RenderTitle(nil, t01)
 		end
-	},
-	{
-		trigger = SeqTriggerOnSideChannel("melody", 1),
-		tick = function(_, somaticState)
-			local logX = 5
-			local logY = 10
-
-			drawSprite("TEvoke_SpaceAirline_02",logX+189,logY-4)
-			drawSprite("TEvoke_SpaceAirline_03",logX+168,logY+27)
-			drawSprite("TEvoke_SpaceAirline_04",logX+0,logY+10)
-			drawSprite("TEvoke_SpaceAirline_01",logX+30,logY+20)
-		end,
 	},
 }
 
-function TEvoke_init()
+TEvoke_titleLogoSequenceDef_alwaysOn = {
+	{
+		tick = function(_, somaticState)
+			RenderTitle(nil, 1)
+		end
+	},
+}
+
+-- variation can be "intro", "melody", or "end"
+-- determines which animations to use.
+function TEvoke_init(variation)
+	TEvoke_variation = variation
+
 	vbank(0)
 	cls()
 	vbank(1)
 	cls()
 	vbank(0)
-	TEvoke_logoSequencer = CreateSequencer(TEvoke_logoSequenceDef)
-	TEvoke_shipSequencer = CreateSequencer(TEvoke_shipSequenceDef)
-	TEvoke_titleLogoSequencer = CreateSequencer(TEvoke_titleLogoSequenceDef)
+
+	if variation == "intro" then
+		TEvoke_logoSequencer = CreateSequencer(TEvoke_logoSequenceDef_intro)
+		TEvoke_shipSequencer = CreateSequencer(TEvoke_shipSequenceDef_intro)
+		TEvoke_titleLogoSequencer = CreateSequencer(TEvoke_titleLogoSequenceDef_intro)
+	else
+		TEvoke_logoSequencer = CreateSequencer(TEvoke_logoSequenceDef_alwaysOn)
+		TEvoke_shipSequencer = CreateSequencer(TEvoke_shipSequenceDef_alwaysOn)
+		TEvoke_titleLogoSequencer = CreateSequencer(TEvoke_titleLogoSequenceDef_alwaysOn)
+	end
+
 end
 
 function TEvoke(tt, _, somaticState, sceneTime)
@@ -158,14 +195,6 @@ function TEvoke(tt, _, somaticState, sceneTime)
 	UpdateSequencer(TEvoke_shipSequencer, somaticState, sceneTime)
 
 	UpdateSequencer(TEvoke_titleLogoSequencer, somaticState, sceneTime)
-
-	-- local logX = 5
-	-- local logY = 10
-
-	-- drawSprite("TEvoke_SpaceAirline_02",logX+189,logY-4)
-	-- drawSprite("TEvoke_SpaceAirline_03",logX+168,logY+27)
-	-- drawSprite("TEvoke_SpaceAirline_04",logX+0,logY+10)
-	-- drawSprite("TEvoke_SpaceAirline_01",logX+30,logY+20)
 
 	UpdateSequencer(TEvoke_logoSequencer, somaticState, sceneTime)
 end

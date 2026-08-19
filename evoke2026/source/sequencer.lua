@@ -39,6 +39,7 @@ end
 -- somaticState = the somatic state containing absolute timing information from the music system.
 -- sceneTiming = the scene timing, which is relative to the scene start.
 function UpdateSequencer(sequencer, somaticState, sceneTiming)
+	assert(sceneTiming ~= nil, "UpdateSequencer requires sceneTiming")
 	if sequencer.currentIndex == 0 then
 		SwitchToSequencerItem(sequencer, 1, sceneTiming, sceneTiming)
 	end
@@ -51,7 +52,8 @@ function UpdateSequencer(sequencer, somaticState, sceneTiming)
 			shouldEnter, itemStartTiming = nextItem.trigger(
 				nextItem,
 				somaticState,
-				sceneTiming
+				sceneTiming,
+				sequencer
 			)
 		else
 			shouldEnter = true
@@ -71,3 +73,17 @@ function UpdateSequencer(sequencer, somaticState, sceneTiming)
 		seqItem.tick(seqItem, somaticState, sequencer.seqTiming)
 	end
 end
+
+function TriggerOnSceneBeat(triggerBeat)
+	-- defines a trigger condition that fires at the given scene beat.
+	return function (_, somaticState, sceneTiming)
+		assert(type(somaticState) == "table" and somaticState.demoBeats ~= nil, "TriggerOnSceneBeat somaticState not right...")
+		assert(type(sceneTiming) == "table" and sceneTiming.demoBeats ~= nil, "TriggerOnSceneBeat sceneTiming not right...")
+		if sceneTiming.demoBeats >= triggerBeat then
+			return true, sceneTiming
+		end
+		return false
+	end
+end
+
+SeqNop = function() end

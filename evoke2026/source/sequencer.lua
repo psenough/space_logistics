@@ -87,3 +87,12 @@ function TriggerOnSceneBeat(triggerBeat)
 end
 
 SeqNop = function() end
+
+
+TriggerNever = function()
+	return false
+end
+
+TriggerAlways = function(_, somaticState, sceneTiming, sequencer)
+	return true, sceneTiming
+end

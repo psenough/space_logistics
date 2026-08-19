@@ -166,10 +166,6 @@ function F09_conveyor(sx)
 	print("... and you!", sx + 48, 88, 6, false, 1, true)
 end
 
-TriggerNever = function()
-	return false
-end
-
 function SeqItem_SetConveyorStateAtBeat(beat, xSpeed, led)
 	return {
 		trigger = beat and TriggerOnSceneBeat(beat) or nil,

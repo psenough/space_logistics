@@ -546,6 +546,14 @@ function VisitPixelsAlongLine(x0, y0, x1, y1, callback)
 	end
 end
 
+-- dithered line draw, interpolating between start & end brightness.
+function lineBayerDithered(x0, y0, x1, y1, gradient, brightness0, brightness1)
+	VisitPixelsAlongLine(x0, y0, x1, y1, function(x, y, t01)
+		local brightness = lerpScalar(brightness0, brightness1, t01)
+		pixBayer(x, y, gradient, brightness)
+	end)
+end
+
 -- accepts an edge { x0,y0,width,height } and a t01 in [0,1] and returns a {x,y} point along the edge.
 function PointAlongLine(edge, t01)
 	local x = edge.x0 + t01 * edge.width

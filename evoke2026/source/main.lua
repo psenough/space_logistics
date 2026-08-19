@@ -18,6 +18,8 @@
 --#include "source/title_evoke_calls.lua"
 --#include "source/evoke_hud_calls.lua"
 
+--#include "source/evoke_solo_hud.lua"
+
 scene_frame = 0
 -- the scene orchestrator tracks scene-based timing, so scenes have a stable timing
 -- reference.
@@ -55,9 +57,9 @@ scenes = {
 		row = 0,
 	},
 	{-- FACES
-		init = Evoke_HUD_init,
+		init = function() Evoke_HUD_init("initial") end,
 		frame = Evoke_HUD, -- evoke HUD
-		name = "Evoke HUD",
+		name = "HUD1-faces",
 		bdr = no_fn,
 		start = 9,
 		row = 0,
@@ -79,9 +81,9 @@ scenes = {
 		row = 0
 	},
 	{-- FACES
-		init = Evoke_HUD_init,
+		init = function() Evoke_HUD_init() end,
 		frame = Evoke_HUD, -- evoke HUD
-		name = "Evoke HUD",
+		name = "HUD-cutback",
 		bdr = no_fn,
 		start = 12,
 		row = 0,
@@ -96,7 +98,7 @@ scenes = {
 	},
 
 	{-- SOLO
-		init = Evoke_HUD_init,
+		init = function() Evoke_HUD_init() end,
 		frame = Evoke_HUD, -- evoke HUD
 		name = "Evoke HUD",
 		bdr = no_fn,

@@ -90,12 +90,58 @@ function drawSprite(spr_id,posx,posy)
 	end
 end
 
+function visitSpritePixelsRotated90(spr_id,posx,posy, fn)
+	local clipRect = GetCurrentClipRect()
+	local w = sprites[spr_id].w // 1
+	local h = sprites[spr_id].h // 1
+	local c = sprites[spr_id].data
+	local bkg = sprites[spr_id].bg
+	posx = posx // 1
+	posy = posy // 1
+	for y=0,h-1 do
+		local srcRow = y*w
+		local screenX = posx+(h-y-1)
+		if screenX >= clipRect.x and screenX < clipRect.x + clipRect.w then-- clip to current clip rect.
+			local x0 = max(0, ceil(clipRect.y - posy))
+			local x1 = min(w, ceil(clipRect.y + clipRect.h - posy))
+			for x=x0,x1-1 do
+				local col = c[x+srcRow]
+				if (col ~= bkg) then
+					fn(screenX, posy+x, col)
+				end
+			end
+		end
+	end
+end
+
+-- uses sprite as a mask; fill01 selects a dithered position within the gradient.
+function fillSpriteRotated90WithDither(spr_id,posx,posy, gradient, fill01)
+	fill01 = clamp01(fill01)
+	local gradientCount = #gradient
+	local gradientPos = fill01 * (gradientCount - 1)
+	local gradientIndex = (gradientPos // 1) + 1
+	local gradientColor = gradient[gradientIndex]
+	local nextGradientColor = gradient[gradientIndex + 1]
+	local blend01 = gradientPos - (gradientIndex - 1)
+
+	visitSpritePixelsRotated90(spr_id,posx,posy, function(x, y, col)
+		local pixelColor = gradientColor
+		if nextGradientColor ~= nil then
+			local bayer = BAYER_MINUS_5[y * TIC_WIDTH() + x]
+			if blend01 + bayer >= 0.5 then
+				pixelColor = nextGradientColor
+			end
+		end
+		pix(x, y, pixelColor)
+	end)
+end
+
 function drawSpriteRotated90(spr_id,posx,posy)
 	local w = sprites[spr_id].w
 	local h = sprites[spr_id].h
 	local c = sprites[spr_id].data
 	local bkg = sprites[spr_id].bg
-	-- todo: screen clip
+	-- todo: clip
 	for y=0,h-1 do
 		local srcRow = y*w
 		local screenX = posx+(h-y-1)

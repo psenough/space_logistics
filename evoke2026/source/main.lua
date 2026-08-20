@@ -20,6 +20,7 @@
 --#include "source/evoke_hud_calls.lua"
 --#include "source/evoke_solo_hud.lua"
 --#include "source/evoke_coda.lua"
+--#include "source/evoke_F13.lua"
 
 scene_frame = 0
 -- the scene orchestrator tracks scene-based timing, so scenes have a stable timing
@@ -82,10 +83,9 @@ scenes = {
 		row = 0,
 	},
 	{ -- B section: title again ** NOT SURE ABOUT THIS ONE.... **
-		init = function() TEvoke_init("melody") end,
-		frame = TEvoke,
-		name = "TEvoke",
-		bdr = no_fn,
+		init = Evoke13Init,
+		frame = Evoke13Tick,
+		name = "Evoke13",
 		start = 13,
 		row = 0
 	},

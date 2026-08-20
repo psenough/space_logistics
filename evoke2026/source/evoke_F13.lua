@@ -129,21 +129,28 @@ function E13_UpdateShips(dtMS)
 	end
 end
 
-function E13_RenderShips()
+function E13_RenderShips(somaticState, sceneTime)
+	local shipRotation = math.pi/2
+	local b = max(0, sceneTime.demoBeats - 23)
+	if b > 0 then
+		shipRotation = math.pi/2 + (b * 1.2)
+	end
 	for _, ship in ipairs(E13_ships) do
 		E13_RenderContrails(ship)
 		--drawSpriteRotated90(ship.shipDef.sprite, ship.x, ship.y)
-        fillSpriteRotated90WithDither(ship.shipDef.sprite, ship.x, ship.y, ship.gradient, ship.fill01)
+        --fillSpriteRotated90WithDither(ship.shipDef.sprite, ship.x, ship.y, ship.gradient, ship.fill01)
+		drawSpriteWithRotationAsMaskAndDither(ship.shipDef.sprite, ship.x, ship.y, ship.gradient, ship.fill01, shipRotation)
 	end
 end
 
 function E13_RenderTitle(seqItem, fadeIn01)
 	local logX = 5
 	local logY = 10
-	drawSpriteDitheredWithBackground("TEvoke_SpaceAirline_02",logX+189,logY-4, fadeIn01)
+	drawSpriteDitheredWithBackground("TEvoke_SpaceAirline_02",logX+189,logY-4, 1) -- little bits
+	drawSpriteDitheredWithBackgroundFlippedHV("TEvoke_SpaceAirline_02",-20,120, 1) -- little bits
 	drawSpriteDitheredWithBackground("TEvoke_SpaceAirline_03",logX+168,logY+27, fadeIn01)
 	drawSpriteDitheredWithBackground("TEvoke_SpaceAirline_04",logX+0,logY+10, fadeIn01)
-	--drawSpriteDitheredWithBackground("TEvoke_SpaceAirline_01",logX+30,logY+20, fadeIn01)
+	--drawSpriteDitheredWithBackground("TEvoke_SpaceAirline_01",logX+30,logY+20, fadeIn01) -- text logo
 end
 
 function Evoke13Init()
@@ -160,10 +167,12 @@ end
 
 function Evoke13Tick(_, _, somaticState, sceneTime)
 	cls(8)
+	AddHudMessage(string.format("sceneBeat: %.2f", sceneTime.demoBeats))
 
 	--drawSprite("TEvoke_bg",0,0)
 	E13_RenderTitle(sceneTime, 0.5)
+	--E13_RenderTitle(sceneTime, 1)
 
 	E13_UpdateShips(somaticState.demoDeltaMillis)
-	E13_RenderShips()
+	E13_RenderShips(somaticState, sceneTime)
 end

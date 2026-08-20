@@ -18,6 +18,74 @@ Solo_orbitFx = nil
 Solo_orbitBaseInclination = nil
 Solo_shapes = nil
 
+-- because i will change the max row count i need to accumulate emitted cell coords rather than calculate realtime
+Solo_lastShapeEmissionColumn = nil
+Solo_lastShapeEmissionRow = nil
+
+function Solo_EmitShape(maxRows, sceneTime)
+    local areaX = 19
+    local areaY = 11
+    local areaW = 160
+    local eventsPerRow = 17
+    local eventWidth = 7-- areaW / eventsPerRow // 1
+    local eventStrideX = 8
+    local eventHeight = 4-- eventWidth
+    local eventStrideY = 4
+    --local eventSeq = #Solo_shapes -- melEvent.count - 1
+    --local row = ((eventSeq / eventsPerRow) // 1) % maxRows
+    --local col = eventSeq % eventsPerRow
+
+    -- advance & find a column/row for this shape
+
+
+    if Solo_lastShapeEmissionColumn == nil then
+        Solo_lastShapeEmissionColumn = 0
+        Solo_lastShapeEmissionRow = 0
+    else
+        Solo_lastShapeEmissionColumn = Solo_lastShapeEmissionColumn + 1
+        if Solo_lastShapeEmissionColumn >= eventsPerRow then
+            Solo_lastShapeEmissionColumn = 0
+            Solo_lastShapeEmissionRow = (Solo_lastShapeEmissionRow + 1) % maxRows
+        end
+    end
+
+    local col = Solo_lastShapeEmissionColumn
+    local row = Solo_lastShapeEmissionRow
+
+    local x = areaX + col * eventStrideX
+    local y = areaY + row * eventStrideY
+    local color = math.random(2,11)
+    local startSceneBeat = sceneTime.demoBeats
+    -- add a rect
+    Solo_shapes[#Solo_shapes+1] = {
+        fn = function (somaticState, sceneTime)
+            --rect(x, y, 15, 15, color)
+            local age = sceneTime.demoBeats - startSceneBeat
+            -- rev lerp over 4 beats to fade out
+            local fadeT = 1 - (age / 8)
+            if fadeT < -1 then -- let go into negative to allow beat pulses to revive it.
+                -- remove this; assume this is the first shape in the list (oldest)
+                table.remove(Solo_shapes, 1)
+            else
+                --fadeT = fadeT ^ 2
+                -- pulse on beat.
+                local pulseT = ((sceneTime.demoBeats + 1) % 2)
+                pulseT = pulseT ^ 2
+                pulseT = 1 - pulseT
+                pulseT = pulseT * 0.3
+                fadeT = (fadeT * 1.25) + pulseT -- make pop more on beat
+                fadeT = clamp01(fadeT) ^ 2
+                rectWithFadeToBlack(x, y, eventWidth, eventHeight, color, fadeT)
+                -- make it appear to have small corner radius.
+                pix(x, y, 0)
+                pix(x + eventWidth - 1, y, 0)
+                pix(x, y + eventHeight - 1, 0)
+                pix(x + eventWidth - 1, y + eventHeight - 1, 0)
+            end
+        end
+    }
+end
+
 Solo_sequenceDef = {
     {
         tick = function(seqItem, somaticState, seqTiming)
@@ -51,49 +119,18 @@ Solo_sequenceDef = {
 
             -- draw geometry.
             local melEvent = QuerySideChannelPart(somaticState, "melody")
-            if melEvent.justHit then
+            local emitCount = melEvent.justHit and 1 or 0
 
-                local areaX = 19
-                local areaY = 11
-                local areaW = 160
-                local eventsPerRow = 17
-                local maxRows = 3
-                local eventWidth = 7-- areaW / eventsPerRow // 1
-                local eventStrideX = 8
-                local eventHeight = 4-- eventWidth
-                local eventStrideY = 4
-                local eventSeq = melEvent.count - 1
-                local row = ((eventSeq / eventsPerRow) // 1) % maxRows
-                local col = eventSeq % eventsPerRow
-                local x = areaX + col * eventStrideX
-                local y = areaY + row * eventStrideY
-                local color = math.random(2,11)
-                local startSceneBeat = sceneTime.demoBeats
-                -- add a rect
-                Solo_shapes[#Solo_shapes+1] = {
-                    fn = function (somaticState, sceneTime)
-                        --rect(x, y, 15, 15, color)
-                        local age = sceneTime.demoBeats - startSceneBeat
-                        -- rev lerp over 4 beats to fade out
-                        local fadeT = 1 - (age / 8)
-                        if fadeT > -1 then
-                            --fadeT = fadeT ^ 2
-                            -- pulse on beat.
-                            local pulseT = ((sceneTime.demoBeats + 1) % 2)
-                            pulseT = pulseT ^ 2
-                            pulseT = 1 - pulseT
-                            pulseT = pulseT * 0.3
-                            fadeT = (fadeT * 1.25) + pulseT -- make pop more on beat
-                            fadeT = clamp01(fadeT) ^ 2
-                            rectWithFadeToBlack(x, y, eventWidth, eventHeight, color, fadeT)
-                            -- make it appear to have small corner radius.
-                            pix(x, y, 0)
-                            pix(x + eventWidth - 1, y, 0)
-                            pix(x, y + eventHeight - 1, 0)
-                            pix(x + eventWidth - 1, y + eventHeight - 1, 0)
-                        end
-                    end
-                }
+            local maxRows = 3
+
+            -- after trill note, emit on every row and ignore row max
+            if sceneTime.demoBeats > 64 and sceneTime.demoBeats <= 69 then
+                maxRows = 100
+                emitCount = 3
+            end
+
+            for i=1, emitCount do
+                Solo_EmitShape(maxRows, sceneTime)
             end
         end
     }
@@ -113,11 +150,17 @@ function SoloInit()
     })
 	Solo_orbitBaseInclination = Solo_orbitFx.biasInclination
     Solo_shapes = {}
+    Solo_lastShapeEmissionColumn = nil
+    Solo_lastShapeEmissionRow = nil
 end
+
+
 
 function SoloTick(_, _, somaticState, sceneTime)
 	cls()
 	drawSprite("EHUD_HUD",0,0)
+
+    AddHudMessage(string.format("sceneBeat=%.2f", sceneTime.demoBeats))
 
     --"tic assist" corner.
 	drawSprite("EHUD_TicA_extra",188,14)
@@ -134,8 +177,8 @@ function SoloTick(_, _, somaticState, sceneTime)
     -- not only for animation; this is required to call this to make sure new particles have computed fields.
     SetParticleOrbitEffectBias(Solo_orbitFx, Solo_orbitBaseInclination + sin(sceneTime.wallMillis * 0.001) * 0.1, Solo_orbitFx.biasAscendingNode, 0.995)
     UpdateParticleOrbitEffect(Solo_orbitFx)
-    RenderParticleOrbitEffect(Solo_orbitFx, 87,64+25, false)
-    RenderParticleOrbitEffect(Solo_orbitFx, 87,64+25, true)
+    RenderParticleOrbitEffect(Solo_orbitFx, 87,64+30, false)
+    RenderParticleOrbitEffect(Solo_orbitFx, 87,64+30, true)
 
     -- render shapes.
     for i, shape in ipairs(Solo_shapes) do
@@ -143,10 +186,10 @@ function SoloTick(_, _, somaticState, sceneTime)
     end
 
     -- // todo dancing spaceships along top 80 px of hud area
-    if sceneTime.demoBeats > 8 then
-        drawSpriteWithRotationAsMask(TEvoke_ships[1][4], 45, 45, sceneTime.demoMillis * 0.003, 3)
-        drawSpriteWithRotationAsMask(TEvoke_ships[2][4], 107, 30, sceneTime.demoMillis * -0.001, 5)
-    end
+    -- if sceneTime.demoBeats > 8 then
+    --     drawSpriteWithRotationAsMask(TEvoke_ships[1][4], 45, 45, sceneTime.demoMillis * 0.003, 3)
+    --     drawSpriteWithRotationAsMask(TEvoke_ships[2][4], 107, 30, sceneTime.demoMillis * -0.001, 5)
+    -- end
 
     DrawMarchingAntsRect(8, 9, 156, 113, 4, sceneTime.demoMillis * 0.01, 7, 0)
 

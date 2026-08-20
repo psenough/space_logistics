@@ -786,3 +786,34 @@ function FillRectDitheredTransparencyPerColumn(x,y,w,h, fgColor, columnFillAmt01
 		end
 	end)
 end
+
+-- angle is in radians
+-- returns equivalent angle but closest to target.
+function UnwrapAngleNear(value, target)
+	return value + (target - value + math.pi) % (2 * math.pi) - math.pi
+end
+
+-- springParams = { response = 0.5, dampingRatio = 0.5 }
+function AdvanceSpring(value, velocity, target, springParams, dx, maxStepX)
+	maxStepX = maxStepX or 1
+	if springParams.response <= 0 then
+		return target, 0
+	end
+	if dx <= 0 then
+		return value, velocity
+	end
+
+	local stepCount = math.max(1, math.ceil(dx / maxStepX))
+	local dt = dx / stepCount
+	local omega = 6.283 / springParams.response
+	local stiffness = omega * omega
+	local drag = 2 * springParams.dampingRatio * omega
+
+	for _=1, stepCount do
+		local acceleration = (target - value) * stiffness - velocity * drag
+		velocity = velocity + acceleration * dt
+		value = value + velocity * dt
+	end
+
+	return value, velocity
+end

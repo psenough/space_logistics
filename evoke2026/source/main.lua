@@ -18,6 +18,7 @@
 --#include "source/frame09_calls.lua"
 --#include "source/title_evoke_calls.lua"
 --#include "source/evoke_hud_calls.lua"
+--#include "source/evoke_solo_dance.lua"
 --#include "source/evoke_solo_hud.lua"
 --#include "source/evoke_coda.lua"
 --#include "source/evoke_F13.lua"

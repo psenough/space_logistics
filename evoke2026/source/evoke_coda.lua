@@ -107,7 +107,9 @@ function EvokeCodaTick(_, _, somaticState, sceneTiming)
         end
     end
 
+    --#ifdef DEBUG
     AddHudMessage(string.format("sceneTiming.demoBeats = %f", sceneTiming.demoBeats))
+    --#endif
 
     drawSprite("SPRITE_TICKETBG", 0, 9)
 
@@ -128,8 +130,6 @@ function EvokeCodaTick(_, _, somaticState, sceneTiming)
     -- "boarding pass" is part of the background; reveal it under a rect.
     local boardingPassRevealX = TEvoke_shipsHoriz[4][6]
     rect(max(50, boardingPassRevealX), 111, 187, 12,15)
-
-    --AddHudMessage(string.format("eventcount = %d", event.count))
 
     local cha = QuerySideChannelPart(somaticState, "cha")
     if cha.count == 1 or cha.count == 3 then

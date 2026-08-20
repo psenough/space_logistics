@@ -5,6 +5,8 @@ Solo_particleGradients = {
 	{1,1,2,3,4},-- red-yellow
 }
 
+Solo_starfieldGradient =  { 0, 8, 15, 9 }
+
 
 Solo_darkGrayGradient = { 15,15,15, 15, 14 } -- grayscale (+12 bright white)
 Solo_grayGradient = { 0,15,15, 15, 14, 13 } -- grayscale (+12 bright white)
@@ -136,6 +138,9 @@ Solo_sequenceDef = {
     }
 }
 
+Solo_Stars = {}
+Solo_StarSequence = 0
+
 function SoloInit()
     Solo_sequencer = CreateSequencer(Solo_sequenceDef)
     Solo_orbitFx = CreateParticleOrbitEffect({
@@ -152,15 +157,57 @@ function SoloInit()
     Solo_shapes = {}
     Solo_lastShapeEmissionColumn = nil
     Solo_lastShapeEmissionRow = nil
+    EvokeSoloDanceInit()
+
+    Solo_Stars = {}
+    Solo_StarSequence = 0
 end
 
+Solo_StarfieldArea = { x=9, y=9, w=156, h=90 }
 
+function Solo_EmitStar(somaticState, sceneTime)
+    -- take next y position.
+    local distRand = math.random()
+    local y01 = math.random()
+    local star = {
+        x = Solo_StarfieldArea.x,
+        y = Solo_StarfieldArea.y + y01 * Solo_StarfieldArea.h,
+        speed = lerpScalar(0.02, 0.08, distRand) * 0.5,
+        strength = lerpScalar(0.5, 1.0, distRand),
+    }
+
+    -- diminish strength as y increases.
+    star.strength = star.strength * (1 - y01 ^ 3  * 0.5)
+
+    Solo_Stars[#Solo_Stars + 1] = star
+    Solo_StarSequence = Solo_StarSequence + 1
+end
+
+function Solo_UpdateStars(somaticState, sceneTime)
+    for i=#Solo_Stars,1,-1 do
+        local star = Solo_Stars[i]
+        star.x = star.x + star.speed * somaticState.demoDeltaMillis
+        if star.x > Solo_StarfieldArea.x + Solo_StarfieldArea.w then
+            table.remove(Solo_Stars, i)
+        end
+    end
+end
+
+function Solo_RenderStars()
+    local lineLength = 12
+    for i, star in ipairs(Solo_Stars) do
+        hlineBayerGradient(star.x - lineLength, star.x, star.y, Solo_starfieldGradient, 0,star.strength)-- star.strength)
+        --hlineBayerGradient(10,90, 20, Solo_starfieldGradient, 1,1)-- star.strength)
+    end
+end
 
 function SoloTick(_, _, somaticState, sceneTime)
 	cls()
 	drawSprite("EHUD_HUD",0,0)
 
-    AddHudMessage(string.format("sceneBeat=%.2f", sceneTime.demoBeats))
+    --#ifdef DEBUG
+    AddHudMessage(string.format("sceneBeat=%.2f starcount=%d", sceneTime.demoBeats, #Solo_Stars))
+    --#endif
 
     --"tic assist" corner.
 	drawSprite("EHUD_TicA_extra",188,14)
@@ -168,11 +215,22 @@ function SoloTick(_, _, somaticState, sceneTime)
 	local spr_id1 = "EHUD_TicA_"..string.format("%02d", id)
 	drawSprite(spr_id1,191,24)
 
+    Solo_UpdateStars(somaticState, sceneTime)
+
+    if somaticState.demoDeltaMillis > 0 and math.random() < 0.03 then -- don't emit during pause.
+        Solo_EmitStar(somaticState, sceneTime)
+    end
+    Solo_RenderStars()
 
     -- melody line
     --local logoFlash = QuerySideChannelPart(somaticState, "melody")
 
     UpdateSequencer(Solo_sequencer, somaticState, sceneTime)
+
+    -- render shapes behind the orbit particle system
+    for i, shape in ipairs(Solo_shapes) do
+        shape.fn(somaticState, sceneTime)
+    end
 
     -- not only for animation; this is required to call this to make sure new particles have computed fields.
     SetParticleOrbitEffectBias(Solo_orbitFx, Solo_orbitBaseInclination + sin(sceneTime.wallMillis * 0.001) * 0.1, Solo_orbitFx.biasAscendingNode, 0.995)
@@ -180,16 +238,7 @@ function SoloTick(_, _, somaticState, sceneTime)
     RenderParticleOrbitEffect(Solo_orbitFx, 87,64+30, false)
     RenderParticleOrbitEffect(Solo_orbitFx, 87,64+30, true)
 
-    -- render shapes.
-    for i, shape in ipairs(Solo_shapes) do
-        shape.fn(somaticState, sceneTime)
-    end
-
-    -- // todo dancing spaceships along top 80 px of hud area
-    -- if sceneTime.demoBeats > 8 then
-    --     drawSpriteWithRotationAsMask(TEvoke_ships[1][4], 45, 45, sceneTime.demoMillis * 0.003, 3)
-    --     drawSpriteWithRotationAsMask(TEvoke_ships[2][4], 107, 30, sceneTime.demoMillis * -0.001, 5)
-    -- end
+    EvokeSoloDanceTick(somaticState, sceneTime)
 
     DrawMarchingAntsRect(8, 9, 156, 113, 4, sceneTime.demoMillis * 0.01, 7, 0)
 

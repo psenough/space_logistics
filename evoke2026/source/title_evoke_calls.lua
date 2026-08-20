@@ -229,9 +229,9 @@ function TEvoke(tt, _, somaticState, sceneTime)
 
 	-- add twinkles on every beat.
 	local twinkleStartBeat = TEvoke_variation == "intro" and 10 or 0
-	AddHudMessage(string.format("variation:%s", TEvoke_variation))
-	AddHudMessage(string.format("twinkleStartBeat:%d", twinkleStartBeat))
-	AddHudMessage(string.format("demoBeats:%.2f", sceneTime.demoBeats))
+	-- AddHudMessage(string.format("variation:%s", TEvoke_variation))
+	-- AddHudMessage(string.format("twinkleStartBeat:%d", twinkleStartBeat))
+	-- AddHudMessage(string.format("demoBeats:%.2f", sceneTime.demoBeats))
 	if sceneTime.demoBeats > twinkleStartBeat then
 		local ibeat = (sceneTime.demoBeats - 1) // 2 -- offset 1 beat so it's upbeats; //2 for every other. now it follows snare.
 		if ibeat > TEvoke_lastBeat then

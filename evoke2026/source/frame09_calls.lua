@@ -288,7 +288,7 @@ end
 
 function Frame09(_, demoBeat, somaticState, sceneTiming)
 	local t = sceneTiming.demoMillis
-	AddHudMessage(string.format("sceneBeat: %.2f", sceneTiming.demoBeats))
+	--AddHudMessage(string.format("sceneBeat: %.2f", sceneTiming.demoBeats))
 
 	vbank(0)
 
@@ -297,7 +297,7 @@ function Frame09(_, demoBeat, somaticState, sceneTiming)
 
 	-- animate the conveyor.
 	UpdateSequencer(F09_conveyorSequencer, somaticState, sceneTiming)
-	AddHudMessage(string.format("conveyor.x: %d", F09_conveyorState.x // 1))
+	--AddHudMessage(string.format("conveyor.x: %d", F09_conveyorState.x // 1))
 	if F09_variation == "greetz" then
 		F09_conveyor(F09_conveyorState.x)
 	else

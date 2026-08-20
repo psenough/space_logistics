@@ -359,7 +359,7 @@ function drawSpriteDitheredWithBackgroundFlippedHV(spr_id, posx, posy, t01)
 end
 
 -- posx/posy place the unrotated top-left; rotation pivots around the sprite center.
--- fn gets (x,y,col); returns nil to skip, or a color to draw.
+-- fn gets (localX, localY, col, screenX, screenY); returns nil to skip, or a color to draw.
 -- background is always transparent; does not call fn.
 function visitSpritePixelsWithRotation(spr_id, posx, posy, a, fn)
 	local clipRect = GetCurrentClipRect()
@@ -367,8 +367,6 @@ function visitSpritePixelsWithRotation(spr_id, posx, posy, a, fn)
 	local h = sprites[spr_id].h // 1
 	local c = sprites[spr_id].data
 	local bkg = sprites[spr_id].bg
-	posx = posx // 1
-	posy = posy // 1
 
 	local cx = w/2
 	local cy = h/2
@@ -377,31 +375,32 @@ function visitSpritePixelsWithRotation(spr_id, posx, posy, a, fn)
 	local sis = math.sin(a)*s
 	local halfBoundsW = (math.abs(cas)*w + math.abs(sis)*h)/2
 	local halfBoundsH = (math.abs(sis)*w + math.abs(cas)*h)/2
-	local x0 = max(ceil(cx-halfBoundsW-0.5), ceil(-posx)) // 1
-	local x1 = min(ceil(cx+halfBoundsW-0.5), ceil(TIC_WIDTH()-posx)) // 1
-	local y0 = max(ceil(cy-halfBoundsH-0.5), ceil(-posy)) // 1
-	local y1 = min(ceil(cy+halfBoundsH-0.5), ceil(TIC_HEIGHT()-posy)) // 1
+	local x0 = max(ceil(cx-halfBoundsW-0.5), ceil(-posx))
+	local x1 = min(ceil(cx+halfBoundsW-0.5), ceil(TIC_WIDTH()-posx))
+	local y0 = max(ceil(cy-halfBoundsH-0.5), ceil(-posy))
+	local y1 = min(ceil(cy+halfBoundsH-0.5), ceil(TIC_HEIGHT()-posy))
 
 	for x=x0,x1-1 do
 		local dx=x+0.5-cx
 		local cdx = cx+cas*dx
 		local sdy = cy-sis*dx
 		-- skip when out of clip rect.
-		if x >= clipRect.x and x < clipRect.x + clipRect.w then
+		local screenX = (posx+x) // 1
+		if screenX >= clipRect.x and screenX < clipRect.x + clipRect.w then
 			for y=y0,y1-1 do
 				local dy=y+0.5-cy
 				local u = (cdx+sis*dy)//1
 				local v = (sdy+cas*dy)//1
 				if (u >= 0) and (u < w) and (v >= 0) and (v < h) then
 					-- clip rect.
-					if y >= clipRect.y and y < clipRect.y + clipRect.h then
+					local screenY = (posy+y) // 1
+					if screenY >= clipRect.y and screenY < clipRect.y + clipRect.h then
 						local col = c[u+v*w]
 						if col ~= bkg then
-							local result = fn(x, y, col)
+							local result = fn(x, y, col, screenX, screenY)
 							if result ~= nil then
-								pix(posx+x, posy+y, result)
+								pix(screenX, screenY, result)
 							end
-							--pix(posx+x,posy+y,col)
 						end
 					end
 				end
@@ -431,10 +430,10 @@ function drawSpriteWithRotationAsMaskAndDither(spr_id, posx, posy, gradient, fil
 	local gradientColor = gradient[gradientIndex]
 	local nextGradientColor = gradient[gradientIndex + 1]
 	local blend01 = gradientPos - (gradientIndex - 1)
-	visitSpritePixelsWithRotation(spr_id, posx, posy, a, function(x, y, col)
+	visitSpritePixelsWithRotation(spr_id, posx, posy, a, function(x, y, col, sx, sy)
 		local pixelColor = gradientColor
 		if nextGradientColor ~= nil then
-			local bayer = BAYER_MINUS_5[y * TIC_WIDTH() + x]
+			local bayer = BAYER_MINUS_5[sy * TIC_WIDTH() + sx]
 			if blend01 + bayer >= 0.5 then
 				pixelColor = nextGradientColor
 			end

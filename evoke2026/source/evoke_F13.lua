@@ -177,7 +177,7 @@ end
 
 function Evoke13Tick(_, _, somaticState, sceneTime)
 	cls(8)
-	AddHudMessage(string.format("sceneBeat: %.2f", sceneTime.demoBeats))
+	--AddHudMessage(string.format("sceneBeat: %.2f", sceneTime.demoBeats))
 
 	--drawSprite("TEvoke_bg",0,0)
 	E13_RenderTitle(sceneTime, 0.5)

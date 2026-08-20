@@ -57,10 +57,10 @@ Solo_sequenceDef = {
                 local areaY = 11
                 local areaW = 160
                 local eventsPerRow = 17
-                local maxRows = 4
+                local maxRows = 3
                 local eventWidth = 7-- areaW / eventsPerRow // 1
                 local eventStrideX = 8
-                local eventHeight = 3-- eventWidth
+                local eventHeight = 4-- eventWidth
                 local eventStrideY = 4
                 local eventSeq = melEvent.count - 1
                 local row = ((eventSeq / eventsPerRow) // 1) % maxRows
@@ -77,14 +77,20 @@ Solo_sequenceDef = {
                         -- rev lerp over 4 beats to fade out
                         local fadeT = 1 - (age / 8)
                         if fadeT > -1 then
-                            fadeT = fadeT ^ 2
+                            --fadeT = fadeT ^ 2
                             -- pulse on beat.
                             local pulseT = ((sceneTime.demoBeats + 1) % 2)
                             pulseT = pulseT ^ 2
                             pulseT = 1 - pulseT
-                            pulseT = pulseT * 0.5
-                            fadeT = fadeT + pulseT
+                            pulseT = pulseT * 0.3
+                            fadeT = (fadeT * 1.25) + pulseT -- make pop more on beat
+                            fadeT = clamp01(fadeT) ^ 2
                             rectWithFadeToBlack(x, y, eventWidth, eventHeight, color, fadeT)
+                            -- make it appear to have small corner radius.
+                            pix(x, y, 0)
+                            pix(x + eventWidth - 1, y, 0)
+                            pix(x, y + eventHeight - 1, 0)
+                            pix(x + eventWidth - 1, y + eventHeight - 1, 0)
                         end
                     end
                 }

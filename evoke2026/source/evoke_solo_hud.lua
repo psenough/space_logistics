@@ -31,8 +31,8 @@ function Solo_EmitShape(maxRows, sceneTime)
     local eventsPerRow = 17
     local eventWidth = 7-- areaW / eventsPerRow // 1
     local eventStrideX = 8
-    local eventHeight = 4-- eventWidth
-    local eventStrideY = 4
+    local eventHeight = 7-- eventWidth
+    local eventStrideY = 8
     --local eventSeq = #Solo_shapes -- melEvent.count - 1
     --local row = ((eventSeq / eventsPerRow) // 1) % maxRows
     --local col = eventSeq % eventsPerRow
@@ -77,12 +77,36 @@ function Solo_EmitShape(maxRows, sceneTime)
                 pulseT = pulseT * 0.3
                 fadeT = (fadeT * 1.25) + pulseT -- make pop more on beat
                 fadeT = clamp01(fadeT) ^ 2
-                rectWithFadeToBlack(x, y, eventWidth, eventHeight, color, fadeT)
-                -- make it appear to have small corner radius.
-                pix(x, y, 0)
-                pix(x + eventWidth - 1, y, 0)
-                pix(x, y + eventHeight - 1, 0)
-                pix(x + eventWidth - 1, y + eventHeight - 1, 0)
+                rectWithFadeToBlack(x, y, eventWidth, 6, color, fadeT) -- uh does this render wrong dimensions ? 
+                -- carve out a 7x7 heart
+                --          .xx.xx.   1,2,3
+                --          xxxxxxx
+                --          xxxxxxx
+                --          .xxxxx.   4,5
+                --          ..xxx..   6,7, 8,9
+                --          ...x...
+                pix(x, y, 0) -- 1
+                pix(x + 3, y, 0) -- 2
+                pix(x + 6, y, 0) -- 3
+
+                pix(x, y + 3, 0) -- 4
+                pix(x + 6, y + 3, 0) -- 5
+
+                pix(x + 0, y + 4, 0) -- 6
+                pix(x + 1, y + 4, 0) -- 7
+                pix(x + 5, y + 4, 0) -- 8
+                pix(x + 6, y + 4, 0) -- 9
+
+                pix(x + 0, y + 5, 0)
+                pix(x + 1, y + 5, 0)
+                pix(x + 2, y + 5, 0)
+                pix(x + 4, y + 5, 0)
+                pix(x + 5, y + 5, 0)
+                pix(x + 6, y + 5, 0)
+
+                -- pix(x + eventWidth - 1, y, 0)
+                -- pix(x, y + eventHeight - 1, 0)
+                -- pix(x + eventWidth - 1, y + eventHeight - 1, 0)
             end
         end
     }
@@ -123,12 +147,12 @@ Solo_sequenceDef = {
             local melEvent = QuerySideChannelPart(somaticState, "melody")
             local emitCount = melEvent.justHit and 1 or 0
 
-            local maxRows = 3
+            local maxRows = 1
 
             -- after trill note, emit on every row and ignore row max
             if sceneTime.demoBeats > 64 and sceneTime.demoBeats <= 69 then
                 maxRows = 100
-                emitCount = 3
+                emitCount = 4
             end
 
             for i=1, emitCount do
@@ -240,7 +264,8 @@ function SoloTick(_, _, somaticState, sceneTime)
 
     EvokeSoloDanceTick(somaticState, sceneTime)
 
-    DrawMarchingAntsRect(8, 9, 156, 113, 4, sceneTime.demoMillis * 0.01, 7, 0)
+    -- too busy.
+    --DrawMarchingAntsRect(8, 9, 156, 113, 4, sceneTime.demoMillis * 0.01, 7, 0)
 
 end
 

@@ -34,7 +34,7 @@ Solo_sequenceDef = {
     },
     {
         trigger = SeqTriggerOnSideChannel("melody"), -- when melody starts, fade in orbit particle system
-        tick = function(seqItem, somaticState, seqTiming)
+        tick = function(seqItem, somaticState, seqTiming, sceneTime)
 
             -- update orbit particle effect.
             local targetCount = 1500
@@ -52,13 +52,42 @@ Solo_sequenceDef = {
             -- draw geometry.
             local melEvent = QuerySideChannelPart(somaticState, "melody")
             if melEvent.justHit then
-                local x = math.random(0, 100)
-                local y = math.random(0, 100)
-                local color = math.random(1, 15)
+
+                local areaX = 19
+                local areaY = 11
+                local areaW = 160
+                local eventsPerRow = 17
+                local maxRows = 4
+                local eventWidth = 7-- areaW / eventsPerRow // 1
+                local eventStrideX = 8
+                local eventHeight = 3-- eventWidth
+                local eventStrideY = 4
+                local eventSeq = melEvent.count - 1
+                local row = ((eventSeq / eventsPerRow) // 1) % maxRows
+                local col = eventSeq % eventsPerRow
+                local x = areaX + col * eventStrideX
+                local y = areaY + row * eventStrideY
+                local color = math.random(2,11)
+                local startSceneBeat = sceneTime.demoBeats
                 -- add a rect
-                Solo_shapes[#Solo_shapes+1] = function ()
-                    rect(x, y, 15, 15, color)
-                end
+                Solo_shapes[#Solo_shapes+1] = {
+                    fn = function (somaticState, sceneTime)
+                        --rect(x, y, 15, 15, color)
+                        local age = sceneTime.demoBeats - startSceneBeat
+                        -- rev lerp over 4 beats to fade out
+                        local fadeT = 1 - (age / 8)
+                        if fadeT > -1 then
+                            fadeT = fadeT ^ 2
+                            -- pulse on beat.
+                            local pulseT = ((sceneTime.demoBeats + 1) % 2)
+                            pulseT = pulseT ^ 2
+                            pulseT = 1 - pulseT
+                            pulseT = pulseT * 0.5
+                            fadeT = fadeT + pulseT
+                            rectWithFadeToBlack(x, y, eventWidth, eventHeight, color, fadeT)
+                        end
+                    end
+                }
             end
         end
     }
@@ -103,9 +132,9 @@ function SoloTick(_, _, somaticState, sceneTime)
     RenderParticleOrbitEffect(Solo_orbitFx, 87,64+25, true)
 
     -- render shapes.
-    -- for i, shapeFunc in ipairs(Solo_shapes) do
-    --     shapeFunc()
-    -- end
+    for i, shape in ipairs(Solo_shapes) do
+        shape.fn(somaticState, sceneTime)
+    end
 
     -- // todo dancing spaceships along top 80 px of hud area
     if sceneTime.demoBeats > 8 then

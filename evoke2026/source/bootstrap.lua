@@ -748,6 +748,27 @@ function VisitFilledRect(x, y, w, h, callback)
 	end
 end
 
+function rectWithFadeToBlack(x, y, w, h, col, fadeIn01)
+	local grad = G_DarkeningGradients[(col // 1) + 1]
+	local gradCount = #grad
+	local gradPos = clamp01(fadeIn01) * (gradCount - 1)
+	local gradIndex = (gradPos // 1) + 1
+	local color = grad[gradIndex]
+	if gradIndex == gradCount then
+		rect(x, y, w, h, color)
+		return
+	end
+	local blend01 = gradPos - (gradIndex - 1)
+	VisitFilledRect(x, y, w, h, function(sx, sy, col, row, x01, y01)
+		local bayer = BAYER_MINUS_5[sy * TIC_WIDTH() + sx] -- in -0.5..0.5
+		if blend01 + bayer >= 0.5 then
+			pix(sx, sy, grad[gradIndex + 1])
+		else
+			pix(sx, sy, color)
+		end
+	end)
+end
+
 -- columnFillAmt01Func is a function that takes:
 -- - column index (0..w-1)
 -- - normalized column index (0..1)

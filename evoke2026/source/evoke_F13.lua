@@ -137,9 +137,19 @@ function E13_RenderShips(somaticState, sceneTime)
 	end
 	for _, ship in ipairs(E13_ships) do
 		E13_RenderContrails(ship)
+		local sprite = sprites[ship.shipDef.sprite]
+		-- keep anchored
+		local rotationAnchorOffset = (sprite.h - sprite.w) // 2
 		--drawSpriteRotated90(ship.shipDef.sprite, ship.x, ship.y)
         --fillSpriteRotated90WithDither(ship.shipDef.sprite, ship.x, ship.y, ship.gradient, ship.fill01)
-		drawSpriteWithRotationAsMaskAndDither(ship.shipDef.sprite, ship.x, ship.y, ship.gradient, ship.fill01, shipRotation)
+		drawSpriteWithRotationAsMaskAndDither(
+			ship.shipDef.sprite,
+			ship.x + rotationAnchorOffset,
+			ship.y - rotationAnchorOffset,
+			ship.gradient,
+			ship.fill01,
+			shipRotation
+		)
 	end
 end
 

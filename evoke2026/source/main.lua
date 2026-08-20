@@ -50,7 +50,7 @@ scenes = {
 		row = 0,
 	},
 	{
-		init = Frame09_init,
+		init = function() Frame09_init("greetz") end,
 		frame = Frame09, -- xray luggage
 		name = "Frame09",
 		bdr = no_fn,
@@ -98,7 +98,7 @@ scenes = {
 		row = 0,
 	},
 	{-- B section melody: baggage variation
-		init = Frame09_init,
+		init = function() Frame09_init("solo") end,
 		frame = Frame09, -- xray luggage
 		name = "Frame09",
 		bdr = no_fn,
@@ -354,7 +354,11 @@ function DemoTIC()
 	if keyp(55) or btnp(3) then -- right
 		if key(KEY_CTRL()) then -- ctrl
 			-- within scene seek beats.
-			somatic_seek(state.demoBeats + 8) -- beats
+			if key(KEY_SHIFT()) then
+				somatic_seek(state.demoBeats + 1) -- fine beats
+			else
+				somatic_seek(state.demoBeats + 8) -- beats
+			end
 		else
 			SetScene(current_scene_id + 1, true)
 		end
@@ -362,7 +366,11 @@ function DemoTIC()
 	if keyp(54) or btnp(2) then -- left
 		if key(KEY_CTRL()) then -- ctrl
 			-- within scene seek beats.
-			somatic_seek(state.demoBeats - 8) -- beats
+			if key(KEY_SHIFT()) then
+				somatic_seek(state.demoBeats - 1) -- fine beats
+			else
+				somatic_seek(state.demoBeats - 8) -- beats
+			end
 		else
 			SetScene(current_scene_id - 1, true)
 		end

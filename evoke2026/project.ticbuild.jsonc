@@ -1,7 +1,7 @@
 {
     "$schema": "./.ticbuild/ticbuild.schema.json",
     "project": {
-        "name": "space_logistics",
+        "name": "space_airlines_checking_in",
         "importDirs": [
             "assets"
         ],
@@ -13,7 +13,7 @@
         "outputCartName": "$(project.name).tic",
         "metadata": {
             "title": "$(project.name)",
-            "author": "TPOLM",
+            "author": "Space Logistics",
             "desc": "demo released at Evoke 2026",
             "script": "Lua",
             "version": "1.0.0"

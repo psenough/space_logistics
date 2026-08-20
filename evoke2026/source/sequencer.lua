@@ -70,7 +70,7 @@ function UpdateSequencer(sequencer, somaticState, sceneTiming)
 	sequencer.seqTiming.demoBeats = sceneTiming.demoBeats - sequencer.seqItemStartTiming.demoBeats
 	sequencer.seqTiming.wallMillis = sceneTiming.wallMillis	- sequencer.seqItemStartTiming.wallMillis
 	if seqItem.tick then
-		seqItem.tick(seqItem, somaticState, sequencer.seqTiming)
+		seqItem.tick(seqItem, somaticState, sequencer.seqTiming, sceneTiming)
 	end
 end
 

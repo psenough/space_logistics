@@ -116,12 +116,15 @@ do
 		return x + RngNext(gTwinkleRng, -10, 10), y + RngNext(gTwinkleRng, -10, 10)
 	end
 
-	function AddTwinkle()
+	-- x , y are optional explicit posittions
+	function AddTwinkle(x, y)
 		local isStar = twinkle_current_type == "starz"
 		for i = 1,1 do
-			local x,y = GetLazerScreenPosition()
-			if isStar then
-				x,y = GetRandomScreenPosition()
+			if not x or not y then
+				x,y = GetLazerScreenPosition()
+				if isStar then
+					x,y = GetRandomScreenPosition()
+				end
 			end
 			local gradientRand = RngNext(gTwinkleRng)
 			local lazerSpeedRand = RngNext(gTwinkleRng)

@@ -3,6 +3,7 @@ TEvoke_logoSequencer = nil
 TEvoke_shipSequencer = nil
 TEvoke_titleLogoSequencer = nil
 TEvoke_variation = nil
+TEvoke_lastBeat = 0 -- integral
 
 function TEvoke_drawLogo(y, asMask)
 	local x = 10
@@ -169,6 +170,8 @@ function TEvoke_init(variation)
 	cls()
 	vbank(0)
 
+	TEvoke_lastBeat = 0
+
 	if variation == "intro" then
 		TEvoke_logoSequencer = CreateSequencer(TEvoke_logoSequenceDef_intro)
 		TEvoke_shipSequencer = CreateSequencer(TEvoke_shipSequenceDef_intro)
@@ -180,6 +183,21 @@ function TEvoke_init(variation)
 	end
 
 end
+
+TEvoke_twinkleOnBeatEmissions = {
+	{
+		{20,24},
+		{201,121},
+	},
+	{
+		{204,10},
+		{106, 121} ,
+	},
+	{
+		{135,65},
+		{74, 14} ,
+	},
+}
 
 function TEvoke(tt, _, somaticState, sceneTime)
 	local t = sceneTime.demoMillis
@@ -200,12 +218,30 @@ function TEvoke(tt, _, somaticState, sceneTime)
 	local accent = QuerySideChannelPart(somaticState, "introAccent")
 	--local melodyBEvent = QuerySideChannelPart(somaticState, "melBrhythm")
 	if melodyEvent.justHit and accent.count > 4 then
-		local twinkleCount = 1
+		local twinkleCount = 0 -- nah
 		if accent.count == 5 and accent.justHit then
 			twinkleCount = 15
 		end
 		for i = 1, twinkleCount do
 			AddTwinkle()
+		end
+	end
+
+	-- add twinkles on every beat.
+	local twinkleStartBeat = TEvoke_variation == "intro" and 10 or 0
+	AddHudMessage(string.format("variation:%s", TEvoke_variation))
+	AddHudMessage(string.format("twinkleStartBeat:%d", twinkleStartBeat))
+	AddHudMessage(string.format("demoBeats:%.2f", sceneTime.demoBeats))
+	if sceneTime.demoBeats > twinkleStartBeat then
+		local ibeat = (sceneTime.demoBeats - 1) // 2 -- offset 1 beat so it's upbeats; //2 for every other. now it follows snare.
+		if ibeat > TEvoke_lastBeat then
+			TEvoke_lastBeat = ibeat
+			-- emission
+			local emission = TEvoke_twinkleOnBeatEmissions[1 + (ibeat % #TEvoke_twinkleOnBeatEmissions)]
+			for _, pos in ipairs(emission) do
+				local x, y = pos[1], pos[2]
+				AddTwinkle(x, y)
+			end
 		end
 	end
 

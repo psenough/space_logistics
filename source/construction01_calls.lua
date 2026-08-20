@@ -136,7 +136,7 @@ function Construction01(tt, _, somaticState, sceneTime)
 	if C01_accentY then
 		C01_accentY = C01_accentY * 0.9 -- decay
 	end
-	--#ifdef DEBUG
+	--#if DEBUG
 	-- hit t to manually accent.
 	if keyp(20) then -- T
 		C01_accent()

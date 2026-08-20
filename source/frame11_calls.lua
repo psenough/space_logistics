@@ -206,7 +206,7 @@ function Frame11(tt, demoBeat, somaticState, sceneTiming)
 	
 
 	-- up/down controls intensity.
-	--#ifdef DEBUG
+	--#if DEBUG
 	if keyp(58) or btnp(0) then -- up
 		F11_particleStreakIntensityOverride = min((F11_particleStreakIntensityOverride or F11_particleStreakIntensity) + 0.1, 1.0)
 	end
@@ -271,7 +271,7 @@ function Frame11(tt, demoBeat, somaticState, sceneTiming)
 		screen_glitch(t, 20, glitchAmt)
 	end
 
-	--#ifdef DEBUG
+	--#if DEBUG
 	if show_hud then
 		print(string.format("F11 intensity: %.2f / trans:%.2f (up/down = manual)",
 			effectiveIntensity, transition01), 0, 16, 5)

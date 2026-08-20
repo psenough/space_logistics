@@ -427,7 +427,7 @@ function vlineBayer(x, y1, y2, gradient, brightness)
 	for y = y1, y2 do
 		local row = (y * TIC_WIDTH()) // 1
 		local bayer = BAYER_MINUS_5[row + x]
-		--#ifdef DEBUG
+		--#if DEBUG
 		if bayer == nil then
 			error(string.format("bayer is nil at x=%d, y=%d", x, y))
 		end

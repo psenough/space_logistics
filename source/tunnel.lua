@@ -154,7 +154,7 @@ function tunnel(tt)
 	end
 
 	-- hit t to manually accent.
-	--#ifdef DEBUG
+	--#if DEBUG
 	if keyp(20) then -- T
 		TUNNEL_pulseY = 1
 	end

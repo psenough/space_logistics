@@ -78,7 +78,7 @@ scenes = {
 		bdr = no_fn,
 		start = 4,
 		row = 0,
-		--#ifdef DEBUG
+		--#if DEBUG
 		hmr_get = F02_getHMRState,
 		hmr_set = F02_setHMRState,
 		--#endif
@@ -302,7 +302,7 @@ function BOOT()
 	somatic_set_row_callback(handleSomaticRow)
 end
 
---#ifdef DEBUG
+--#if DEBUG
 -- ticbuild allows HMR for tic80 carts. before the old cart is killed, the tic80 calls the
 -- returned function to get a state snapshot to pass to the next cart.
 function MakeHMRState()
@@ -371,7 +371,7 @@ function HonorHMRState()
 end
 --#endif -- DEBUG
 
---#ifdef DEBUG
+--#if DEBUG
 function AddHudMessage(msg)
 	table.insert(hud_messages, msg)
 end
@@ -440,17 +440,17 @@ function DemoTIC()
 	hud_messages = {}
 	local state = somatic_tick()
 	
-	--#ifdef DEBUG
+	--#if DEBUG
 	HonorHMRState()
 	--#endif
 
+	--#if DEBUG
 	if keyp(55) or btnp(3) then
 		SetScene(current_scene_id + 1, true)
 	end
 	if keyp(54) or btnp(2) then
 		SetScene(current_scene_id - 1, true)
 	end
-	--#ifdef DEBUG
 	if keyp(56) then -- HOME
 		SetScene(1, true)
 	end
@@ -497,7 +497,7 @@ function DemoTIC()
 	end
 
 	--hide cursor
-	--#ifdef DEBUG
+	--#if DEBUG
 	poke(16379, show_hud and 128 or 2) -- show cursor when hud is on
 	--#else
 	poke(16379, 2) -- hide cursor always in release
@@ -520,7 +520,7 @@ function DemoTIC()
 	UpdateSceneTiming(state)
 	scenes[current_scene_id].frame(time(), state.demoBeats, state, scene_timing)
 
-	--#ifdef DEBUG
+	--#if DEBUG
 	if show_hud then
 		RenderHud(state)
 	end

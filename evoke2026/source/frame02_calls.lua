@@ -46,7 +46,7 @@ function Frame02_init()
 	F02_previousI = -1
 end
 
---#ifdef DEBUG
+--#if DEBUG
 function F02_getHMRState()
 	return {
 		idOverride = F02_idOverride,
@@ -134,7 +134,7 @@ function Frame02(t,beats, somaticState)
 
 	local id= F02_idOverride or (beats//8%4)
 
-	--#ifdef DEBUG
+	--#if DEBUG
 	if keyp(28) then -- 1
 		F02_idOverride = 0
 	elseif keyp(29) then -- 2

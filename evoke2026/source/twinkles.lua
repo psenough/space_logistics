@@ -201,7 +201,7 @@ do
 		end
 
 		-- hit t to manually add twinkle.
-		--#ifdef DEBUG
+		--#if DEBUG
 		if keyp(20) then -- T
 			AddTwinkle()
 		end

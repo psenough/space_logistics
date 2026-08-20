@@ -107,7 +107,7 @@ function EvokeCodaTick(_, _, somaticState, sceneTiming)
         end
     end
 
-    --#ifdef DEBUG
+    --#if DEBUG
     AddHudMessage(string.format("sceneTiming.demoBeats = %f", sceneTiming.demoBeats))
     --#endif
 

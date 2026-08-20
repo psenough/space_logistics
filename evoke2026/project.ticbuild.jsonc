@@ -1,7 +1,7 @@
 {
     "$schema": "./.ticbuild/ticbuild.schema.json",
     "project": {
-        "name": "space_airlines_checking_in",
+        "name": "space_logistics_checking_in",
         "importDirs": [
             "assets"
         ],
@@ -62,7 +62,8 @@
         "release": {
             "preprocessor": {
                 "defines": {
-                    "RELEASE": true
+                    "RELEASE": true,
+                    "DEBUG": false
                 }
             },
             "assembly": {

@@ -374,7 +374,7 @@ function EvokeSoloDanceTick(somaticState, sceneTime)
 	end
 	PopClipRect()
 
-	--#ifdef DEBUG
+	--#if DEBUG
 	AddHudMessage(string.format(
 		"dance %d %s %.2f/%.2f",
 		moveIndex,

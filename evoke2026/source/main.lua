@@ -177,7 +177,7 @@ function BOOT()
 	somatic_set_row_callback(handleSomaticRow)
 end
 
---#ifdef DEBUG
+--#if DEBUG
 -- ticbuild allows HMR for tic80 carts. before the old cart is killed, the tic80 calls the
 -- returned function to get a state snapshot to pass to the next cart.
 function MakeHMRState()
@@ -249,7 +249,7 @@ function HonorHMRState()
 end
 --#endif -- DEBUG
 
---#ifdef DEBUG
+--#if DEBUG
 function AddHudMessage(msg)
 	table.insert(hud_messages, msg)
 end
@@ -348,10 +348,11 @@ function DemoTIC()
 	local state = somatic_tick(nil, FramesToMillis(-7)) -- less = animation lag; higher = audio lag.
 	SideChannelDatabase_UpdateProjectedState(state)
 
-	--#ifdef DEBUG
+	--#if DEBUG
 	HonorHMRState()
 	--#endif
 
+	--#if DEBUG
 	if keyp(55) or btnp(3) then -- right
 		if key(KEY_CTRL()) then -- ctrl
 			-- within scene seek beats.
@@ -376,7 +377,6 @@ function DemoTIC()
 			SetScene(current_scene_id - 1, true)
 		end
 	end
-	--#ifdef DEBUG
 	if keyp(56) then -- HOME
 		SetScene(1, true)
 	end
@@ -423,7 +423,7 @@ function DemoTIC()
 	end
 
 	--hide cursor
-	--#ifdef DEBUG
+	--#if DEBUG
 	poke(16379, show_hud and 128 or 2) -- show cursor when hud is on
 	--#else
 	poke(16379, 2) -- hide cursor always in release
@@ -448,7 +448,7 @@ function DemoTIC()
 	UpdateSceneTiming(state)
 	scenes[current_scene_id].frame(time(), state.demoBeats, state, scene_timing)
 
-	--#ifdef DEBUG
+	--#if DEBUG
 	if show_hud then
 		RenderHud(state)
 	end

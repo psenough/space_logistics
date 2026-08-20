@@ -229,7 +229,7 @@ function SoloTick(_, _, somaticState, sceneTime)
 	cls()
 	drawSprite("EHUD_HUD",0,0)
 
-    --#ifdef DEBUG
+    --#if DEBUG
     AddHudMessage(string.format("sceneBeat=%.2f starcount=%d", sceneTime.demoBeats, #Solo_Stars))
     --#endif
 

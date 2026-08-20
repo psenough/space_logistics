@@ -2,6 +2,7 @@
 
 F09_conveyorState = nil
 F09_conveyorSequencer = nil
+F09_variation = nil
 
 function F09_goodLed(t)
 	local blinkPeriodMs = 700
@@ -100,6 +101,9 @@ function F09_conveyor(sx)
 	px = px + 200
 	drawSprite("F9_Suitcase_01", px, 52)
 
+	px = px + 200
+	drawSprite("F9_Suitcase_02", px, 52) -- and you
+
 	vbank(1)
 	--cls()
 	drawSprite("F9_ScannerBG", 83, 34)
@@ -166,35 +170,124 @@ function F09_conveyor(sx)
 	print("... and you!", sx + 48, 88, 6, false, 1, true)
 end
 
-function SeqItem_SetConveyorStateAtBeat(beat, xSpeed, led)
-	return {
-		trigger = beat and TriggerOnSceneBeat(beat) or nil,
-		tick = function(seqItem, somaticState, seqTiming)
-			F09_conveyorState.xSpeed = xSpeed
-			F09_conveyorState.led = led
-		end
+F09_keyboardMiddleDef = {
+	mainSpriteId = "SPRITE_KEYBOARD_MIDDLE",
+	scannedSpriteId = "SPRITE_KEYBOARD_MIDDLE_OVERLAY",
+	offsetY = 14,
+	itemWidth = 42,
+}
+
+F09_soloConveyorDef = {
+	{
+		mainSpriteId = "SPRITE_BOWLINGBALL",
+		scannedSpriteId = "SPRITE_BOWNLINGBALL_OVERLAY",
+		offsetY = 25,
+		itemWidth = 80,
+	},
+	{
+		mainSpriteId = "SPRITE_BOMB",
+		scannedSpriteId = "SPRITE_BOMB_OVERLAY",
+		offsetY = 0,
+		itemWidth = 200,
+	},
+	{
+		mainSpriteId = "SPRITE_KEYBOARD_START",
+		scannedSpriteId = "SPRITE_KEYBOARD_START_OVERLAY",
+		offsetY = 14,
+		itemWidth = 41,
+	},
+	F09_keyboardMiddleDef,
+	F09_keyboardMiddleDef,
+	F09_keyboardMiddleDef,
+	F09_keyboardMiddleDef,
+	F09_keyboardMiddleDef,
+	F09_keyboardMiddleDef,
+	F09_keyboardMiddleDef, 
+	F09_keyboardMiddleDef,
+	F09_keyboardMiddleDef,
+	F09_keyboardMiddleDef, 
+	F09_keyboardMiddleDef,
+	F09_keyboardMiddleDef, 
+	F09_keyboardMiddleDef,
+	F09_keyboardMiddleDef,
+	F09_keyboardMiddleDef,
+	{
+		mainSpriteId = "SPRITE_KEYBOARD_END",
+		scannedSpriteId = "SPRITE_KEYBOARD_END_OVERLAY",
+		offsetY = 14,
+		itemWidth = 41,
 	}
+}
+
+function ConveyorSolo(sx)
+	sx = sx + 200
+	local px = sx
+
+	for i, item in ipairs(F09_soloConveyorDef) do
+		drawSprite(item.mainSpriteId, px, 52 + item.offsetY)
+		px = px + item.itemWidth
+	end
+
+	vbank(1)
+	drawSprite("F9_ScannerBG", 83, 34)
+
+	for i, item in ipairs(F09_soloConveyorDef) do
+		drawSprite(item.scannedSpriteId, sx, 52 + item.offsetY)
+		sx = sx + item.itemWidth
+	end
 end
 
 F09_conveyorSequenceDef = {
-	SeqItem_SetConveyorStateAtBeat(nil, -0.05, "ok"),
-	-- SeqItem_SetConveyorStateAtBeat(100, 0, "question"),
-	-- SeqItem_SetConveyorStateAtBeat(110, 0, "ok"),
+	{
+		tick = function(seqItem, somaticState, seqTiming, sceneTiming)
+			local xSpeed = -0.05
+			F09_conveyorState.x = sceneTiming.demoMillis * xSpeed
+			F09_conveyorState.led = "ok"
+		end
+	},
 }
 
-function Frame09_init()
-	--F09_st = time()
-	F09_conveyorSequencer = CreateSequencer(F09_conveyorSequenceDef)
+-- during solos we will modulate the speed of the conveyor belt and set led states.
+F09_soloSequenceDef = {
+	{
+		tick = function(seqItem, somaticState, seqTiming, sceneTiming)
+			--local targetSpeed = -0.09
+
+			-- modulate targetspeed.
+			-- local convX = F09_conveyorState.x
+			-- local led = "ok"
+			-- if convX < 380 then
+			-- 	targetSpeed = -0.09
+			-- 	led = "question"
+			-- end
+
+			--local speed = UpdateSlewedScalar(F09_conveyorState.speed, targetSpeed, 0.001)
+			local speed = -0.08
+			F09_conveyorState.x = sceneTiming.demoMillis * speed
+			F09_conveyorState.led = "ok"
+			--F09_conveyorState.speed = speed
+		end
+	},
+}
+
+-- variation = "greetz" or "solo"
+function Frame09_init(variation)
+	F09_variation = variation
+	local seqDef = F09_conveyorSequenceDef
+	if variation == "solo" then
+		seqDef = F09_soloSequenceDef
+	end
+	F09_conveyorSequencer = CreateSequencer(seqDef)
 
 	F09_conveyorState = {
+		-- gets set in sequencer tick.
 		x = 0,
-		xSpeed = -0.05, -- doesn't matter; to be overwritten by animation sequence.
-		led = "ok",
+		speed = 0,
 	}
 end
 
 function Frame09(_, demoBeat, somaticState, sceneTiming)
-	local t = sceneTiming.demoMillis-- (tt - F09_st)
+	local t = sceneTiming.demoMillis
 	AddHudMessage(string.format("sceneBeat: %.2f", sceneTiming.demoBeats))
 
 	vbank(0)
@@ -204,11 +297,12 @@ function Frame09(_, demoBeat, somaticState, sceneTiming)
 
 	-- animate the conveyor.
 	UpdateSequencer(F09_conveyorSequencer, somaticState, sceneTiming)
-	F09_conveyorState.x = F09_conveyorState.x + somaticState.demoDeltaMillis * F09_conveyorState.xSpeed
-	--local sx = -t / 20
 	AddHudMessage(string.format("conveyor.x: %d", F09_conveyorState.x // 1))
-	F09_conveyor(F09_conveyorState.x)
-
+	if F09_variation == "greetz" then
+		F09_conveyor(F09_conveyorState.x)
+	else
+		ConveyorSolo(F09_conveyorState.x)
+	end
 	-- clip around
 	rect(0, 0, 240, 19, 0)
 	rect(0, 19, 74, 117, 0)

@@ -73,17 +73,30 @@ function HUD_01_Scene(tt)
 	drawSprite("HUD_Frame",0,0)
 
 	if (t//120%2 >= 1) then
-		print("Flare Alert!",80,8,2)
-		local px = 178
-		local py = 116
-		rect(px,py,46,11,2)
-		rectb(px,py,46,11,6)
+		print("Flare Alert!",80,7,2)
+		--local px = 178
+		--local py = 116
+		--rect(px,py,46,11,2)
+		--rectb(px,py,46,11,6)
 		--poke(0x3FF8,2)
 	else
 		--poke(0x3FF8,0)
 	end
 
+	if (t//160%2 >= 1) then
+		line(8,122,46,122,2)
+		rect(7,123,41,7,2)
+		line(8,130,46,130,2)
+	else
+		line(9,123,44,123,3)
+		rect(8,124,39,5,3)
+		line(9,129,44,129,3)
+	end
+
 end
+
+HUD_particleTrails = nil -- bottom logo ones.
+HUD_particlesEnabled = true
 
 
 function HUD_02_init()
@@ -94,9 +107,33 @@ function HUD_02_init()
 	vbank(1)
 	cls()
 	vbank(0)
+
+	do
+		HUD_particleTrails = {}
+		local particleCount = 2
+
+		for i=1,particleCount do
+			local particleTrail = CreateParticleTrail({
+		-- 	-- total hud area:
+		-- 	-- areaX = 8,
+		-- 	-- areaY = 9,
+		-- 	-- areaW = 156,
+		-- 	-- areaH = 113,
+				areaX = 196,
+				areaY = 63,
+				areaW = 44,
+				areaH = 26,
+				seed = i,
+				--gradient = Evoke_HUD_particleGradients[((i-1) % #Evoke_HUD_particleGradients) + 1],
+				gradient = { 8,7,6,5 },
+			})
+			table.insert(HUD_particleTrails, particleTrail)
+		end
+	end
+
 end
 
-function HUD_02_Scene(tt)
+function HUD_02_Scene(tt, demoBeats, somaticState, sceneTime)
 
 	local t = (tt - HUD_02_st)
 	
@@ -138,5 +175,9 @@ function HUD_02_Scene(tt)
 	end--]]
 	if t//100%4 > 1 then print("coordinating with\nneighbour sectors",50,barY+12,6,false) end
 
+
+	for i, particleTrail in ipairs(HUD_particleTrails) do
+		UpdateParticleTrail(particleTrail, somaticState, sceneTime)
+	end
 
 end

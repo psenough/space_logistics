@@ -259,7 +259,11 @@ function Frame11(tt, demoBeat, somaticState, sceneTiming)
 	-- ship
 	local shipDx = LERP(0.001, 0.08, effectiveIntensity)
 	F11_shipX = F11_shipX + shipDx * dt
+	F11_shipY = math.sin(t/2000) * 2
 	drawSprite("F11_Ship", F11_shipX, math.sin(t/2000) * 2)
+	if (demoBeat//2)%2 == 0 then
+		line(F11_shipX+38,F11_shipY+96,F11_shipX+43,F11_shipY+96,4)
+	end
 
 	-- rocks in front
 	for i,p in ipairs(F11_fgParticles.particles) do

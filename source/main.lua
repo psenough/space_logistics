@@ -23,6 +23,7 @@
 
 --#include "source/twinkles.lua"
 --#include "source/particle_orbits.lua"
+--#include "source/particle_trails.lua"
 
 --#include "source/frame01_calls.lua"
 --#include "source/frame02_calls.lua"

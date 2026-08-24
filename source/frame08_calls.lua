@@ -37,6 +37,8 @@ function Frame08(tt)
 	local s2x = 0
 	local s2y = 0
 
+	drawSprite("F8_Ship_04",240-t/100,46-t/240)
+
 	-- draw sprites
 	for i=1,#Frame08_sprites do
 		-- update

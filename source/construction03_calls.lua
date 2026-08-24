@@ -168,6 +168,11 @@ function C03_CreateBoosterStreakSystem(edge, t0, t1)
 	})
 end
 
+
+C3_TrailGradient = {
+	12,11,10,11
+}
+
 function Construction03_init()
 	vbank(0)
 	cls()
@@ -265,6 +270,57 @@ function Construction03(tt, beats, somaticState, sceneTime)
 	local glitchAmt = transition01 ^ 2
 	if (glitchAmt > 0.05) then
 		screen_glitch(t, 13, glitchAmt)
+	end
+
+	
+	local paths = {
+		{ st = 2200, endt = 2800, pivots={{146,75,20},{161,83,10},{236,136,10}}},
+		{ st = 1600, endt = 2200, pivots={{152,72,20},{167,80,10},{246,136,10}}},
+		{ st = 1800, endt = 2400, pivots={{161,69,20},{176,77,10},{266,136,10}}}, 
+		{ st = 2000, endt = 2600, pivots={{168,66,20},{181,74,10},{286,136,10}}}, 
+		{ st = 5200, endt = 5800, pivots={{146,75,20},{161,83,10},{236,136,10}}},
+		{ st = 5400, endt = 6000, pivots={{152,72,20},{167,80,10},{246,136,10}}},
+		{ st = 5000, endt = 5600, pivots={{161,69,20},{176,77,10},{266,136,10}}}, 
+		{ st = 4800, endt = 5400, pivots={{168,66,20},{181,74,10},{286,136,10}}},
+	}
+
+	local linegrad = {3,3,12,10,10,10,10,10,10,10}  
+
+	for p=1,#paths do
+		local linestart = paths[p].st
+		local lineend = paths[p].endt
+		local linepath = paths[p].pivots
+		if t > linestart and t < lineend+1000 then
+			
+			local st = lineend - linestart
+			local pt = t - linestart
+			local steps = 0
+			for i=1,#linepath-1 do
+				steps = steps + linepath[i][3]
+			end
+			
+			local cstep = (pt/st)*steps//1
+			
+			local count = 1
+			local lastx = linepath[1][1]
+			local lasty = linepath[1][2]
+			
+			for i=1,#linepath-1 do
+				local refx = (linepath[i+1][1]-linepath[i][1])/linepath[i][3]
+				local refy = (linepath[i+1][2]-linepath[i][2])/linepath[i][3]
+				for s=1,linepath[i][3] do
+					local px = linepath[i][1]+refx*s
+					local py = linepath[i][2]+refy*s
+					local c = (cstep-count)//1 
+					if c > 1 and c < #linegrad then
+						line(lastx,lasty,px,py,linegrad[c])
+					end
+					count = count + 1
+					lastx = px
+					lasty = py
+				end
+			end
+		end
 	end
 
 end

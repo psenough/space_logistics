@@ -47,13 +47,15 @@ C02_doors = {
 		{1400,2000,"C2_ShipCon_01",5000},
 		{50000,50000,"C2_ShipCon_01",0},
 		{10400,11000,"C2_ShipCon_01",14000},
+		{11800,13000,"C2_ShipCon_01",17000},
 		{50000,50000,"C2_ShipCon_01",0},
-		{50000,50000,"C2_ShipCon_01",0}
+		{50000,50000,"C2_ShipCon_01",0},
+		{50000,50000,"C2_ShipCon_01",0},
 	}
 
 function Construction02(tt)
 
-	local t = (tt - C02_st)*1.5
+	local t = (tt - C02_st)*2.0
 	math.randomseed(t)
 
 	cls()

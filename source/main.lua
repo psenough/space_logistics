@@ -226,8 +226,8 @@ scenes = {
 		frame = SphereScenes_Timelapse,
 		name = "SphereScenes_Timelapse",
 		bdr = no_fn,
-		start = 33,
-		row = 0,
+		start = 32,
+		row = 48,
 	},{
 		init = EndScene_init,
 		frame = EndScene,

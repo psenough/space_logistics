@@ -49,10 +49,10 @@ function HUD_01_Scene(tt)
 	local by = 48
 	local wid = 40
 	local hei = 8
-	if (t//120%2 >= 1) then
-		rect(bx,by,wid,hei,2)
-	end
-	rectb(bx,by,wid,hei,6)
+	--if (t//120%2 >= 1) then
+	--	rect(bx,by,wid,hei,2)
+	--end
+	--rectb(bx,by,wid,hei,6)
 
 	rect(bx,by+hei+2,wid,hei*4,0)
 	rectb(bx,by+hei+2,wid,hei*4,6)
@@ -60,13 +60,13 @@ function HUD_01_Scene(tt)
 	print(prsd,bx+3,by+hei+5,6,false,1,true)
 	
 	-- box bottom right
-	if (t//120%2 >= 1) then
-		local px = 178
-		local py = 118
-		rect(px,py,46,11,0)
-		rectb(px,py,46,11,6)
-		print(string.format("%.0f",(20000+t)//15),px+20,py+3,2)
-	end
+	--if (t//120%2 >= 1) then
+	--	local px = 178
+	--	local py = 118
+	--	rect(px,py,46,11,2)
+	--	rectb(px,py,46,11,6)
+		--print(string.format("%.0f",(20000+t)//15),px+20,py+3,2)
+	--end
 
 	--drawSprite("HUD_01",0,0)
 	drawSprite("HUD_02",0,0)
@@ -74,9 +74,13 @@ function HUD_01_Scene(tt)
 
 	if (t//120%2 >= 1) then
 		print("Flare Alert!",80,8,2)
-		poke(0x3FF8,2)
+		local px = 178
+		local py = 116
+		rect(px,py,46,11,2)
+		rectb(px,py,46,11,6)
+		--poke(0x3FF8,2)
 	else
-		poke(0x3FF8,0)
+		--poke(0x3FF8,0)
 	end
 
 end
@@ -104,7 +108,7 @@ function HUD_02_Scene(tt)
 		{"TTE","Slipstream","SIMurai","Damage","Forsaken","Marquee Design","Joker"},
 		{"Altair","AbCr","Oftenhide","Dreamweb","Rift","BionFX","Elude"},
 		{"Rabenauge","Abyss C","Haujobb","K2","Akronyme A", "Stargaze"},
-		{"Desire","Nah Kolor","TPOLM","RBBS","Poo-brain","Hornet"}
+		{"Desire","Nah Kolor","TPOLM","RBBS","Poo-brain","Hornet","Trepaan"}
 	}
 
 	local idx = t//2000%#greets+1

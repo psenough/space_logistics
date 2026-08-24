@@ -42,12 +42,17 @@ function drawShadowSprite(spr_id,x,y)
 end
 
 function drawFrame03_Ship(t,x,y)
-	local mode = 1--t//30%3
-	--if mode > 0 then 
-	drawShadowSprite("Frame03_Ship_Shadow",x,y+80,mode)
-	--end
+	local mode = t//30%3
+	if mode > 0 then 
+		drawShadowSprite("Frame03_Ship_Shadow",x,y+80,mode)
+	end
 	drawSprite("ContainerGrey",x,y+22)
 	drawSprite("Frame03_Ship",x,y)
+	-- blinking light
+	if ((t//600)%2) == 0 then
+		pix(x+64,y+4,5)
+	end
+	
 	--left
 	local jet_id1 = t//60%3+1 -- math.random(2)+1
 	local spr_id1 = "Jet_Sprite_"..string.format("%02d", jet_id1)

@@ -198,6 +198,21 @@ function Frame02(t,beats, somaticState)
 
 	if F02_showShip then
 		drawSprite(F02_shipSprites[id+1],80+sx,20+sy)
+		-- blinking lights
+		if id == 0 then 
+			pix(80+sx+0,20+sy+98,((beats//2+1)%2)+1)
+			pix(80+sx+8,20+sy+90,(beats//2%2)+1)
+			pix(80+sx+10,20+sy+88,((beats//2+1)%2)+1)
+			pix(80+sx+11,20+sy+87,(beats//2%2)+1)
+		end
+		if id == 1 then
+			pix(80+sx+36,20+sy+83,((beats//2+1)%2)+1)
+			pix(80+sx+87,20+sy+34,(beats//2%2)+1)
+		end
+		if id == 3 then
+			pix(80+sx+0,20+sy+26,((beats//2+1)%2)+1)
+			line(80+sx+88,20+sy+58,80+sx+88,20+sy+59,(beats//2%2)+1)
+		end
 	end
 
 	TwinkleTick(somaticState, "starz")

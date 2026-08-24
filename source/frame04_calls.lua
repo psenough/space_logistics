@@ -13,6 +13,16 @@
 -- 	end
 -- end
 
+function stars_y(t)
+	for i=0,50 do
+		circ(math.random(240),
+			 (math.random(136)+t//600)%136,
+			 math.random()*1.5,
+			 (4+math.random(2)//1*8)*math.abs(math.sin(t/math.random(10000))//1)
+			)
+	end
+end
+
 F4ships = nil
 F4starfield = nil
 
@@ -56,10 +66,10 @@ function Frame04(t)
 
 	local tt=1
 
-	--math.randomseed(1000)
-	--stars(t)
-	UpdateStarField(F4starfield)
-	RenderStarField(F4starfield, t)
+	math.randomseed(1000)
+	stars_y(t+10000)
+	--UpdateStarField(F4starfield)
+	--RenderStarField(F4starfield, t)
 	
 	math.randomseed(t)
 

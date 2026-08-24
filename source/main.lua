@@ -63,7 +63,7 @@ is_booting = true
 boot_start_time = time()
 
 scenes = {
-	{ -- missing "Space" on logo
+	{
 		init = no_fn,
 		frame = Frame01, -- ship docking
 		name = "Frame01",

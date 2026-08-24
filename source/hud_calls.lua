@@ -95,6 +95,113 @@ function HUD_01_Scene(tt)
 
 end
 
+
+function HUD_01_Scene_Crit(tt)
+
+	local t = (tt - HUD_01_st)
+	
+	cls()
+
+	for i=1,240 do
+	 for j=1,220,10 do
+			--rim(j,66,1,1,10-i/4)
+			pix(math.random(i),math.random(j),math.random(i))
+		end
+		--pix(math.random(i),math.random(i),math.random(i))
+		rim(100+t/200,65,60-i,40,10-i/4)
+		--pix(230-i/4,150-i/4,i/16)
+	end
+	
+	for y=0,136,2 do
+		for x=0,240 do
+			pix(x,y,pix(x,y)/2)
+		end
+	end
+	
+	-- box header left
+	local bx = 16
+	local by = 48
+	local wid = 40
+	local hei = 8
+
+	rect(bx,by+hei+2,wid,hei*4,0)
+	rectb(bx,by+hei+2,wid,hei*4,6)
+	local prsd = string.sub("crit lvl 5\nemergency\nexe dyson\ncontainer", 0, t//140)
+	print(prsd,bx+3,by+hei+5,6,false,1,true)
+
+	drawSprite("HUD_02",0,0)
+	drawSprite("HUD_Frame",0,0)
+
+	if (t//120%2 >= 1) then
+		print("Ships Assemble!",80,7,2)
+	end
+
+	if (t//160%2 >= 1) then
+		line(8,122,46,122,2)
+		rect(7,123,41,7,2)
+		line(8,130,46,130,2)
+	else
+		line(9,123,44,123,3)
+		rect(8,124,39,5,3)
+		line(9,129,44,129,3)
+	end
+
+end
+
+
+function HUD_01_Scene_Construction(tt)
+
+	local t = (tt - HUD_01_st)
+	
+	cls()
+
+	for i=1,240 do
+	 for j=1,220,10 do
+			--rim(j,66,1,1,10-i/4)
+			pix(math.random(i),math.random(j),math.random(i))
+		end
+		--pix(math.random(i),math.random(i),math.random(i))
+		rim(100+t/200,65,60-i,40,10-i/4)
+		--pix(230-i/4,150-i/4,i/16)
+	end
+	
+	for y=0,136,2 do
+		for x=0,240 do
+			pix(x,y,pix(x,y)/2)
+		end
+	end
+	
+	-- box header left
+	local bx = 16
+	local by = 48
+	local wid = 40
+	local hei = 8
+
+	rect(bx,by+hei+2,wid,hei*4,0)
+	rectb(bx,by+hei+2,wid,hei*4,6)
+	local prsd = string.sub("crit lvl 6\ninit\ncontainer\nconstruct", 0, t//140)
+	print(prsd,bx+3,by+hei+5,6,false,1,true)
+
+	drawSprite("HUD_02",0,0)
+	drawSprite("HUD_Frame",0,0)
+
+	if (t//120%2 >= 1) then
+		print("Construct Begin",80,7,2)
+	end
+
+	if (t//160%2 >= 1) then
+		line(8,122,46,122,2)
+		rect(7,123,41,7,2)
+		line(8,130,46,130,2)
+	else
+		line(9,123,44,123,3)
+		rect(8,124,39,5,3)
+		line(9,129,44,129,3)
+	end
+
+end
+
+
 HUD_particleTrails = nil -- bottom logo ones.
 HUD_particlesEnabled = true
 

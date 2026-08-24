@@ -107,7 +107,7 @@ scenes = {
 		bdr = no_fn,
 		start = 9,
 		row = 0,
-	},{ -- maybe needs a hud surrounding of some sort?
+	},{
 		init = HUD_01_init,
 		frame = HUD_01_Scene,
 		name = "HUD_01_Scene",
@@ -164,28 +164,42 @@ scenes = {
 		start = 19,
 		row = 0,
 		rowHandler = tunnel_music_row,
-	},{ -- hud greets
+	},{
+		init = HUD_01_init,
+		frame = HUD_01_Scene_Crit,
+		name = "HUD_01_Scene_Crit",
+		bdr = no_fn,
+		start = 21,
+		row = 0,
+	},{
 		init = HUD_02_init,
 		frame = HUD_02_Scene,
 		name = "HUD_02_Scene",
 		bdr = no_fn,
-		start = 21,
+		start = 22,
 		row = 0,
 	},{
 		init = Frame11_init,
 		frame = Frame11, -- plasma orbit
 		name = "Frame11",
 		bdr = no_fn,
-		start = 23,
+		start = 24,
 		row = 0,
 	},{
-		init = Construction03_init,
-		frame = Construction03, -- industrial planet elements
-		name = "Construction03",
+		init = Tunnel2_init,
+		frame = Tunnel2,
+		name = "Tunnel2",
 		bdr = no_fn,
 		start = 25,
 		row = 0,
-	},{ -- sync to music, right order of sequence?
+	},{
+		init = HUD_01_init,
+		frame = HUD_01_Scene_Construction,
+		name = "HUD_01_Scene_Construction",
+		bdr = no_fn,
+		start = 27,
+		row = 0,
+	},{
 		init = Construction01_init,
 		frame = Construction01, -- welding
 		name = "Construction01",
@@ -194,9 +208,9 @@ scenes = {
 		row = 0,
 		rowHandler = C01_music_row,
 	},{
-		init = Tunnel2_init,
-		frame = Tunnel2,
-		name = "Tunnel2",
+		init = Construction03_init,
+		frame = Construction03, -- industrial planet elements
+		name = "Construction03",
 		bdr = no_fn,
 		start = 29,
 		row = 0,
@@ -209,40 +223,19 @@ scenes = {
 		row = 0,
 	},{
 		init = SphereScenes_init,
-		frame = SphereScenes_1,
-		name = "SphereScenes_1",
+		frame = SphereScenes_Timelapse,
+		name = "SphereScenes_Timelapse",
 		bdr = no_fn,
 		start = 33,
-		row = 0,
-	},{
-		init = SphereScenes_init,
-		frame = SphereScenes_2,
-		name = "SphereScenes_2",
-		bdr = no_fn,
-		start = 34,
-		row = 0,
-	},{
-		init = SphereScenes_init,
-		frame = SphereScenes_3,
-		name = "SphereScenes_3",
-		bdr = no_fn,
-		start = 35,
 		row = 0,
 	},{
 		init = EndScene_init,
 		frame = EndScene,
 		name = "EndScene",
 		bdr = no_fn,
-		start = 36,
+		start = 35,
 		row = 0,
 		rowHandler = TwinkleRowHandler,
-	},{
-		init = Frame09_init,
-		frame = Frame09, -- xray luggage
-		name = "Frame09",
-		bdr = no_fn,
-		start = 39,
-		row = 0,
 	}
 }
 

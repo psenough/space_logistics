@@ -53,7 +53,7 @@ C02_doors = {
 
 function Construction02(tt)
 
-	local t = (tt - C02_st)
+	local t = (tt - C02_st)*1.5
 	math.randomseed(t)
 
 	cls()

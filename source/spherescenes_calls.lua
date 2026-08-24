@@ -10,7 +10,6 @@ function SphereScenes_init()
 	vbank(0)
 end
 
-
 local SS_sprites = {
 	{"SS_Stage1_Frame01",0,-0,1},
 	{"SS_Stage1_Frame02",350,-80,1},
@@ -225,3 +224,42 @@ function SphereScenes_3(tt)
 
 end
 
+
+-- todo: rest of timelapse animation
+function SphereScenes_Timelapse(tt)
+
+	local t = (tt - SS_st)
+	math.randomseed(t)
+
+	--cls()
+	vbank(0)
+	RenderSun(120, 68, 120, SS_sunGradient, t)
+
+
+	vbank(1)
+	cls()
+	local frameRefX = -120+t//120
+	local frameRefY = -t//120
+	drawSprite("SS_Stage1_Frame03",frameRefX-185,frameRefY)
+	drawSprite("SS_Stage1_Frame01",frameRefX,frameRefY)
+	drawSprite("SS_Stage1_Frame02",frameRefX+185,frameRefY)
+	drawSprite("SS_Stage1_Frame01",frameRefX+52,frameRefY+105)
+	drawSprite("SS_Stage1_Frame01",frameRefX+52-185,frameRefY+105)
+	drawSprite("SS_Stage1_Frame03",frameRefX+52+185,frameRefY+105)
+	drawSprite("SS_Stage1_Frame03",frameRefX+104-185,frameRefY+210)
+	drawSprite("SS_Stage1_Frame01",frameRefX+104,frameRefY+210)
+	drawSprite("SS_Stage1_Frame02",frameRefX+104+185,frameRefY+210)
+
+	-- start, end, id, posx, posy, dx, dy
+	local welders = {
+		{	0, 2000, nil, 100,100, 60, 0},
+		{3000, 6000, nil, 180,104, 60, 0},
+		{2000,10000, nil, 100, 50, 60,-33},
+		{   0,    0, nil,  70,148,  0, 0},
+		{1000,20000, nil, 170,194, 60, 0},
+	}
+
+	drawWelders(welders,frameRefX,frameRefY,t)
+	vbank(0)
+
+end

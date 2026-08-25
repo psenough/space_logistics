@@ -13,11 +13,11 @@ HUD2_Infobar = "E37B12E138B13P97E39B14A21P76E37B4CB7CBAP19AP77E35B5CB7CBA19PAP78
 HUD2_Consoleoverlay = "AGGAGGAG38A1333G2AGGAG38"
 
 function loadHUDSprites()
-	loadExtendedSprite(unpac_noheader(HUD_01),"HUD_01",240,136,0)
-	loadExtendedSprite(unpac_noheader(HUD_02),"HUD_02",240,136,0)
-	loadExtendedSprite(unpac_noheader(HUD_Frame),"HUD_Frame",240,136,0)
+	lE(HUD_01,"HUD_01",240,136,0)
+	lE(HUD_02,"HUD_02",240,136,0)
+	lE(HUD_Frame,"HUD_Frame",240,136,0)
 	
-	loadExtendedSprite(unpac_noheader(HUD2_Background),"HUD2_Background",240,136,0)
-	loadExtendedSprite(unpac_noheader(HUD2_Infobar),"HUD2_Infobar",153,31,4)
-	loadExtendedSprite(unpac_noheader(HUD2_Consoleoverlay),"HUD2_Consoleoverlay",46,31,0)
+	lE(HUD2_Background,"HUD2_Background",240,136,0)
+	lE(HUD2_Infobar,"HUD2_Infobar",153,31,4)
+	lE(HUD2_Consoleoverlay,"HUD2_Consoleoverlay",46,31,0)
 end

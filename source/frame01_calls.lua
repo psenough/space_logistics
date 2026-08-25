@@ -29,32 +29,6 @@ function drawDoorOpenAnim(t,st,et,x,y)
 	end
 end
 
-function drawSpriteD(spr_id,spr_id2,x,y)
-	local posx = x
-	local posy = y
-	local w = sprites[spr_id].w
-	local h = sprites[spr_id].h
-	local c = sprites[spr_id].data
-	local c2 = sprites[spr_id2].data
-	local bkg = sprites[spr_id].bg
-	for x=0,w-1 do
-		for y=0,h-1 do
-				local idx = x+y*w
-				local col = c[idx]
-				local col2 = c2[idx]
-				if (col ~= bkg) then
-						local dx=(posx+x)//1
-						local dy=(posy+y)//1
-						local dc=col
-						if (dx/2+20+math.sin(dy*dx/12+(20000-time())/800)*30)/70 > 1 then
-							dc=col2
-						end
-						pix(dx,dy,dc)
-				end
-		end
-	end
-end
-
 function stars_side(t,x,y)
 	for i=0,50 do
 		circ((math.random(240)+x)%240,

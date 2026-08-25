@@ -28,8 +28,8 @@ function loadFrame09Sprites()
 	tomem(unpac(F9_ScannerBG))
 	loadSprite("F9_ScannerBG",97,87,0)
 
-	loadExtendedSprite(unpac_noheader(F9_BG),"F9_BG",240,121,0)
-	loadExtendedSprite(unpac_noheader(F9_Frame),"F9_Frame",240,85,0)
-	loadExtendedSprite(unpac_noheader(F9_Suitcase_02),"F9_Suitcase_02",172,69,0)
-	loadExtendedSprite(unpac_noheader(F9_Suitcase_Scan_02),"F9_Suitcase_Scan_02",172,69,0)
+	lE(F9_BG,"F9_BG",240,121,0)
+	lE(F9_Frame,"F9_Frame",240,85,0)
+	lE(F9_Suitcase_02,"F9_Suitcase_02",172,69,0)
+	lE(F9_Suitcase_Scan_02,"F9_Suitcase_Scan_02",172,69,0)
 end

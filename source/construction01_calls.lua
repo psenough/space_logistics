@@ -115,11 +115,7 @@ end
 
 function Construction01_init()
 	C01_st = time()
-	vbank(0)
-	cls()
-	vbank(1)
-	cls()
-	vbank(0)
+	clsall()
 
 	C01_accentY = nil
 	C01_accentIndex = 0

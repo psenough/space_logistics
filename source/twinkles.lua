@@ -8,16 +8,15 @@ twinkle_lazer_left_edge = {
 	x0 = 0,
 	y0 = 50, -- don't emit too high or it's just a little corner.
 	width = 0,
-	height = TIC_HEIGHT() - 1 - 100,
+	height = 35,--TIC_HEIGHT() - 101,
 }
 -- and bottom edge.
 twinkle_lazer_bottom_edge = {
 	x0 = 0,
-	y0 = TIC_HEIGHT() - 1,
-	width = TIC_WIDTH() - 1 - 100, -- don't emit too far right; avoid the corner,
+	y0 = 135,--TIC_HEIGHT() - 1,
+	width = 139,--TIC_WIDTH() - 101, -- don't emit too far right; avoid the corner,
 	height = 0,
 }
-
 
 do
 	local gTwinkleParticles = nil

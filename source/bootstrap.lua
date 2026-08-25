@@ -78,6 +78,10 @@ function tomem(str, adr)
 	end
 end
 
+function lE(id,nid,w,h,bg)
+	return loadExtendedSprite(unpac_noheader(id),nid,w,h,bg)
+end
+
 local sprites = {}
 
 function loadSprite(name, w, h, bg)
@@ -107,6 +111,14 @@ function sweetie16_init()
 	poke(0x3FF8, 0) -- border
 	poke(0x3FF9, 0) -- screen offset
 	poke(0x3FFA, 0)
+end
+
+function clsall()
+	vbank(0)
+	cls()
+	vbank(1)
+	cls()
+	vbank(0)
 end
 
 function no_fn() end

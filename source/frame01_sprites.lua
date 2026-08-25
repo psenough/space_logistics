@@ -101,7 +101,7 @@ function loadFrame01Sprites()
 	tomem(unpac(F1_Ship02))
 	loadSprite("F1_Ship02",36,30,5)
 
-	loadExtendedSprite(unpac_noheader(F1_BgDitherExtended),"F1_BgDither",190,121,0)
-	loadExtendedSprite(unpac_noheader(F1_LogoBackdropExtended),"F1_LogoBackdrop",236,132,0)
-	loadExtendedSprite(unpac_noheader(F1_GateMask),"F1_GateMask",190,121,4)
+	lE(F1_BgDitherExtended,"F1_BgDither",190,121,0)
+	lE(F1_LogoBackdropExtended,"F1_LogoBackdrop",236,132,0)
+	lE(F1_GateMask,"F1_GateMask",190,121,4)
 end

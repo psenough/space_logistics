@@ -130,7 +130,8 @@ F05_greenGradientDarker = { 7,7, 7, 7, 6 } -- green
 F05_justDarkBlue = { 8 }
 
 function Frame05_initShared(traces, gradients)
-	poke(0x3FF8,0) -- border black
+	--poke(0x3FF8,0) -- border black
+	clsall()
 	
 	F05_st = time()
 	F05_traces = traces or false
@@ -162,7 +163,8 @@ function Frame05_notraces() -- init
 end
 
 function Frame05b_initShared(traces)
-	poke(0x3FF8,0) -- border black
+	--poke(0x3FF8,0) -- border black
+	clsall()
 	
 	F05_st = time()
 	F05_traces = traces

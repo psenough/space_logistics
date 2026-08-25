@@ -34,11 +34,7 @@ C02_st=0
 
 function Construction02_init()
 	C02_st = time()
-	vbank(0)
-	cls()
-	vbank(1)
-	cls()
-	vbank(0)
+	clsall()
 end
 
 C02_doors = {
@@ -72,7 +68,7 @@ function Construction02(tt)
 		end
 		
 		-- draw rest of the bay
-		drawSprite("C2_ShipbgSprite",doorx,0)
+		drawSprite("C2_ShipBG",doorx,0)
 
 		-- draw blinking lights
 		if (t > C02_doors[i][1]-2000) and (t < C02_doors[i][2]+2000) then

@@ -38,11 +38,7 @@ F02_idOverride = nil
 F02_showShip = true
 
 function Frame02_init()
-	cls()
-	vbank(1)
-	cls()
-	vbank(0)
-
+	clsall()
 	F02_previousI = -1
 end
 

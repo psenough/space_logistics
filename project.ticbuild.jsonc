@@ -44,12 +44,12 @@
             },
             {
                 "asset": "maincode",
-                //"chunks": ["CODE_COMPRESSED"]
+                "chunks": ["CODE_COMPRESSED"]
                 "chunks": ["CODE"]
             }
         ],
         "lua": {
-            "minify": false
+            "minify": true
         }
     },
     "buildConfigurations": {
@@ -62,7 +62,7 @@
             },
             "assembly": {
                 "lua": {
-                    "minify": true
+                    "minify": false
                 }
             }
         }

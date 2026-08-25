@@ -33,7 +33,6 @@
 --#include "source/frame06_calls.lua"
 --#include "source/frame07_calls.lua"
 --#include "source/frame08_calls.lua"
---#include "source/frame09_calls.lua"
 --#include "source/frame11_calls.lua"
 --#include "source/tunnel.lua"
 --#include "source/construction01_calls.lua"
@@ -542,7 +541,6 @@ BootTasks = {
 	loadFrame06Sprites,
 	loadFrame07Sprites,
 	loadFrame08Sprites,
-	loadFrame09Sprites,
 	loadFrame11Sprites,
 	loadC01Sprites,
 	loadC02Sprites,

@@ -174,11 +174,7 @@ C3_TrailGradient = {
 }
 
 function Construction03_init()
-	vbank(0)
-	cls()
-	vbank(1)
-	cls()
-	vbank(0)
+	clsall()
 
 	C03_bg = createCachedSprite("C3_Bg_ditter", 0, 0)
 

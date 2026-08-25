@@ -126,7 +126,7 @@ function F11_RenderParticleStreak(p)
 end
 
 function Frame11_init()
-	poke(0x3FF8,0) -- border black
+	--poke(0x3FF8,0) -- border black
 	
 	F11_st = time()
 	math.randomseed(12)

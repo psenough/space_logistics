@@ -53,7 +53,7 @@ scene_timing = {
 	demoBeats = 0,
 	wallMillis = 0,
 }
-current_scene_id = 1
+current_scene_id = 22
 show_hud = false
 show_palette = false
 last_somatic_state = nil

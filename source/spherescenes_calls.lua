@@ -48,7 +48,7 @@ function drawWelders(welders,frameRefX,frameRefY,t)
 	end
 end
 
-SS_sunGradient = { 12,4,3,2,1,3,4 }
+SS_sunGradient = { 12,4,3,2,1,2,3,4 }
 
 function RenderSun(cx,cy,r,grad,t)
 	--local cx, cy, r = 120, 68, 60
@@ -87,7 +87,7 @@ function RenderSun(cx,cy,r,grad,t)
 		-- local pz = sr*x + cr*z
 	end,t)
 end
-
+--[[
 function SphereScenes_1(tt)
 
 	local t = (tt - SS_st)
@@ -191,7 +191,6 @@ function SphereScenes_3(tt)
 	drawSprite("SS_Stage2_Frame02",frameRefX+104-185,frameRefY+210)
 	drawSprite("SS_Stage2_Frame01",frameRefX+104,frameRefY+210)
 	drawSprite("SS_Stage2_Frame02",frameRefX+104+185,frameRefY+210)
-	-- todo: match these one by one
 	drawSprite("SS_Stage3_03",frameRefX+76,frameRefY+25)
 	drawSprite("SS_Stage3_03",frameRefX+82,frameRefY+13)
 	drawSprite("SS_Stage3_01",frameRefX+53,frameRefY+13)
@@ -210,7 +209,6 @@ function SphereScenes_3(tt)
 	-- start, end, id, posx, posy, dx, dy
 	local welders = {
 		{	0, 6000, nil, 100,100, 60, 0},
-		--{6000,10000, nil, 110, 46, 60,-33},
 		{   0, 1000, nil,  70,148,  0, 0},
 		{   0, 1000, nil, 190,192, 60, 0},
 		{6000,10000, nil, 170,202, 60, 0},
@@ -223,12 +221,12 @@ function SphereScenes_3(tt)
 	vbank(0)
 
 end
+--]]
 
-
--- todo: rest of timelapse animation
 function SphereScenes_Timelapse(tt)
 
 	local t = (tt - SS_st)
+	local tl = t*20
 	math.randomseed(t)
 
 	--cls()
@@ -240,26 +238,147 @@ function SphereScenes_Timelapse(tt)
 	cls()
 	local frameRefX = -120+t//120
 	local frameRefY = -t//120
-	drawSprite("SS_Stage1_Frame03",frameRefX-185,frameRefY)
-	drawSprite("SS_Stage1_Frame01",frameRefX,frameRefY)
-	drawSprite("SS_Stage1_Frame02",frameRefX+185,frameRefY)
-	drawSprite("SS_Stage1_Frame01",frameRefX+52,frameRefY+105)
-	drawSprite("SS_Stage1_Frame01",frameRefX+52-185,frameRefY+105)
-	drawSprite("SS_Stage1_Frame03",frameRefX+52+185,frameRefY+105)
-	drawSprite("SS_Stage1_Frame03",frameRefX+104-185,frameRefY+210)
-	drawSprite("SS_Stage1_Frame01",frameRefX+104,frameRefY+210)
-	drawSprite("SS_Stage1_Frame02",frameRefX+104+185,frameRefY+210)
+	if t<6000 then
+		drawSprite("SS_Stage1_Frame03",frameRefX-185,frameRefY)
+	else
+		drawSprite("SS_Stage2_Frame01",frameRefX-185,frameRefY)
+	end
 
-	-- start, end, id, posx, posy, dx, dy
-	local welders = {
-		{	0, 2000, nil, 100,100, 60, 0},
-		{3000, 6000, nil, 180,104, 60, 0},
-		{2000,10000, nil, 100, 50, 60,-33},
-		{   0,    0, nil,  70,148,  0, 0},
-		{1000,20000, nil, 170,194, 60, 0},
+	if t<7000 then
+		drawSprite("SS_Stage1_Frame01",frameRefX,frameRefY)
+	else
+		drawSprite("SS_Stage2_Frame01",frameRefX,frameRefY)
+	end
+
+	if t<8000 then
+		drawSprite("SS_Stage1_Frame02",frameRefX+185,frameRefY)
+	else
+		drawSprite("SS_Stage2_Frame02",frameRefX+185,frameRefY)
+	end
+
+	if t<9000 then
+		drawSprite("SS_Stage1_Frame01",frameRefX+52,frameRefY+105)
+	else
+		drawSprite("SS_Stage2_Frame01",frameRefX+52,frameRefY+105)
+	end
+
+	if t<10000 then
+		drawSprite("SS_Stage1_Frame01",frameRefX+52-185,frameRefY+105)
+	else
+		drawSprite("SS_Stage2_Frame01",frameRefX+52-185,frameRefY+105)
+	end
+
+	if t<11000 then
+		drawSprite("SS_Stage1_Frame03",frameRefX+52+185,frameRefY+105)
+	else
+		drawSprite("SS_Stage2_Frame02",frameRefX+52+185,frameRefY+105)
+	end
+	
+	if t<12000 then
+		drawSprite("SS_Stage1_Frame03",frameRefX+104-185,frameRefY+210)
+	else
+		drawSprite("SS_Stage2_Frame02",frameRefX+104-185,frameRefY+210)
+	end
+
+	if t<13000 then
+		drawSprite("SS_Stage1_Frame01",frameRefX+104,frameRefY+210)
+	else
+		drawSprite("SS_Stage2_Frame01",frameRefX+104,frameRefY+210)
+	end
+
+	if t<14000 then
+		drawSprite("SS_Stage1_Frame02",frameRefX+104+185,frameRefY+210)
+	else
+		drawSprite("SS_Stage2_Frame02",frameRefX+104+185,frameRefY+210)
+	end
+
+	if t>15000 then drawSprite("SS_Stage3_03",frameRefX+76,frameRefY+25) end
+	if t>15600 then drawSprite("SS_Stage3_03",frameRefX+82,frameRefY+13) end
+	if t>17000 then drawSprite("SS_Stage3_01",frameRefX+53,frameRefY+13) end
+	if t>18000 then drawSprite("SS_Stage3_04",frameRefX+135,frameRefY+12) end
+	if t>18500 then drawSprite("SS_Stage3_03",frameRefX+134,frameRefY+118) end
+	if t>15000 then drawSprite("SS_Stage3_04",frameRefX+171,frameRefY+153) end
+	if t>17200 then drawSprite("SS_Stage3_03",frameRefX+186,frameRefY+181) end
+	if t>19500 then drawSprite("SS_Stage3_04",frameRefX+266,frameRefY+13) end
+	if t>16000 then drawSprite("SS_Stage3_02",frameRefX+250,frameRefY+118) end
+	if t>19500 then drawSprite("SS_Stage3_03",frameRefX+258,frameRefY+118) end
+	if t>19000 then drawSprite("SS_Stage3_02",frameRefX+257,frameRefY+132) end
+	if t>20000 then drawSprite("SS_Stage3_03",frameRefX-51,frameRefY+118) end
+	if t>15600 then drawSprite("SS_Stage3_01",frameRefX-80,frameRefY+118) end
+	if t>16000 then drawSprite("SS_Stage3_01",frameRefX+1,frameRefY+117) end
+
+	-- -- start, end, id, posx, posy, dx, dy
+	-- local welders = {
+	-- 	{6000, 8000, nil, 100,100, 60, 0},
+	-- 	{3000, 6000, nil, 180,104, 60, 0},
+	-- 	{2000,10000, nil, 100, 50, 60,-33},
+	-- 	{   0,    0, nil,  70,148,  0, 0},
+	-- 	{1000,20000, nil, 170,194, 60, 0},
+	-- 	{4000, 5000, nil, 100,100, 60, 0},
+	-- 	{5000, 6000, nil, 180,104, 60, 0},
+	-- 	{5000, 6000, nil, 100, 50, 60,-33},
+	-- 	{6000,11000, nil,  70,148, 10, 0},
+	-- 	{6100,20000, nil, 170,194, 60, 0},
+	-- 	{8000,12000, nil, 100,100, 60, 0},
+	-- 	{9000,10000, nil, 180,104, 60, 0},
+	-- 	{9000,12000, nil, 100, 50, 60,-33},
+	-- 	{9000,11000, nil,  70,148, 10, 0},
+	-- 	{9100,20000, nil, 170,194, 60, 0},
+	-- }
+
+	-- drawWelders(welders,frameRefX,frameRefY,tl)
+
+	local paths = {
+		{ st = 0, endt = 3000, pivots={{100,10,10},{200,10,10},{300,10,10},{250,10,10},{150,10,10}}},
+		{ st = 1000, endt = 4000, pivots={{60,15,10},{80,15,10},{100,15,10},{120,15,10},{140,15,10},{160,15,10}}},
+		{ st = 3000, endt = 5000, pivots={{180,14,10},{0,14,10},{50,14,10},{250,14,10}}},
+		{ st = 0, endt = 3000, pivots={{100,100,10},{200,100,10},{250,100,10},{50,100,10},{-100,100,10}}},
+		{ st = 1000, endt = 4000, pivots={{60,110,10},{150,110,10},{190,110,10}}},
+		{ st = 2000, endt = 8000, pivots={{180,104,10},{0,104,10},{50,104,10},{250,104,10}}},
+		{ st = 1200, endt = 6000, pivots={{100,50,10},{160,27,10},{220,-6,10},{160,27,10},{100,50,10}}},
 	}
 
-	drawWelders(welders,frameRefX,frameRefY,t)
+	for p=1,#paths do
+		local linestart = paths[p].st
+		local lineend = paths[p].endt
+		local linepath = paths[p].pivots
+		if t > linestart and t < lineend+1000 then
+			
+			local st = lineend - linestart
+			local pt = t - linestart
+			local steps = 0
+			for i=1,#linepath-1 do
+				steps = steps + linepath[i][3]
+			end
+			
+			local cstep = (pt/st)*steps//1
+			
+			local count = 1
+			local lastx = linepath[1][1]
+			local lasty = linepath[1][2]
+
+			for i=1,#linepath-1 do
+				local refx = (linepath[i+1][1]-linepath[i][1])/linepath[i][3]
+				local refy = (linepath[i+1][2]-linepath[i][2])/linepath[i][3]
+				for s=1,linepath[i][3] do
+					local px = linepath[i][1]+refx*s
+					local py = linepath[i][2]+refy*s
+					local c = (cstep-count)//1 
+					if c == 1 then welder(frameRefX+px,frameRefY+py,t) end
+					count = count + 1
+					lastx = px
+					lasty = py
+				end
+			end
+		end
+	end
+
+	drawSprite("SS_Ship_up",20+tl//45,136-tl//30)
+	drawSprite("SS_Ship_up",-60+tl//45,236-tl//30)
+
+	drawSprite("SS_Ship_up",-20+tl//45,1036-tl//30)
+	drawSprite("SS_Ship_up",-160+tl//45,1236-tl//30)
+
 	vbank(0)
 
 end

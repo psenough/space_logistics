@@ -64,6 +64,25 @@ function drawSprite(spr_id,posx,posy)
 	end
 end
 
+function drawSpriteFlipH(spr_id,posx,posy)
+	local w = sprites[spr_id].w
+	local h = sprites[spr_id].h
+	local c = sprites[spr_id].data
+	local bkg = sprites[spr_id].bg
+	for y=0,h-1 do
+		local srcRow = y*w
+		local screenY = posy+y
+		if screenY >= 0 and screenY < TIC_HEIGHT() then-- clip to screen
+			for x=0,w-1 do
+				local col = c[x+srcRow]
+				if (col ~= bkg) then
+					pix(posx+(w-x),screenY,col)
+				end
+			end
+		end
+	end
+end
+
 function drawSpriteRotated90(spr_id,posx,posy)
 	local w = sprites[spr_id].w
 	local h = sprites[spr_id].h

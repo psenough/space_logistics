@@ -25,6 +25,12 @@ function welder(x,y,t)
 	drawSprite(spr_id1,x,y)
 end
 
+function welderL(x,y,t)
+	local id = t//60%6+1
+	local spr_id1 = "SS_Welder_"..string.format("%02d", id)
+	drawSpriteFlipH(spr_id1,x,y)
+end
+
 function drawWelders(welders,frameRefX,frameRefY,t)
 	for i=1,#welders do
 		local w = welders[i]
@@ -335,7 +341,15 @@ function SphereScenes_Timelapse(tt)
 		{ st = 0, endt = 3000, pivots={{100,100,10},{200,100,10},{250,100,10},{50,100,10},{-100,100,10}}},
 		{ st = 1000, endt = 4000, pivots={{60,110,10},{150,110,10},{190,110,10}}},
 		{ st = 2000, endt = 8000, pivots={{180,104,10},{0,104,10},{50,104,10},{250,104,10}}},
-		{ st = 1200, endt = 6000, pivots={{100,50,10},{160,27,10},{220,-6,10},{160,27,10},{100,50,10}}},
+		{ st = 1200, endt = 6000, pivots={{100,50,10},{130,7,10},{100,50,20},{80,100,20}}},
+		{ st = 3200, endt = 9000, pivots={{150,155,10},{180,112,10},{150,155,20},{130,205,20}}},
+		{ st = 4000, endt =12000, pivots={{180,210,20},{0,210,20},{50,210,10},{250,210,10}}},
+		{ st = 4400, endt =12000, pivots={{0,0,20},{50,100,20},{220,100,10},{270,210,20}}},
+		{ st = 4600, endt =14000, pivots={{50,105,20},{100,205,20},{270,205,10},{320,315,20}}},
+		{ st = 6000, endt =14000, pivots={{200,260,10},{230,217,10},{200,260,20},{180,310,20}}},
+		{ st = 8000, endt =14000, pivots={{-100,210,20},{-60,210,20},{50,210,20},{100,210,20},{50,210,10},{-60,210,10}}},
+		{ st =13000, endt =20000, pivots={{-100,210,20},{-60,210,20},{50,210,20},{100,210,20},{50,210,10},{-60,210,10}}},
+		{ st =16000, endt =22000, pivots={{-85,260,10},{-55,217,10},{-85,260,20},{-105,310,20}}},
 	}
 
 	for p=1,#paths do
@@ -364,7 +378,13 @@ function SphereScenes_Timelapse(tt)
 					local px = linepath[i][1]+refx*s
 					local py = linepath[i][2]+refy*s
 					local c = (cstep-count)//1 
-					if c == 1 then welder(frameRefX+px,frameRefY+py,t) end
+					if c == 1 then 
+						if px > lastx then
+							welder(frameRefX+px,frameRefY+py,t)
+						else
+							welderL(frameRefX+px,frameRefY+py,t)
+						end
+					end
 					count = count + 1
 					lastx = px
 					lasty = py
@@ -373,11 +393,30 @@ function SphereScenes_Timelapse(tt)
 		end
 	end
 
+	drawSprite("SS_Stage3_02",(frameRefX+tl//50)%800-140,frameRefY+100)
+	drawSprite("SS_Welder_06",(frameRefX+tl//50)%800-150,frameRefY+100)
+	drawSprite("SS_Welder_06",(frameRefX+tl//50)%800-155,frameRefY+110)
+
+	drawSprite("SS_Stage3_02",(frameRefX+tl//60)%1000-40,frameRefY+200)
+	drawSprite("SS_Welder_06",(frameRefX+tl//60)%1000-50,frameRefY+200)
+	drawSprite("SS_Welder_06",(frameRefX+tl//60)%1000-55,frameRefY+210)
+
+	drawSprite("SS_Stage3_02",(frameRefX+tl//50)%800-40,frameRefY+200)
+	drawSprite("SS_Welder_06",(frameRefX+tl//50)%800-50,frameRefY+200)
+	drawSprite("SS_Welder_06",(frameRefX+tl//50)%800-55,frameRefY+210)
+
+
 	drawSprite("SS_Ship_up",20+tl//45,136-tl//30)
 	drawSprite("SS_Ship_up",-60+tl//45,236-tl//30)
 
-	drawSprite("SS_Ship_up",-20+tl//45,1036-tl//30)
-	drawSprite("SS_Ship_up",-160+tl//45,1236-tl//30)
+	drawSprite("SS_Ship_up",-200+tl//45,536-tl//30)
+	drawSprite("SS_Ship_up",-300+tl//45,636-tl//30)
+
+	drawSprite("SS_Ship_up",-400+tl//45,1036-tl//30)
+	drawSprite("SS_Ship_up",-600+tl//45,1136-tl//30)
+
+	drawSprite("SS_Ship_up",-600+tl//45,1336-tl//30)
+	drawSprite("SS_Ship_up",-700+tl//45,1536-tl//30)
 
 	vbank(0)
 

@@ -83,7 +83,7 @@ scenes = {
 		hmr_set = F02_setHMRState,
 		--#endif
 		rowHandler = TwinkleRowHandler,
-	},{ -- missing credits on left maybe?
+	},{
 		init = no_fn,
 		frame = Frame03, -- cargo ship flying over slabs
 		name = "Frame03",

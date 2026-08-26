@@ -57,12 +57,8 @@ end
 SS_sunGradient = { 12,4,3,2,1,2,3,4 }
 
 function RenderSun(cx,cy,r,grad,t)
-	--local cx, cy, r = 120, 68, 60
-	--local cx, cy, r = 120, 68, 120
-
 	local invR = 1 / r
 	local phase = t * -0.00017
-	--local rotation = t * 0.0001
 	local scale = 3+math.sin(t/20000)*2
 
 	-- don't put these in the shader for performance.
@@ -71,10 +67,6 @@ function RenderSun(cx,cy,r,grad,t)
 	local scalev1 = scale * 9
 	local scalev2 = scale * 12
 	local scalev3 = scale * 7
-	--local cr, sr = cos(rotation), sin(rotation)
-
-	--circ(cx, cy, r + 3, 8)
-	--circ(cx, cy, r + 1, 9) 
 
 	ShadeCircleBayerHack(cx, cy, r, grad, function(screenX, screenY)
 		local x = (screenX - cx) * invR -- normalize
@@ -85,149 +77,10 @@ function RenderSun(cx,cy,r,grad,t)
 			sin(scalev1*x + 5*y + phase) +
 			sin(scalev2*z - 7*y - phasev2) +
 			sin(scalev3*(x + z + y) + phasev3)
-		--return z * (waves + 2) * 0.5 * (3 * (F11_particleStreakIntensity + 1))
-		return z * (waves + 2) * LERP(0.5, 3, F11_GetParticleStreakIntensity())
 
-		-- interaction with rotated coords looks cool but is subtle and costs a lot of CPU
-		-- local px = cr*x - sr*z
-		-- local pz = sr*x + cr*z
+		return z * (waves + 2) * 0.5
 	end,t)
 end
---[[
-function SphereScenes_1(tt)
-
-	local t = (tt - SS_st)
-	math.randomseed(t)
-
-	--cls()
-	vbank(0)
-	RenderSun(120, 68, 120, SS_sunGradient, t)
-
-
-	vbank(1)
-	cls()
-	local frameRefX = -120+t//120
-	local frameRefY = -t//120
-	drawSprite("SS_Stage1_Frame03",frameRefX-185,frameRefY)
-	drawSprite("SS_Stage1_Frame01",frameRefX,frameRefY)
-	drawSprite("SS_Stage1_Frame02",frameRefX+185,frameRefY)
-	drawSprite("SS_Stage1_Frame01",frameRefX+52,frameRefY+105)
-	drawSprite("SS_Stage1_Frame01",frameRefX+52-185,frameRefY+105)
-	drawSprite("SS_Stage1_Frame03",frameRefX+52+185,frameRefY+105)
-	drawSprite("SS_Stage1_Frame03",frameRefX+104-185,frameRefY+210)
-	drawSprite("SS_Stage1_Frame01",frameRefX+104,frameRefY+210)
-	drawSprite("SS_Stage1_Frame02",frameRefX+104+185,frameRefY+210)
-
-	-- start, end, id, posx, posy, dx, dy
-	local welders = {
-		{	0, 2000, nil, 100,100, 60, 0},
-		{3000, 6000, nil, 180,104, 60, 0},
-		{2000,10000, nil, 100, 50, 60,-33},
-		{   0,    0, nil,  70,148,  0, 0},
-		{1000,20000, nil, 170,194, 60, 0},
-	}
-
-	drawWelders(welders,frameRefX,frameRefY,t)
-	vbank(0)
-
-end
-
-
-function SphereScenes_2(tt)
-
-	local t = (tt - SS_st)
-	math.randomseed(t)
-
-	--cls()
-	vbank(0)
-	RenderSun(120, 68, 120, SS_sunGradient, t)
-
-	vbank(1)
-	cls()
-	local frameRefX = -120+t//120 -- -65+120-t//120
-	local frameRefY = -t//120 -- -56+t//120 
-	drawSprite("SS_Stage2_Frame01",frameRefX-185,frameRefY)
-	drawSprite("SS_Stage2_Frame01",frameRefX,frameRefY)
-	drawSprite("SS_Stage2_Frame02",frameRefX+185,frameRefY)
-	drawSprite("SS_Stage2_Frame01",frameRefX+52,frameRefY+105)
-	drawSprite("SS_Stage2_Frame01",frameRefX+52-185,frameRefY+105)
-	drawSprite("SS_Stage2_Frame02",frameRefX+52+185,frameRefY+105)
-	drawSprite("SS_Stage2_Frame02",frameRefX+104-185,frameRefY+210)
-	drawSprite("SS_Stage2_Frame01",frameRefX+104,frameRefY+210)
-	drawSprite("SS_Stage2_Frame02",frameRefX+104+185,frameRefY+210)
-
-	-- start, end, id, posx, posy, dx, dy
-	local welders = {
-		{	0, 6000, nil, 100,100, 60, 0},
-		--{6000,10000, nil, 110, 46, 60,-33},
-		{   0, 1000, nil,  70,148,  0, 0},
-		{   0, 1000, nil, 190,192, 60, 0},
-		{6000,10000, nil, 170,202, 60, 0},
-	}
-
-	drawWelders(welders,frameRefX,frameRefY,t)
-
-	drawSprite("SS_Ship_up",frameRefX+20+t//45,frameRefY+300-t//30)
-	vbank(0)
-
-end
-
-
-function SphereScenes_3(tt)
-
-	local t = (tt - SS_st)
-	math.randomseed(t)
-
-	--cls()
-	vbank(0)
-
-	RenderSun(120, 68, 120, SS_sunGradient, t)
-
-	vbank(1)
-	cls()
-
-	local frameRefX = -120+t//120
-	local frameRefY = -t//120 
-	drawSprite("SS_Stage2_Frame01",frameRefX-185,frameRefY)
-	drawSprite("SS_Stage2_Frame01",frameRefX,frameRefY)
-	drawSprite("SS_Stage2_Frame02",frameRefX+185,frameRefY)
-	drawSprite("SS_Stage2_Frame01",frameRefX+52,frameRefY+105)
-	drawSprite("SS_Stage2_Frame01",frameRefX+52-185,frameRefY+105)
-	drawSprite("SS_Stage2_Frame02",frameRefX+52+185,frameRefY+105)
-	drawSprite("SS_Stage2_Frame02",frameRefX+104-185,frameRefY+210)
-	drawSprite("SS_Stage2_Frame01",frameRefX+104,frameRefY+210)
-	drawSprite("SS_Stage2_Frame02",frameRefX+104+185,frameRefY+210)
-	drawSprite("SS_Stage3_03",frameRefX+76,frameRefY+25)
-	drawSprite("SS_Stage3_03",frameRefX+82,frameRefY+13)
-	drawSprite("SS_Stage3_01",frameRefX+53,frameRefY+13)
-	drawSprite("SS_Stage3_04",frameRefX+135,frameRefY+12)
-	drawSprite("SS_Stage3_03",frameRefX+134,frameRefY+118)
-	drawSprite("SS_Stage3_04",frameRefX+171,frameRefY+153)
-	drawSprite("SS_Stage3_03",frameRefX+186,frameRefY+181)
-	drawSprite("SS_Stage3_04",frameRefX+266,frameRefY+13)
-	drawSprite("SS_Stage3_02",frameRefX+250,frameRefY+118)
-	drawSprite("SS_Stage3_03",frameRefX+258,frameRefY+118)
-	drawSprite("SS_Stage3_02",frameRefX+257,frameRefY+132)
-	drawSprite("SS_Stage3_03",frameRefX-51,frameRefY+118)
-	drawSprite("SS_Stage3_01",frameRefX-80,frameRefY+118)
-	drawSprite("SS_Stage3_01",frameRefX+1,frameRefY+117)
-
-	-- start, end, id, posx, posy, dx, dy
-	local welders = {
-		{	0, 6000, nil, 100,100, 60, 0},
-		{   0, 1000, nil,  70,148,  0, 0},
-		{   0, 1000, nil, 190,192, 60, 0},
-		{6000,10000, nil, 170,202, 60, 0},
-	}
-
-	drawWelders(welders,frameRefX,frameRefY,t)
-
-	drawSprite("SS_Ship_up",20+t//45,136-t//30)
-	drawSprite("SS_Ship_up",-60+t//45,236-t//30)
-	vbank(0)
-
-end
---]]
 
 function SphereScenes_Timelapse(tt)
 
@@ -313,36 +166,15 @@ function SphereScenes_Timelapse(tt)
 	if t>15600 then drawSprite("SS_Stage3_01",frameRefX-80,frameRefY+118) end
 	if t>16000 then drawSprite("SS_Stage3_01",frameRefX+1,frameRefY+117) end
 
-	-- -- start, end, id, posx, posy, dx, dy
-	-- local welders = {
-	-- 	{6000, 8000, nil, 100,100, 60, 0},
-	-- 	{3000, 6000, nil, 180,104, 60, 0},
-	-- 	{2000,10000, nil, 100, 50, 60,-33},
-	-- 	{   0,    0, nil,  70,148,  0, 0},
-	-- 	{1000,20000, nil, 170,194, 60, 0},
-	-- 	{4000, 5000, nil, 100,100, 60, 0},
-	-- 	{5000, 6000, nil, 180,104, 60, 0},
-	-- 	{5000, 6000, nil, 100, 50, 60,-33},
-	-- 	{6000,11000, nil,  70,148, 10, 0},
-	-- 	{6100,20000, nil, 170,194, 60, 0},
-	-- 	{8000,12000, nil, 100,100, 60, 0},
-	-- 	{9000,10000, nil, 180,104, 60, 0},
-	-- 	{9000,12000, nil, 100, 50, 60,-33},
-	-- 	{9000,11000, nil,  70,148, 10, 0},
-	-- 	{9100,20000, nil, 170,194, 60, 0},
-	-- }
-
-	-- drawWelders(welders,frameRefX,frameRefY,tl)
-
 	local paths = {
 		{ st = 0, endt = 3000, pivots={{100,10,10},{200,10,10},{300,10,10},{250,10,10},{150,10,10}}},
 		{ st = 1000, endt = 4000, pivots={{60,15,10},{80,15,10},{100,15,10},{120,15,10},{140,15,10},{160,15,10}}},
 		{ st = 3000, endt = 5000, pivots={{180,14,10},{0,14,10},{50,14,10},{250,14,10}}},
-		{ st = 0, endt = 3000, pivots={{100,100,10},{200,100,10},{250,100,10},{50,100,10},{-100,100,10}}},
-		{ st = 1000, endt = 4000, pivots={{60,110,10},{150,110,10},{190,110,10}}},
+		{ st = 0, endt = 3000, pivots={{100,100,10},{200,100,10},{250,100,10},{50,100,10},{-100,100,10},{-200,100,20}}},
+		{ st = 1000, endt = 4000, pivots={{60,110,10},{150,110,10},{190,110,10},{290,110,20}}},
 		{ st = 2000, endt = 8000, pivots={{180,104,10},{0,104,10},{50,104,10},{250,104,10}}},
-		{ st = 1200, endt = 6000, pivots={{100,50,10},{130,7,10},{100,50,20},{80,100,20}}},
-		{ st = 3200, endt = 9000, pivots={{150,155,10},{180,112,10},{150,155,20},{130,205,20}}},
+		{ st = 1200, endt = 6000, pivots={{100,50,10},{130,7,10},{100,50,20},{80,100,20},{280,100,10}}},
+		{ st = 3200, endt = 9000, pivots={{150,155,10},{180,112,10},{150,155,20},{130,205,20},{230,205,10}}},
 		{ st = 4000, endt =12000, pivots={{180,210,20},{0,210,20},{50,210,10},{250,210,10}}},
 		{ st = 4400, endt =12000, pivots={{0,0,20},{50,100,20},{220,100,10},{270,210,20}}},
 		{ st = 4600, endt =14000, pivots={{50,105,20},{100,205,20},{270,205,10},{320,315,20}}},

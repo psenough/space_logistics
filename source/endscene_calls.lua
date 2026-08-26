@@ -53,10 +53,71 @@ function EndScene(tt, _, somaticState, sceneTime)
 	stars_side(10000+t,0,0)
 	math.randomseed(t)
 
-	local moonX = 10
+	local moonX = 9
 	local moonY = 10
 	drawSprite("End_Moon",moonX,moonY)
 	if t > 7000 then 
+
+		-- twilight anim
+		local posX = 65
+		local posY = 61
+
+		local paths = {
+			{ st = 7000, endt = 7300, pivots={{5,5,4},{0,0,0}}},
+			{ st = 7000, endt = 7300, pivots={{-5,-5,4},{0,0,0}}},
+			{ st = 7000, endt = 7300, pivots={{5,-5,4},{0,0,0}}},
+			{ st = 7000, endt = 7300, pivots={{-5,5,4},{0,0,0}}},
+		
+			{ st = 7000, endt = 7400, pivots={{12,0,6},{0,0,0}}},
+			{ st = 7000, endt = 7400, pivots={{-12,0,6},{0,0,0}}},
+			{ st = 7000, endt = 7400, pivots={{0,12,6},{0,0,0}}},
+			{ st = 7000, endt = 7400, pivots={{0,-12,6},{0,0,0}}},
+			
+			{ st = 7000, endt = 7600, pivots={{18,0,6},{0,0,0}}},
+			{ st = 7000, endt = 7600, pivots={{-18,0,6},{0,0,0}}},
+			{ st = 7000, endt = 7600, pivots={{0,20,6},{0,0,0}}},
+			{ st = 7000, endt = 7600, pivots={{0,-20,6},{0,0,0}}},
+		}
+		
+		local linegrad = {3,4,0,4,0}  
+
+		for p=1,#paths do
+			local linestart = paths[p].st
+			local lineend = paths[p].endt
+			local linepath = paths[p].pivots
+			if t > linestart and t < lineend+1000 then
+				
+				local st = lineend - linestart
+				local pt = t - linestart
+				local steps = 0
+				for i=1,#linepath-1 do
+					steps = steps + linepath[i][3]
+				end
+				
+				local cstep = (pt/st)*steps//1
+				
+				local count = 1
+				local lastx = linepath[1][1]
+				local lasty = linepath[1][2]
+				
+				for i=1,#linepath-1 do
+					local refx = (linepath[i+1][1]-linepath[i][1])/linepath[i][3]
+					local refy = (linepath[i+1][2]-linepath[i][2])/linepath[i][3]
+					for s=1,linepath[i][3] do
+						local px = linepath[i][1]+refx*s
+						local py = linepath[i][2]+refy*s
+						local c = (cstep-count)//1 
+						if c > 1 and c < #linegrad then
+							line(posX+lastx,posY+lasty,posX+px,posY+py,linegrad[c])
+						end
+						count = count + 1
+						lastx = px
+						lasty = py
+					end
+				end
+			end
+		end
+
 		local aid = End_em
 		if End_em < 4 then
 			aid = (t-7000)//360%4+1
@@ -74,7 +135,7 @@ function EndScene(tt, _, somaticState, sceneTime)
 			aid = (t-7000)//360%6+1
 			End_ep = aid+1
 		end
-		drawSprite("End_Planetlights_"..string.format("%02d", aid),0,0)
+		drawSprite("End_Planetlights_"..string.format("%02d", aid),1,0)
 	end
 
 	local sat1X = 44
